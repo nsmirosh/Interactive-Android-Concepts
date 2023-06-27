@@ -1,5 +1,6 @@
 package nick.mirosh.androidsamples.ui.main
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,15 +19,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import nick.mirosh.androidsamples.R
 
 @Composable
 fun SimpleListScreenContent(modifier: Modifier = Modifier, viewModel: MainViewModel) {
     val pokemon by viewModel.pokemon.collectAsStateWithLifecycle(listOf())
+
 
     val modifier = Modifier.padding(8.dp)
     val rowModifier = Modifier
@@ -48,7 +53,10 @@ fun SimpleListScreenContent(modifier: Modifier = Modifier, viewModel: MainViewMo
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 10.dp
                     ),
-                    modifier = modifier
+                    modifier = modifier,
+                    colors = CardDefaults.cardColors(
+                        containerColor = getRandomColor()
+                    ),
                 ) {
                     Row(
                         modifier = rowModifier,
@@ -90,4 +98,16 @@ fun getImageUrl(pokemonUrl: String): String {
     val matches = regex.findAll(pokemonUrl)
     val id = matches.lastOrNull()?.value
     return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
+}
+
+@Composable
+fun getRandomColor(): Color {
+    val list = listOf(
+        R.color.color1,
+        R.color.color_2,
+        R.color.color_3,
+        R.color.color_4,
+        R.color.color_5
+    )
+    return colorResource(list[(0..4).random()])
 }

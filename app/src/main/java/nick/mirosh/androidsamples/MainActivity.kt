@@ -43,7 +43,6 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                     ) {
                         composable(route = MainScreen.route) {
-                            val viewModel = hiltViewModel<MainViewModel>()
                             MainScreenContent(
                                 onSimpleListClick = {
                                     navController.navigateSingleTopTo(SimpleList.route)

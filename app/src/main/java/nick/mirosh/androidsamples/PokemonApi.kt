@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface PokemonApiService {
 
-    @GET("/pokemon")
-    suspend fun getPokemon(
+    @GET("pokemon")
+    fun getPokemon(
     ): Call<PokemonResponse>
 }

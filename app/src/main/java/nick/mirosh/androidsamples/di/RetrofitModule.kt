@@ -19,7 +19,7 @@ class RetrofitModule {
     @Provides
     fun providePokemonService(
         okHttpClient: OkHttpClient
-    ): PokemonApiService{
+    ): PokemonApiService {
 
         val retrofit = Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)

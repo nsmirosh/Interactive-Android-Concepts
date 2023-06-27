@@ -5,9 +5,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import nick.mirosh.androidsamples.PokemonApiService
 import nick.mirosh.androidsamples.models.Pokemon
+import javax.inject.Inject
 
-class PokemonRepositoryImpl(private val pokemonApi: PokemonApiService) : PokemonRepository {
-    private val pokemon = MutableStateFlow<List<Pokemon>>(emptyList())
+class PokemonRepositoryImpl @Inject constructor(private val pokemonApi: PokemonApiService) :
+    PokemonRepository {
+    override val pokemon = MutableStateFlow<List<Pokemon>>(emptyList())
 
     override suspend fun getPokemon() {
         withContext(Dispatchers.IO) {

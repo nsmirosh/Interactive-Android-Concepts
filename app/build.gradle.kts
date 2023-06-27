@@ -24,7 +24,7 @@ android {
     buildFeatures.buildConfig = true
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"https://pokeapi.co/api/v2\"")
+            buildConfigField("String", "BASE_URL", "\"https://pokeapi.co/api/v2/\"")
         }
         release {
             isMinifyEnabled = false

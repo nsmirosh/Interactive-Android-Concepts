@@ -11,16 +11,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import nick.mirosh.androidsamples.ui.MainScreen
 import nick.mirosh.androidsamples.ui.SimpleList
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
+import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,23 +39,32 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = SimpleList.route,
+                        startDestination = MainScreen.route,
                         modifier = Modifier
                     ) {
-                        composable(route = SimpleList.route) {
+                        composable(route = MainScreen.route) {
                             val viewModel = hiltViewModel<MainViewModel>()
-
                             MainScreenContent(
-                                viewModel = viewModel,
+                                onSimpleListClick = {
+                                    navController.navigateSingleTopTo(SimpleList.route)
+                                }
                             )
                         }
-
+                        composable(route = SimpleList.route) {
+                            val viewModel = hiltViewModel<MainViewModel>()
+                            SimpleListScreenContent(
+                                viewModel = viewModel
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
+
+fun NavHostController.navigateSingleTopTo(route: String) =
+    this.navigate(route) { launchSingleTop = true }
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {

@@ -23,6 +23,9 @@ interface MyAppDestinations {
     val route: String
 }
 
+object MainScreen: MyAppDestinations {
+    override val route = "main_screen"
+}
 /**
  * Rally app navigation destinations
  */

@@ -9,5 +9,5 @@ interface PokemonApiService {
 
     @GET("/pokemon")
     suspend fun getPokemon(
-    ): PokemonResponse
+    ): Call<PokemonResponse>
 }

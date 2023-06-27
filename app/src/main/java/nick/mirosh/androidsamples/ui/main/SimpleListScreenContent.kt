@@ -1,6 +1,6 @@
 package nick.mirosh.androidsamples.ui.main
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,12 +26,24 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import nick.mirosh.androidsamples.R
+import nick.mirosh.androidsamples.models.Pokemon
 
 @Composable
 fun SimpleListScreenContent(modifier: Modifier = Modifier, viewModel: MainViewModel) {
     val pokemon by viewModel.pokemon.collectAsStateWithLifecycle(listOf())
+    if (pokemon.isNotEmpty())
+        LazyColumn {
+            items(pokemon.size) { index ->
+                val pokemon = pokemon[index]
+                PokemonCard(pokemon)
+            }
+        }
+    else
+        EmptyScreen()
+}
 
-
+@Composable
+fun PokemonCard(pokemon: Pokemon) {
     val modifier = Modifier.padding(8.dp)
     val rowModifier = Modifier
         .padding(8.dp, 4.dp, 8.dp, 4.dp)
@@ -40,56 +51,53 @@ fun SimpleListScreenContent(modifier: Modifier = Modifier, viewModel: MainViewMo
 
     val imageModifier = Modifier
         .height(150.dp)
-        .padding(8.dp)
         .width(200.dp)
         .clip(shape = RoundedCornerShape(8.dp))
-
-    if (pokemon.isNotEmpty()) {
-        LazyColumn {
-            items(pokemon.size) { index ->
-                val pokemon = pokemon[index]
-                Card(
-                    shape = RoundedCornerShape(8.dp),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 10.dp
-                    ),
-                    modifier = modifier,
-                    colors = CardDefaults.cardColors(
-                        containerColor = getRandomColor()
-                    ),
-                ) {
-                    Row(
-                        modifier = rowModifier,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        AsyncImage(
-                            contentScale = ContentScale.FillBounds,
-                            modifier = imageModifier,
-                            model = getImageUrl(pokemon.url),
-                            contentDescription = "Translated description of what the image contains"
-                        )
-                        Text(
-                            text = pokemon.name,
-                            lineHeight = 18.sp,
-                            fontSize = 14.sp
-                        )
-                    }
-                }
-
-            }
-        }
-    } else {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+        .padding(8.dp)
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 10.dp
+        ),
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = getRandomColor()
+        ),
+    ) {
+        Row(
+            modifier = rowModifier,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Text(
-                text = "No saved articles",
+                text = pokemon.name.replaceFirstChar { it.uppercaseChar() },
                 fontSize = 24.sp,
+                color = Color.White,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .align(Alignment.Bottom)
+            )
+            AsyncImage(
+                contentScale = ContentScale.FillBounds,
+                modifier = imageModifier.padding(8.dp),
+                model = getImageUrl(pokemon.url),
+                contentDescription = "Translated description of what the image contains"
             )
         }
     }
+}
 
+@Composable
+fun EmptyScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "No saved articles",
+            fontSize = 24.sp,
+        )
+    }
 }
 
 fun getImageUrl(pokemonUrl: String): String {

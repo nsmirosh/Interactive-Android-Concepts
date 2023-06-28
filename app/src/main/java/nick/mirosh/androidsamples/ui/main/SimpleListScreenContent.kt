@@ -1,5 +1,6 @@
 package nick.mirosh.androidsamples.ui.main
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,13 +32,17 @@ import nick.mirosh.androidsamples.R
 import nick.mirosh.androidsamples.models.Pokemon
 
 @Composable
-fun SimpleListScreenContent(modifier: Modifier = Modifier, viewModel: MainViewModel) {
-    val pokemon by viewModel.pokemon.collectAsStateWithLifecycle(listOf())
+fun SimpleListScreenContent(
+    modifier: Modifier = Modifier,
+    viewModel: MainViewModel,
+    onRowClick: (Pokemon) -> Unit
+) {
+    val pokemon = remember { viewModel.pokemonList }
     if (pokemon.isNotEmpty())
         LazyColumn {
             items(pokemon.size) { index ->
                 val pokemon = pokemon[index]
-                PokemonCard(pokemon)
+                PokemonCard(pokemon, onRowClick)
             }
         }
     else
@@ -48,7 +54,7 @@ fun SimpleListScreenContent(modifier: Modifier = Modifier, viewModel: MainViewMo
 }
 
 @Composable
-fun PokemonCard(pokemon: Pokemon) {
+fun PokemonCard(pokemon: Pokemon, onRowClick: (Pokemon) -> Unit) {
     val modifier = Modifier.padding(8.dp)
     val rowModifier = Modifier
         .padding(8.dp, 4.dp, 8.dp, 4.dp)
@@ -70,7 +76,9 @@ fun PokemonCard(pokemon: Pokemon) {
         ),
     ) {
         Row(
-            modifier = rowModifier,
+            modifier = rowModifier.clickable {
+                onRowClick(pokemon)
+            },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {

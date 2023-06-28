@@ -32,3 +32,6 @@ object MainScreen: MyAppDestinations {
 object SimpleList : MyAppDestinations {
     override val route = "simple_list"
 }
+object SimpleListWithDeletion : MyAppDestinations {
+    override val route = "simple_list_with_deletion"
+}

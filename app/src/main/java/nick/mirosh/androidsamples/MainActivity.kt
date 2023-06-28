@@ -52,7 +52,10 @@ class MainActivity : ComponentActivity() {
                         composable(route = SimpleList.route) {
                             val viewModel = hiltViewModel<MainViewModel>()
                             SimpleListScreenContent(
-                                viewModel = viewModel
+                                viewModel = viewModel,
+                                onRowClick = {
+                                    viewModel.onRowClick(it)
+                                }
                             )
                         }
                     }

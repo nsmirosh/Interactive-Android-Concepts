@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,7 +40,11 @@ fun SimpleListScreenContent(modifier: Modifier = Modifier, viewModel: MainViewMo
             }
         }
     else
-        EmptyScreen()
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
 }
 
 @Composable
@@ -87,18 +92,6 @@ fun PokemonCard(pokemon: Pokemon) {
     }
 }
 
-@Composable
-fun EmptyScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "No saved articles",
-            fontSize = 24.sp,
-        )
-    }
-}
 
 fun getImageUrl(pokemonUrl: String): String {
 

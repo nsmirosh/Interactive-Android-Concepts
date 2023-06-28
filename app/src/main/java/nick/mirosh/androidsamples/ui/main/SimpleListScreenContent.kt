@@ -14,9 +14,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,11 +29,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import nick.mirosh.androidsamples.R
 import nick.mirosh.androidsamples.models.Pokemon
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimpleListScreenContent(
     modifier: Modifier = Modifier,
@@ -41,8 +44,18 @@ fun SimpleListScreenContent(
     if (pokemon.isNotEmpty())
         LazyColumn {
             items(pokemon.size) { index ->
-                val pokemon = pokemon[index]
-                PokemonCard(pokemon, onRowClick)
+                val dismissState = rememberDismissState(
+                    confirmValueChange = {
+                        if (it == DismissValue.DismissedToEnd) {
+                            viewModel.onRowClick(pokemon[index])
+                        }
+                        true
+                    }
+                )
+                SwipeToDismiss(state = dismissState, background = {}, dismissContent = {
+                    val pokemon = pokemon[index]
+                    PokemonCard(pokemon, onRowClick)
+                })
             }
         }
     else
@@ -52,6 +65,7 @@ fun SimpleListScreenContent(
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
 }
+
 
 @Composable
 fun PokemonCard(pokemon: Pokemon, onRowClick: (Pokemon) -> Unit) {
@@ -100,7 +114,6 @@ fun PokemonCard(pokemon: Pokemon, onRowClick: (Pokemon) -> Unit) {
     }
 }
 
-
 fun getImageUrl(pokemonUrl: String): String {
 
     val regex = Regex("\\d+(?=/[^/]*$)")
@@ -120,3 +133,17 @@ fun getRandomColor(): Color {
     )
     return colorResource(list[(0..4).random()])
 }
+// [ ] - Swipe to dismiss
+// [ ] - Add a new item
+// [ ] - Undo swipe to dismiss
+// [ ] - Expand an item and make sure the state holds
+// [ ] - Collapse an item and make sure the state holds
+// [ ] - Make sure the color sticks and doesn't change
+// [ ] - Add an animation to the expand/collapse
+// [ ] - Add a parallax header to the top
+
+
+// [ ] Another screen
+// [ ] Grid layout
+// [ ] Heteregenous grid layout
+// [ ] Add a bottom and a top navigation bar

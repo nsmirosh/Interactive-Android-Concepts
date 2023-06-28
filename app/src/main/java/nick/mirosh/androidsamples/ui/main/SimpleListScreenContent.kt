@@ -44,18 +44,8 @@ fun SimpleListScreenContent(
     if (pokemon.isNotEmpty())
         LazyColumn {
             items(pokemon.size) { index ->
-                val dismissState = rememberDismissState(
-                    confirmValueChange = {
-                        if (it == DismissValue.DismissedToEnd) {
-                            viewModel.onRowClick(pokemon[index])
-                        }
-                        true
-                    }
-                )
-                SwipeToDismiss(state = dismissState, background = {}, dismissContent = {
-                    val pokemon = pokemon[index]
-                    PokemonCard(pokemon, onRowClick)
-                })
+                val pokemon = pokemon[index]
+                PokemonCard(pokemon, onRowClick)
             }
         }
     else

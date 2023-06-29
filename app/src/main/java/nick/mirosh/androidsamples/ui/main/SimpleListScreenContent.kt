@@ -4,9 +4,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,13 +32,14 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import nick.mirosh.androidsamples.getImageUrl
 import nick.mirosh.androidsamples.models.Pokemon
 
 @Composable
 fun SimpleListScreenContent(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel,
-    onDeleteItem : (Pokemon) -> Unit
+    onDeleteItem: (Pokemon) -> Unit
 ) {
     val pokemonList by viewModel.pokemonList.collectAsStateWithLifecycle()
 
@@ -91,42 +90,37 @@ fun PokemonCard(pokemon: Pokemon) {
             containerColor = colorResource(pokemon.color),
         ),
     ) {
-        ConstraintLayout {
-
-        }
-        Row(
-            modifier = rowModifier
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
                 .clickable {
                     expanded = !expanded
                 }
                 .padding(bottom = extraPadding.coerceAtLeast(0.dp)),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
+            val (name, image) = createRefs()
+
             Text(
                 text = pokemon.name.replaceFirstChar { it.uppercaseChar() },
                 fontSize = 24.sp,
                 color = Color.White,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .align(Alignment.Bottom)
+                modifier = Modifier.constrainAs(name) {
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                }
             )
             AsyncImage(
                 contentScale = ContentScale.FillBounds,
-                modifier = imageModifier.padding(8.dp),
+                modifier = Modifier.constrainAs(image) {
+                    bottom.linkTo(parent.bottom)
+                    end.linkTo(parent.end)
+                },
                 model = getImageUrl(pokemon.url),
                 contentDescription = "Translated description of what the image contains"
             )
         }
     }
-}
-
-fun getImageUrl(pokemonUrl: String): String {
-
-    val regex = Regex("\\d+(?=/[^/]*$)")
-    val matches = regex.findAll(pokemonUrl)
-    val id = matches.lastOrNull()?.value
-    return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
 }
 
 
@@ -148,7 +142,6 @@ fun getImageUrl(pokemonUrl: String): String {
 // [ ] Grid layout
 // [ ] Heteregenous grid layout
 // [ ] Add a bottom and a top navigation bar
-
 
 
 //Pagination screen

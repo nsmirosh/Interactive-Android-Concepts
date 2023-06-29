@@ -52,8 +52,8 @@ class MainActivity : ComponentActivity() {
                             val viewModel = hiltViewModel<MainViewModel>()
                             SimpleListScreenContent(
                                 viewModel = viewModel,
-                                onRowClick = {
-                                    viewModel.onRowClick(it)
+                                onDeleteItem = {
+                                    viewModel.onDeleteItem(it)
                                 }
                             )
                         }

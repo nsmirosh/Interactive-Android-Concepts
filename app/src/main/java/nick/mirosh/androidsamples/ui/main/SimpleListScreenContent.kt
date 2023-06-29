@@ -1,5 +1,8 @@
 package nick.mirosh.androidsamples.ui.main
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,11 +17,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -30,16 +31,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import nick.mirosh.androidsamples.R
 import nick.mirosh.androidsamples.models.Pokemon
 
 @Composable
 fun SimpleListScreenContent(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel,
-    onRowClick: (Pokemon) -> Unit
+    onDeleteItem : (Pokemon) -> Unit
 ) {
     val pokemonList by viewModel.pokemonList.collectAsStateWithLifecycle()
 
@@ -71,6 +72,15 @@ fun PokemonCard(pokemon: Pokemon) {
         .width(200.dp)
         .clip(shape = RoundedCornerShape(8.dp))
         .padding(8.dp)
+
+    val extraPadding by animateDpAsState(
+        if (expanded) 48.dp else 0.dp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ), label = ""
+    )
+
     Card(
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(
@@ -81,10 +91,15 @@ fun PokemonCard(pokemon: Pokemon) {
             containerColor = colorResource(pokemon.color),
         ),
     ) {
+        ConstraintLayout {
+
+        }
         Row(
-            modifier = rowModifier.clickable {
-                expanded = !expanded
-            },
+            modifier = rowModifier
+                .clickable {
+                    expanded = !expanded
+                }
+                .padding(bottom = extraPadding.coerceAtLeast(0.dp)),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -103,16 +118,6 @@ fun PokemonCard(pokemon: Pokemon) {
                 contentDescription = "Translated description of what the image contains"
             )
         }
-        if (expanded) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .padding(8.dp)
-                    .clip(shape = RoundedCornerShape(8.dp))
-                    .padding(8.dp)
-            )
-        }
     }
 }
 
@@ -129,19 +134,26 @@ fun getImageUrl(pokemonUrl: String): String {
 // [ ] - Add a new item
 // [ ] - Undo swipe to dismiss
 // [x] - Expand an item and make sure the state holds
-// [ ] - Collapse an item and make sure the state holds
-// [ ] - Make sure the color sticks and doesn't change
-// [ ] - Add an animation to the expand/collapse
+// [x] - Collapse an item and make sure the state holds
+// [x] - Make sure the color sticks and doesn't change
+// [x] - Add an animation to the expand/collapse
+// [ ] - delete an item
+// [ ] - add animation to deletion
 // [ ] - Add a parallax header to the top
 // [ ] - Add animation when an item is deleted or added back
 // [ ] - implement saved state handle to survive process death for my flows
-
+// [ ] - Use ConstraintLayout to flatten everything
 
 // [ ] Another screen
 // [ ] Grid layout
 // [ ] Heteregenous grid layout
 // [ ] Add a bottom and a top navigation bar
 
+
+
+//Pagination screen
+
+// [ ] - Pagination
 
 //[ ] - Deep link into pokemon details screen
 

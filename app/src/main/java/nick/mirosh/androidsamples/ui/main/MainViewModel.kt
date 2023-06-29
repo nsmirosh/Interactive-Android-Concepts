@@ -1,11 +1,5 @@
 package nick.mirosh.androidsamples.ui.main
 
-import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.toMutableStateList
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,7 +26,8 @@ class MainViewModel @Inject constructor(private val pokemonRepository: PokemonRe
         }
     }
 
-    fun onRowClick(pokemon: Pokemon) {
+    fun onDeleteItem(pokemon: Pokemon) {
+        _pokemonList.value = _pokemonList.value.filter { it.name != pokemon.name }
     }
 
     private fun getRandomColor() =

@@ -22,8 +22,6 @@ import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -46,6 +44,7 @@ class MainActivity : ComponentActivity() {
                             MainScreenContent(
                                 onSimpleListClick = {
                                     navController.navigateSingleTopTo(SimpleList.route)
+
                                 }
                             )
                         }

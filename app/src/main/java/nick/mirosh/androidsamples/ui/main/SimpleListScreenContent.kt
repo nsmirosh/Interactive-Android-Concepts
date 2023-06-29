@@ -14,13 +14,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,23 +30,24 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import nick.mirosh.androidsamples.R
 import nick.mirosh.androidsamples.models.Pokemon
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimpleListScreenContent(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel,
     onRowClick: (Pokemon) -> Unit
 ) {
-    val pokemon = remember { viewModel.pokemonList }
-    if (pokemon.isNotEmpty())
+    val pokemonList by viewModel.pokemonList.collectAsStateWithLifecycle()
+
+    if (pokemonList.isNotEmpty())
         LazyColumn {
-            items(pokemon.size) { index ->
-                val pokemon = pokemon[index]
-                PokemonCard(pokemon, onRowClick)
+            items(pokemonList.size) { index ->
+                val pokemon = pokemonList[index]
+                PokemonCard(pokemon)
             }
         }
     else
@@ -56,9 +58,9 @@ fun SimpleListScreenContent(
         }
 }
 
-
 @Composable
-fun PokemonCard(pokemon: Pokemon, onRowClick: (Pokemon) -> Unit) {
+fun PokemonCard(pokemon: Pokemon) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
     val modifier = Modifier.padding(8.dp)
     val rowModifier = Modifier
         .padding(8.dp, 4.dp, 8.dp, 4.dp)
@@ -76,12 +78,12 @@ fun PokemonCard(pokemon: Pokemon, onRowClick: (Pokemon) -> Unit) {
         ),
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = getRandomColor()
+            containerColor = colorResource(pokemon.color),
         ),
     ) {
         Row(
             modifier = rowModifier.clickable {
-                onRowClick(pokemon)
+                expanded = !expanded
             },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -101,6 +103,16 @@ fun PokemonCard(pokemon: Pokemon, onRowClick: (Pokemon) -> Unit) {
                 contentDescription = "Translated description of what the image contains"
             )
         }
+        if (expanded) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .padding(8.dp)
+                    .clip(shape = RoundedCornerShape(8.dp))
+                    .padding(8.dp)
+            )
+        }
     }
 }
 
@@ -112,28 +124,24 @@ fun getImageUrl(pokemonUrl: String): String {
     return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
 }
 
-@Composable
-fun getRandomColor(): Color {
-    val list = listOf(
-        R.color.color1,
-        R.color.color_2,
-        R.color.color_3,
-        R.color.color_4,
-        R.color.color_5
-    )
-    return colorResource(list[(0..4).random()])
-}
+
 // [ ] - Swipe to dismiss
 // [ ] - Add a new item
 // [ ] - Undo swipe to dismiss
-// [ ] - Expand an item and make sure the state holds
+// [x] - Expand an item and make sure the state holds
 // [ ] - Collapse an item and make sure the state holds
 // [ ] - Make sure the color sticks and doesn't change
 // [ ] - Add an animation to the expand/collapse
 // [ ] - Add a parallax header to the top
+// [ ] - Add animation when an item is deleted or added back
+// [ ] - implement saved state handle to survive process death for my flows
 
 
 // [ ] Another screen
 // [ ] Grid layout
 // [ ] Heteregenous grid layout
 // [ ] Add a bottom and a top navigation bar
+
+
+//[ ] - Deep link into pokemon details screen
+

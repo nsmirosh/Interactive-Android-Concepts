@@ -13,7 +13,7 @@ class PokemonRepositoryImpl @Inject constructor(private val pokemonApi: PokemonA
         return withContext(Dispatchers.IO) {
             pokemonApi.getPokemon().execute().body()?.let { pokemonResponse ->
                 pokemonResponse.results?.map {
-                    Pokemon(it.name.orEmpty(), it.url.orEmpty())
+                    Pokemon(it.name.orEmpty(), it.url.orEmpty(), false)
                 } ?: listOf()
             }!!
         }

@@ -35,3 +35,6 @@ object SimpleList : MyAppDestinations {
 object SimpleListWithDeletion : MyAppDestinations {
     override val route = "simple_list_with_deletion"
 }
+object ProgressBar: MyAppDestinations {
+    override val route = "progres_bar"
+}

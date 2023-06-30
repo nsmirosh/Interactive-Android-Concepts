@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 fun MainScreenContent(
     modifier: Modifier = Modifier,
     onSimpleListClick: () -> Unit,
+    onProgressBarClick: () -> Unit,
 ) {
     Column {
         Text(
@@ -19,6 +20,14 @@ fun MainScreenContent(
             modifier = Modifier
                 .clickable {
                     onSimpleListClick()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "Progress Bar",
+            modifier = Modifier
+                .clickable {
+                    onProgressBarClick()
                 }
                 .padding(24.dp)
         )

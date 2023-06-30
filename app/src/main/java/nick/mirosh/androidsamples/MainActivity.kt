@@ -17,10 +17,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import nick.mirosh.androidsamples.ui.MainScreen
+import nick.mirosh.androidsamples.ui.ProgressBar
 import nick.mirosh.androidsamples.ui.SimpleList
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
+import nick.mirosh.androidsamples.ui.progress.ProgressBarContent
+import nick.mirosh.androidsamples.ui.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 
 @AndroidEntryPoint
@@ -32,8 +35,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     NavHost(
                         navController = navController,
@@ -42,19 +44,21 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(route = MainScreen.route) {
                             MainScreenContent(
-                                onSimpleListClick = {
-                                    navController.navigateSingleTopTo(SimpleList.route)
-
-                                }
+                                onSimpleListClick = { navController.navigateSingleTopTo(SimpleList.route) },
+                                onProgressBarClick = { navController.navigateSingleTopTo(ProgressBar.route) },
                             )
                         }
                         composable(route = SimpleList.route) {
                             val viewModel = hiltViewModel<MainViewModel>()
                             SimpleListScreenContent(
                                 viewModel = viewModel,
-                                onDeleteItem = {
-                                    viewModel.onDeleteItem(it)
-                                }
+                                onDeleteItem = { viewModel.onDeleteItem(it) }
+                            )
+                        }
+                        composable(route = ProgressBar.route) {
+                            val viewModel = hiltViewModel<ProgressBarViewModel>()
+                            ProgressBarContent(
+                                viewModel = viewModel
                             )
                         }
                     }

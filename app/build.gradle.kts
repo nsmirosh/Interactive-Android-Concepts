@@ -80,6 +80,8 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.46.1")
     kapt("com.google.dagger:hilt-android-compiler:2.46.1")
     implementation("androidx.compose.material3:material3:1.2.0-alpha03")
+    implementation("androidx.compose.material:material:1.4.3")
+
 
     //depdendency for coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")

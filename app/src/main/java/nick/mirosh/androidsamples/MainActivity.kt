@@ -16,9 +16,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import nick.mirosh.androidsamples.ui.BottomNavigation
 import nick.mirosh.androidsamples.ui.MainScreen
 import nick.mirosh.androidsamples.ui.ProgressBar
 import nick.mirosh.androidsamples.ui.SimpleList
+import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
@@ -46,6 +48,11 @@ class MainActivity : ComponentActivity() {
                             MainScreenContent(
                                 onSimpleListClick = { navController.navigateSingleTopTo(SimpleList.route) },
                                 onProgressBarClick = { navController.navigateSingleTopTo(ProgressBar.route) },
+                                onBottomNavClick = {
+                                    navController.navigateSingleTopTo(
+                                        BottomNavigation.route
+                                    )
+                                }
                             )
                         }
                         composable(route = SimpleList.route) {
@@ -61,12 +68,17 @@ class MainActivity : ComponentActivity() {
                                 viewModel = viewModel
                             )
                         }
+
+                        composable(route = BottomNavigation.route) {
+                            BottomNavigationScreen()
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 fun NavHostController.navigateSingleTopTo(route: String) =
     this.navigate(route) { launchSingleTop = true }

@@ -13,6 +13,7 @@ fun MainScreenContent(
     modifier: Modifier = Modifier,
     onSimpleListClick: () -> Unit,
     onProgressBarClick: () -> Unit,
+    onBottomNavClick: () -> Unit
 ) {
     Column {
         Text(
@@ -28,6 +29,14 @@ fun MainScreenContent(
             modifier = Modifier
                 .clickable {
                     onProgressBarClick()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "Bottom Nav",
+            modifier = Modifier
+                .clickable {
+                    onBottomNavClick()
                 }
                 .padding(24.dp)
         )

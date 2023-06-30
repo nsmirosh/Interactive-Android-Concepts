@@ -123,7 +123,7 @@ fun PokemonCard(pokemon: Pokemon) {
     }
 }
 
-
+//List screen
 // [ ] - Swipe to dismiss
 // [ ] - Add a new item
 // [ ] - Undo swipe to dismiss
@@ -131,22 +131,24 @@ fun PokemonCard(pokemon: Pokemon) {
 // [x] - Collapse an item and make sure the state holds
 // [x] - Make sure the color sticks and doesn't change
 // [x] - Add an animation to the expand/collapse
+// [ ] - add the ability to "like"
 // [ ] - delete an item
 // [ ] - add animation to deletion
 // [ ] - Add a parallax header to the top
 // [ ] - Add animation when an item is deleted or added back
 // [ ] - implement saved state handle to survive process death for my flows
 // [ ] - Use ConstraintLayout to flatten everything
+// [ ] - Add a filter to show in grid and hetero grid layout
+// [ ] - add a grid layout in the grid icon
+// [ ] - add a hetero grid layout in the hetero icon
 
-// [ ] Another screen
-// [ ] Grid layout
-// [ ] Heteregenous grid layout
-// [ ] Add a bottom and a top navigation bar
 
+//Favorite screen as part of the list screen
+// [ ] - Add bottom navigation via icons to switch between list and favorites
 
 //Pagination screen
-
 // [ ] - Pagination
-
 //[ ] - Deep link into pokemon details screen
 
+//Progress bar screen
+// [ ] - add animated number counter to progress bar - https://www.youtube.com/watch?v=07ZdBCyh7sc

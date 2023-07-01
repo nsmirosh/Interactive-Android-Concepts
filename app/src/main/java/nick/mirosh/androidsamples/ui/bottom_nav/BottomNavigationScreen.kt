@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -60,5 +62,12 @@ fun RowScope.AddItem(
             it.route == screen.route
         } == true,
         onClick = { navController.navigate(screen.route) },
-        icon = { Icon(imageVector = screen.icon, contentDescription = "Navigation Icon") })
+
+        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+        icon = {
+            Icon(
+                imageVector = screen.icon,
+                contentDescription = "Navigation Icon"
+            )
+        })
 }

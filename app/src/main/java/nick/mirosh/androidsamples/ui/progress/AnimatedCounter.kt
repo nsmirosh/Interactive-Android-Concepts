@@ -2,6 +2,10 @@ package nick.mirosh.androidsamples.ui.progress
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -14,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 
+@OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("UnusedContentLambdaTargetStateParameter")
 @Composable
 fun AnimatedCounter(
@@ -41,14 +46,16 @@ fun AnimatedCounter(
             }
             AnimatedContent(
                 targetState = char,
-                label = ""
+                label = "",
+                transitionSpec = {
+                    slideInVertically { it } togetherWith slideOutVertically { -it }
+                }
             ) { char ->
                 Text(
                     text = char.toString(),
                     style = style,
                     softWrap = false
                 )
-
             }
         }
     }

@@ -13,17 +13,17 @@ import javax.inject.Inject
 class ProgressBarViewModel @Inject constructor() :
     ViewModel() {
 
-    private val _progress = MutableStateFlow(0.0f)
+    private val _progress = MutableStateFlow(0)
     val progress = _progress.asStateFlow()
-
 
     fun onStartPressed() {
         viewModelScope.launch {
-            //iterate from 0 to 100 and post an update to _progress every 100ms
-            var j = 0f
-            for (i in 0..10) {
-                j += 0.1f
-                _progress.value = j
+            var counter = 0
+            while (counter < 100) {
+                val randomNo = (0..10).random()
+                if (counter + randomNo > 100) continue
+                counter += randomNo
+                _progress.value = counter
                 delay(500)
             }
         }

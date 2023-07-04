@@ -1,5 +1,6 @@
 package nick.mirosh.androidsamples.ui.main
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -11,10 +12,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +37,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -35,32 +47,93 @@ import coil.compose.AsyncImage
 import nick.mirosh.androidsamples.getImageUrl
 import nick.mirosh.androidsamples.models.Pokemon
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SimpleListScreenContent(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel,
     onDeleteItem: (Pokemon) -> Unit
 ) {
-    val pokemonList by viewModel.pokemonList.collectAsStateWithLifecycle()
+    var listStyle by rememberSaveable {
+        mutableStateOf(
+            true
+        )
+    }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        style = TextStyle(color = Color.White),
+                        text = "TopAppBar"
+                    )
+                },
+                actions = {
+                    IconButton(onClick = {
+                        listStyle = !listStyle
+                    }) {
+                        Icon(
+                            tint = Color.White,
+                            imageVector = Icons.Filled.Build,
+                            contentDescription = "Enable grid"
+                        )
+                    }
+                },
+            )
+        },
+        content = {
+            val pokemonList by viewModel.pokemonList.collectAsStateWithLifecycle()
+            Content(pokemonList, listStyle)
+        },
+    )
+}
 
+@Composable
+fun Content(
+    pokemonList: List<Pokemon>,
+    listStyle: Boolean = true,
+) {
     if (pokemonList.isNotEmpty())
-        LazyColumn {
-            items(pokemonList.size) { index ->
-                val pokemon = pokemonList[index]
-                PokemonCard(pokemon)
+        if (listStyle)
+            LazyColumn {
+                items(pokemonList.size) { index ->
+                    PokemonCard(pokemonList[index])
+                }
             }
-        }
+        else
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2)
+            ) {
+                items(pokemonList.size) { index ->
+                    PokemonCard(pokemonList[index], false)
+                }
+            }
     else
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            CircularProgressIndicator(
+                modifier = Modifier.align(
+                    Alignment.Center
+                )
+            )
         }
 }
 
+private fun LazyItemScope.items(size: Int, any: Any) {
+
+}
+
 @Composable
-fun PokemonCard(pokemon: Pokemon) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
+fun PokemonCard(
+    pokemon: Pokemon,
+    isListStyle: Boolean = true
+) {
+    var expanded by rememberSaveable {
+        mutableStateOf(
+            false
+        )
+    }
     val modifier = Modifier.padding(8.dp)
     val rowModifier = Modifier
         .padding(8.dp, 4.dp, 8.dp, 4.dp)
@@ -97,7 +170,11 @@ fun PokemonCard(pokemon: Pokemon) {
                 .clickable {
                     expanded = !expanded
                 }
-                .padding(bottom = extraPadding.coerceAtLeast(0.dp)),
+                .padding(
+                    bottom = extraPadding.coerceAtLeast(
+                        0.dp
+                    )
+                ),
         ) {
             val (name, image) = createRefs()
 
@@ -112,10 +189,18 @@ fun PokemonCard(pokemon: Pokemon) {
             )
             AsyncImage(
                 contentScale = ContentScale.FillBounds,
-                modifier = Modifier.constrainAs(image) {
-                    bottom.linkTo(parent.bottom)
-                    end.linkTo(parent.end)
-                },
+                modifier = Modifier
+                    .constrainAs(
+                        image
+                    ) {
+                        bottom.linkTo(parent.bottom)
+                        end.linkTo(parent.end)
+                    }
+                    .then(
+                        if (isListStyle) Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp) else Modifier.height(120.dp).padding(16.dp)
+                    ),
                 model = getImageUrl(pokemon.url),
                 contentDescription = "Translated description of what the image contains"
             )
@@ -123,32 +208,9 @@ fun PokemonCard(pokemon: Pokemon) {
     }
 }
 
-//List screen
-// [ ] - Swipe to dismiss
-// [ ] - Add a new item
-// [ ] - Undo swipe to dismiss
-// [x] - Expand an item and make sure the state holds
-// [x] - Collapse an item and make sure the state holds
-// [x] - Make sure the color sticks and doesn't change
-// [x] - Add an animation to the expand/collapse
-// [ ] - add the ability to "like"
-// [ ] - delete an item
-// [ ] - add animation to deletion
-// [ ] - Add a parallax header to the top
-// [ ] - Add animation when an item is deleted or added back
-// [ ] - implement saved state handle to survive process death for my flows
-// [ ] - Use ConstraintLayout to flatten everything
-// [ ] - Add a filter to show in grid and hetero grid layout
-// [ ] - add a grid layout in the grid icon
-// [ ] - add a hetero grid layout in the hetero icon
 
+@Preview
+@Composable
+fun SimpleListScreenContent() {
 
-//Favorite screen as part of the list screen
-// [ ] - Add bottom navigation via icons to switch between list and favorites
-
-//Pagination screen
-// [ ] - Pagination
-//[ ] - Deep link into pokemon details screen
-
-//Progress bar screen
-// [ ] - add animated number counter to progress bar - https://www.youtube.com/watch?v=07ZdBCyh7sc
+}

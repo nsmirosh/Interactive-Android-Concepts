@@ -68,7 +68,6 @@ class MainActivity : ComponentActivity() {
                                 viewModel = viewModel
                             )
                         }
-
                         composable(route = BottomNavigation.route) {
                             BottomNavigationScreen()
                         }

@@ -5,6 +5,14 @@ List screen
 [x] - Make sure the color sticks and doesn't change
 [x] - Add an animation to the expand/collapse
 [x] - Use ConstraintLayout to flatten everything
+[x] - Add a menu to the top
+[x] - Grid layout
+[ ] - implement a preview
+[ ] - Implement an animation on change of the layout
+[ ] - Make the UI adaptive to different screens
+[ ] - learn about scope and extract the initialization of grid and list
+
+//Tasks screen
 [ ] - Swipe to dismiss
 [ ] - Add a new item
 [ ] - Undo swipe to dismiss

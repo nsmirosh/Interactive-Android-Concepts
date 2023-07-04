@@ -37,7 +37,7 @@ fun AnimatedCounter(
         val countString = count.toString()
         val oldCountString = oldCount.toString()
         for (i in countString.indices) {
-            val oldChar = oldCountString.getOrNull(i)
+            val oldChar = oldCountString.getOrNull(i);
             val newChar = countString[i]
             val char = if (oldChar == newChar) {
                 oldCountString[i]

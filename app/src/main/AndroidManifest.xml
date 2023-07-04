@@ -31,6 +31,8 @@
                 <data android:host="my.funny.app" android:scheme="nick" />
             </intent-filter>
         </activity>
+       some
+       some
     </application>
 
 </manifest>

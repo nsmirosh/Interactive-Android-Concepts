@@ -7,7 +7,7 @@ List screen
 [x] - Use ConstraintLayout to flatten everything
 [x] - Add a menu to the top
 [x] - Grid layout
-[ ] - implement a preview
+[x] - implement a preview
 [ ] - Implement an animation on change of the layout
 [ ] - Make the UI adaptive to different screens
 [ ] - learn about scope and extract the initialization of grid and list
@@ -36,3 +36,6 @@ Pagination screen
 
 Progress bar screen
 [ ] - add animated number counter to progress bar - https:www.youtube.com/watch?v=07ZdBCyh7sc
+
+
+The end is nigh 1270 6

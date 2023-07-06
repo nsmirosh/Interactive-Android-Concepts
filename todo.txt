@@ -37,5 +37,6 @@ Pagination screen
 Progress bar screen
 [ ] - add animated number counter to progress bar - https:www.youtube.com/watch?v=07ZdBCyh7sc
 
-
-The end is nigh 1270 6
+Screen of todos
+[ ] - Learn the proper way to do mapping in clean architecture
+[ ] - Do the mapping between two layers

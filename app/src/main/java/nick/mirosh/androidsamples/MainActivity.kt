@@ -1,5 +1,6 @@
 package nick.mirosh.androidsamples
 
+import TodoScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +21,7 @@ import nick.mirosh.androidsamples.ui.BottomNavigation
 import nick.mirosh.androidsamples.ui.MainScreen
 import nick.mirosh.androidsamples.ui.ProgressBar
 import nick.mirosh.androidsamples.ui.SimpleList
+import nick.mirosh.androidsamples.ui.TodoList
 import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
@@ -27,6 +29,7 @@ import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
 import nick.mirosh.androidsamples.ui.progress.ProgressBarContent
 import nick.mirosh.androidsamples.ui.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
+import nick.mirosh.androidsamples.ui.todo.TodoViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -52,7 +55,8 @@ class MainActivity : ComponentActivity() {
                                     navController.navigateSingleTopTo(
                                         BottomNavigation.route
                                     )
-                                }
+                                },
+                                onTodoClick = { navController.navigateSingleTopTo(TodoList.route) }
                             )
                         }
                         composable(route = SimpleList.route) {
@@ -70,6 +74,10 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = BottomNavigation.route) {
                             BottomNavigationScreen()
+                        }
+                        composable(route = TodoList.route) {
+                            val viewModel = hiltViewModel<TodoViewModel>()
+                            TodoScreen(viewModel)
                         }
                     }
                 }

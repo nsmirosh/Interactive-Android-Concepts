@@ -41,3 +41,6 @@ object ProgressBar: MyAppDestinations {
 object BottomNavigation: MyAppDestinations {
     override val route = "bottom_navigation"
 }
+object TodoList: MyAppDestinations {
+    override val route = "todo_list"
+}

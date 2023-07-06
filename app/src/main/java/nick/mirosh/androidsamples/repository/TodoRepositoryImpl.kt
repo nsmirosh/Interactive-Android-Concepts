@@ -24,4 +24,10 @@ class TodoRepositoryImpl @Inject constructor(
             todoDao.insert(todo)
         }
     }
+
+    override suspend fun delete(todoId: Int) {
+        withContext(dispatcher) {
+            todoDao.deleteById(todoId)
+        }
+    }
 }

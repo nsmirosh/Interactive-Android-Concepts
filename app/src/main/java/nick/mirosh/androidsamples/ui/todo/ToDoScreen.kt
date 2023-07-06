@@ -1,5 +1,7 @@
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -9,6 +11,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -24,13 +27,15 @@ import nick.mirosh.androidsamples.ui.todo.TodoViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun TodoScreen(todoViewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
-    val todoList by todoViewModel.todoList.collectAsStateWithLifecycle()
+fun TodoScreen(viewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
+    val todoList by viewModel.todoList.collectAsStateWithLifecycle()
     Box(modifier = Modifier.fillMaxSize()) {
         if (todoList.isNotEmpty())
             LazyColumn {
                 items(todoList.size) { index ->
-                    ToDoCard(todoList[index])
+                    ToDoCard(todoList[index], onDeleteClicked = {
+                        viewModel.delete(todoList[index].id)
+                    })
                 }
             }
         else {
@@ -58,15 +63,26 @@ fun TodoScreen(todoViewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
 }
 
 @Composable
-fun ToDoCard(todo: Todo) {
-    Text(
-        modifier = Modifier.padding(16.dp),
-        style = TextStyle(
-            color = Color.Black, fontSize =
-            24.sp
-        ),
-        text = todo.title,
-    )
+fun ToDoCard(todo: Todo, onDeleteClicked: (Int) -> Unit) {
+    Row {
+        Text(
+            modifier = Modifier.padding(16.dp),
+            style = TextStyle(
+                color = Color.Black, fontSize =
+                24.sp
+            ),
+            text = todo.title,
+        )
+        Icon(
+            imageVector = Icons.Default.Delete,
+            contentDescription = "Delete",
+            tint = Color.Black,
+            modifier = Modifier
+                .size(24.dp)
+                .clickable { onDeleteClicked(todo.id) }
+
+        )
+    }
 }
 
 @Composable
@@ -97,20 +113,7 @@ fun TodoListPreview() {
     val list = listOf(card1, card2, card3)
     LazyColumn {
         items(3) {
-            ToDoCard(list[it])
+            ToDoCard(list[it], {} )
         }
     }
-}
-
-@Composable
-@Preview
-fun TodoCardPreview() {
-    ToDoCard(
-        todo = Todo(
-            id = 0,
-            title = "Title",
-            description = "Description",
-            completed = false,
-        )
-    )
 }

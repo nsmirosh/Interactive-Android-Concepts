@@ -6,4 +6,5 @@ import nick.mirosh.androidsamples.models.DatabaseTodo
 interface TodoRepository {
     suspend fun getTodos(): Flow<List<DatabaseTodo>>
     suspend fun insert(todo: DatabaseTodo)
+    suspend fun delete(todoId: Int)
 }

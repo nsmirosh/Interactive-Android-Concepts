@@ -24,4 +24,7 @@ interface TodoDao {
 
     @Delete
     fun delete(todo: DatabaseTodo)
+
+    @Query("DELETE FROM todos WHERE id = :todoId")
+    fun deleteById(todoId: Int)
 }

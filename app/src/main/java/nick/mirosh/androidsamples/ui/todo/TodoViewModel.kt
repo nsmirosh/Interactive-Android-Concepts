@@ -27,4 +27,11 @@ class TodoViewModel @Inject constructor(private val todoRepository: TodoReposito
             }
         }
     }
+
+    fun delete(id: Int) {
+        viewModelScope.launch {
+            todoRepository.delete(id)
+        }
+    }
 }
+

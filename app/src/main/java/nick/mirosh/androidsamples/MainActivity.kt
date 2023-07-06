@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = TodoList.route) {
                             val viewModel = hiltViewModel<TodoViewModel>()
-                            TodoScreen(todoViewModel = viewModel, onNewTodoClicked = {
+                            TodoScreen(viewModel = viewModel, onNewTodoClicked = {
                                 navController.navigateSingleTopTo(TodoDetails.route)
                             })
                         }

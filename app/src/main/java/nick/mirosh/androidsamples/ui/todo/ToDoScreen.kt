@@ -9,11 +9,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -68,17 +73,46 @@ fun TodoListScreen(viewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
 
 @Composable
 fun ToDoCard(todo: Todo, onDeleteClicked: (Int) -> Unit) {
+    var titleText by remember {
+        mutableStateOf(todo.title)
+    }
+    var isInEditMode by remember {
+        mutableStateOf(false)
+    }
     Row {
-        Text(
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.CenterVertically),
-            style = TextStyle(
-                color = Color.Black,
-                fontSize = 24.sp,
-            ),
-            text = todo.title,
-        )
+        if (isInEditMode) {
+            TextField(
+                value = titleText,
+                onValueChange = {
+                    titleText = it
+                },
+                label = { Text("Title") }
+            )
+
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = "Confirm",
+                tint = Color.Black,
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(2.dp)
+                    .align(Alignment.CenterVertically)
+                    .clickable { isInEditMode = false }
+
+            )
+        } else {
+            Text(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.CenterVertically)
+                    .clickable { isInEditMode = true },
+                style = TextStyle(
+                    color = Color.Black,
+                    fontSize = 24.sp,
+                ),
+                text = todo.title,
+            )
+        }
         Icon(
             imageVector = Icons.Default.Delete,
             contentDescription = "Delete",

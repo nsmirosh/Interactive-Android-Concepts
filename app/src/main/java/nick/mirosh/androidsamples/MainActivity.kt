@@ -1,6 +1,6 @@
 package nick.mirosh.androidsamples
 
-import TodoScreen
+import TodoListScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = TodoList.route) {
                             val viewModel = hiltViewModel<TodoViewModel>()
-                            TodoScreen(viewModel = viewModel, onNewTodoClicked = {
+                            TodoListScreen(viewModel = viewModel, onNewTodoClicked = {
                                 navController.navigateSingleTopTo(TodoDetails.route)
                             })
                         }

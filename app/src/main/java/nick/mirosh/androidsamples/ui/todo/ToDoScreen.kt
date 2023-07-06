@@ -27,11 +27,14 @@ import nick.mirosh.androidsamples.ui.todo.TodoViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun TodoScreen(viewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
+fun TodoListScreen(viewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
     val todoList by viewModel.todoList.collectAsStateWithLifecycle()
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         if (todoList.isNotEmpty())
-            LazyColumn {
+            LazyColumn(modifier = Modifier.align(Alignment.Center)) {
                 items(todoList.size) { index ->
                     ToDoCard(todoList[index], onDeleteClicked = {
                         viewModel.delete(todoList[index].id)
@@ -40,7 +43,8 @@ fun TodoScreen(viewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
             }
         else {
             Text(
-                style = TextStyle(color = Color.Black),
+                modifier = Modifier.align(Alignment.Center),
+                style = TextStyle(fontSize = 24.sp, color = Color.Black),
                 text = "No todos yet"
             )
         }
@@ -66,10 +70,12 @@ fun TodoScreen(viewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
 fun ToDoCard(todo: Todo, onDeleteClicked: (Int) -> Unit) {
     Row {
         Text(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.CenterVertically),
             style = TextStyle(
-                color = Color.Black, fontSize =
-                24.sp
+                color = Color.Black,
+                fontSize = 24.sp,
             ),
             text = todo.title,
         )
@@ -79,6 +85,8 @@ fun ToDoCard(todo: Todo, onDeleteClicked: (Int) -> Unit) {
             tint = Color.Black,
             modifier = Modifier
                 .size(24.dp)
+                .padding(2.dp)
+                .align(Alignment.CenterVertically)
                 .clickable { onDeleteClicked(todo.id) }
 
         )
@@ -113,7 +121,7 @@ fun TodoListPreview() {
     val list = listOf(card1, card2, card3)
     LazyColumn {
         items(3) {
-            ToDoCard(list[it], {} )
+            ToDoCard(list[it], {})
         }
     }
 }

@@ -20,8 +20,10 @@ class TodoViewModel @Inject constructor(private val todoRepository: TodoReposito
 
     init {
         viewModelScope.launch {
-            todoItems.value = todoRepository.getTodos().map {
-                it.asDomainModel()
+            todoRepository.getTodos().collect {
+                todoItems.value = it.map { databaseTodo ->
+                    databaseTodo.asDomainModel()
+                }
             }
         }
     }

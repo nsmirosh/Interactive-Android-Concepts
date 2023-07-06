@@ -1,6 +1,7 @@
 package nick.mirosh.androidsamples.repository
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import nick.mirosh.androidsamples.database.TodoDao
 import nick.mirosh.androidsamples.di.IoDispatcher
@@ -12,15 +13,15 @@ class TodoRepositoryImpl @Inject constructor(
     private val todoDao: TodoDao
 ) : TodoRepository {
 
-    override suspend fun getTodos(): List<DatabaseTodo> {
+    override suspend fun getTodos(): Flow<List<DatabaseTodo>> {
         return withContext(dispatcher) {
             todoDao.getAllTodos()
         }
     }
 
     override suspend fun insert(todo: DatabaseTodo) {
-       withContext(dispatcher) {
-           todoDao.insert(todo)
-       }
+        withContext(dispatcher) {
+            todoDao.insert(todo)
+        }
     }
 }

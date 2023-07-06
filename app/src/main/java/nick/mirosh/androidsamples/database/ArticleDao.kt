@@ -5,12 +5,13 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import nick.mirosh.androidsamples.models.DatabaseTodo
 
 @Dao
 interface TodoDao {
     @Query("SELECT * FROM todos")
-    fun getAllTodos():  List<DatabaseTodo>
+    fun getAllTodos(): Flow<List<DatabaseTodo>>
 
     @Query("SELECT * FROM todos WHERE completed = 1")
     fun getCompletedTodos(): List<DatabaseTodo>

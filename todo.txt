@@ -24,7 +24,7 @@ List screen
 [ ] - Add a parallax header to the top
 [ ] - Add animation when an item is deleted or added back
 [ ] - implement saved state handle to survive process death for my flows
-[ ] - Automatically update the list of todos upon modifying the database in the details screen
+[x] - Automatically update the list of todos upon modifying the database in the details screen
 [ ] - Learn the proper way to do mapping in clean architecture
 [ ] - Do the mapping between two layers
 - use this for reference - https://dribbble.com/shots/14848933-Rengse-To-Do-List-App-Design/attachments/6558496?mode=media

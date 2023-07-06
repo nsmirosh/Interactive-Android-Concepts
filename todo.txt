@@ -16,7 +16,6 @@ List screen
 [ ] - Swipe to dismiss
 [ ] - Add a new item
 [ ] - Undo swipe to dismiss
-[ ] - add the ability to "like"
 [ ] - delete an item
 [ ] - add animation to deletion
 [ ] - Add a parallax header to the top
@@ -25,6 +24,11 @@ List screen
 [ ] - Add a filter to show in grid and hetero grid layout
 [ ] - add a grid layout in the grid icon
 [ ] - add a hetero grid layout in the hetero icon
+[ ] - Automatically update the list of todos upon modifying the database in the details screen
+[ ] - Learn the proper way to do mapping in clean architecture
+[ ] - Do the mapping between two layers
+- use this for reference - https://dribbble.com/shots/14848933-Rengse-To-Do-List-App-Design/attachments/6558496?mode=media
+[ ] - add the ability to change the name of the task while it's in the list
 
 Bottom navigation screen
 [ ] - Add bottom navigation via icons to switch between list and favorites
@@ -36,7 +40,3 @@ Pagination screen
 
 Progress bar screen
 [ ] - add animated number counter to progress bar - https:www.youtube.com/watch?v=07ZdBCyh7sc
-
-Screen of todos
-[ ] - Learn the proper way to do mapping in clean architecture
-[ ] - Do the mapping between two layers

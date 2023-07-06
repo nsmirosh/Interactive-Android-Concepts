@@ -44,3 +44,6 @@ object BottomNavigation: MyAppDestinations {
 object TodoList: MyAppDestinations {
     override val route = "todo_list"
 }
+object TodoDetails: MyAppDestinations {
+    override val route = "todo_details"
+}

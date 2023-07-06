@@ -21,6 +21,7 @@ import nick.mirosh.androidsamples.ui.BottomNavigation
 import nick.mirosh.androidsamples.ui.MainScreen
 import nick.mirosh.androidsamples.ui.ProgressBar
 import nick.mirosh.androidsamples.ui.SimpleList
+import nick.mirosh.androidsamples.ui.TodoDetails
 import nick.mirosh.androidsamples.ui.TodoList
 import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
@@ -30,6 +31,8 @@ import nick.mirosh.androidsamples.ui.progress.ProgressBarContent
 import nick.mirosh.androidsamples.ui.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 import nick.mirosh.androidsamples.ui.todo.TodoViewModel
+import nick.mirosh.androidsamples.ui.todo.details.TodoDetailsScreen
+import nick.mirosh.androidsamples.ui.todo.details.TodoDetailsViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -77,7 +80,19 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = TodoList.route) {
                             val viewModel = hiltViewModel<TodoViewModel>()
-                            TodoScreen(viewModel)
+                            TodoScreen(todoViewModel = viewModel, onNewTodoClicked = {
+                                navController.navigateSingleTopTo(TodoDetails.route)
+                            })
+                        }
+                        composable(route = TodoDetails.route) {
+                            val viewModel = hiltViewModel<TodoDetailsViewModel>()
+                            TodoDetailsScreen(viewModel) { titleText, descriptionText ->
+                                viewModel.insertTodo(
+                                    title = titleText,
+                                    description = descriptionText
+                                )
+                                navController.popBackStack()
+                            }
                         }
                     }
                 }

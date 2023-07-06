@@ -11,19 +11,19 @@ List screen
 [ ] - Implement an animation on change of the layout
 [ ] - Make the UI adaptive to different screens
 [ ] - learn about scope and extract the initialization of grid and list
+[ ] - Add a filter to show in grid and hetero grid layout
+[ ] - add a grid layout in the grid icon
+[ ] - add a hetero grid layout in the hetero icon
 
 //Tasks screen
 [ ] - Swipe to dismiss
-[ ] - Add a new item
+[x] - Add a new item
 [ ] - Undo swipe to dismiss
 [ ] - delete an item
 [ ] - add animation to deletion
 [ ] - Add a parallax header to the top
 [ ] - Add animation when an item is deleted or added back
 [ ] - implement saved state handle to survive process death for my flows
-[ ] - Add a filter to show in grid and hetero grid layout
-[ ] - add a grid layout in the grid icon
-[ ] - add a hetero grid layout in the hetero icon
 [ ] - Automatically update the list of todos upon modifying the database in the details screen
 [ ] - Learn the proper way to do mapping in clean architecture
 [ ] - Do the mapping between two layers

@@ -15,7 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nick.mirosh.androidsamples.models.Todo
 import nick.mirosh.androidsamples.ui.todo.TodoViewModel
@@ -25,7 +27,6 @@ import nick.mirosh.androidsamples.ui.todo.TodoViewModel
 fun TodoScreen(todoViewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
     val todoList by todoViewModel.todoList.collectAsStateWithLifecycle()
     Box(modifier = Modifier.fillMaxSize()) {
-
         if (todoList.isNotEmpty())
             LazyColumn {
                 items(todoList.size) { index ->
@@ -59,7 +60,57 @@ fun TodoScreen(todoViewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
 @Composable
 fun ToDoCard(todo: Todo) {
     Text(
-        style = TextStyle(color = Color.Black),
+        modifier = Modifier.padding(16.dp),
+        style = TextStyle(
+            color = Color.Black, fontSize =
+            24.sp
+        ),
         text = todo.title,
+    )
+}
+
+@Composable
+@Preview
+fun TodoListPreview() {
+    val card1 =
+        Todo(
+            id = 0,
+            title = "Title",
+            description = "Description",
+            completed = false,
+        )
+    val card2 =
+        Todo(
+            id = 0,
+            title = "Title",
+            description = "Description",
+            completed = false,
+        )
+    val card3 =
+        Todo(
+            id = 0,
+            title = "Title",
+            description = "Description",
+            completed = false,
+
+            )
+    val list = listOf(card1, card2, card3)
+    LazyColumn {
+        items(3) {
+            ToDoCard(list[it])
+        }
+    }
+}
+
+@Composable
+@Preview
+fun TodoCardPreview() {
+    ToDoCard(
+        todo = Todo(
+            id = 0,
+            title = "Title",
+            description = "Description",
+            completed = false,
+        )
     )
 }

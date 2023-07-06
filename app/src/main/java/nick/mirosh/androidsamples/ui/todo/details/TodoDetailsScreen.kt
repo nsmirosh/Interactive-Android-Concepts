@@ -13,7 +13,9 @@ import androidx.compose.runtime.setValue
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun TodoDetailsScreen(todoDetailsViewModel: TodoDetailsViewModel, onTodoAdded:(String, String) -> Unit) {
+fun TodoDetailsScreen(
+    onTodoAdded: (String, String) -> Unit
+) {
     //create a field where the  user can enter the title of the
     var titleText by rememberSaveable { mutableStateOf("") }
     var descriptionText by rememberSaveable { mutableStateOf("") }
@@ -33,7 +35,7 @@ fun TodoDetailsScreen(todoDetailsViewModel: TodoDetailsViewModel, onTodoAdded:(S
             label = { Text("Title") }
         )
         Button(onClick = {
-        onTodoAdded(titleText, descriptionText)
+            onTodoAdded(titleText, descriptionText)
         }) {
             Text("Insert Todo")
         }

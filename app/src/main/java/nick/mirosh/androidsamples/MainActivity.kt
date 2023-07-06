@@ -86,7 +86,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = TodoDetails.route) {
                             val viewModel = hiltViewModel<TodoDetailsViewModel>()
-                            TodoDetailsScreen(viewModel) { titleText, descriptionText ->
+                            TodoDetailsScreen { titleText, descriptionText ->
                                 viewModel.insertTodo(
                                     title = titleText,
                                     description = descriptionText

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -21,12 +22,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import nick.mirosh.androidsamples.R
 import nick.mirosh.androidsamples.models.Todo
 import nick.mirosh.androidsamples.ui.todo.TodoViewModel
 
@@ -34,18 +39,13 @@ import nick.mirosh.androidsamples.ui.todo.TodoViewModel
 @Composable
 fun TodoListScreen(viewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
     val todoList by viewModel.todoList.collectAsStateWithLifecycle()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
         if (todoList.isNotEmpty())
-            LazyColumn(modifier = Modifier.align(Alignment.Center)) {
-                items(todoList.size) { index ->
-                    ToDoCard(todoList[index], onDeleteClicked = {
-                        viewModel.delete(todoList[index].id)
-                    })
-                }
-            }
+            TodoList(todoList = todoList, onDeleteClicked = viewModel::delete)
         else {
             Text(
                 modifier = Modifier.align(Alignment.Center),
@@ -55,11 +55,14 @@ fun TodoListScreen(viewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
         }
         FloatingActionButton(
             onClick = onNewTodoClicked,
+            shape = RectangleShape,
+            backgroundColor = colorResource(id = R.color.todo_screen_accent),
             modifier = Modifier
-                .padding(16.dp)
+                .padding(24.dp)
                 .align(
                     Alignment.BottomEnd
                 )
+                .clip(RoundedCornerShape(16.dp))
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -67,6 +70,15 @@ fun TodoListScreen(viewModel: TodoViewModel, onNewTodoClicked: () -> Unit) {
                 tint = Color.White,
                 modifier = Modifier.size(24.dp)
             )
+        }
+    }
+}
+
+@Composable
+fun TodoList(todoList: List<Todo>, onDeleteClicked: (Int) -> Unit) {
+    LazyColumn {
+        items(todoList.size) { index ->
+            ToDoCard(todo = todoList[index], onDeleteClicked = onDeleteClicked)
         }
     }
 }

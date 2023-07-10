@@ -13,4 +13,6 @@
     <color name="color_3">#fee440</color>
     <color name="color_4">#00bbf9</color>
     <color name="color_5">#00f5d4</color>
+
+    <color name="todo_screen_accent">#55AD81</color>
 </resources>

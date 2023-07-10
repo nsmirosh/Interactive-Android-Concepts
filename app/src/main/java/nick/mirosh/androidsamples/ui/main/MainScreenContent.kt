@@ -14,7 +14,8 @@ fun MainScreenContent(
     onSimpleListClick: () -> Unit,
     onProgressBarClick: () -> Unit,
     onBottomNavClick: () -> Unit,
-    onTodoClick: () -> Unit
+    onTodoClick: () -> Unit,
+   onSideEffectsClicked: () -> Unit
 ) {
     Column {
         Text(
@@ -46,6 +47,14 @@ fun MainScreenContent(
             modifier = Modifier
                 .clickable {
                     onTodoClick()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "Side effects",
+            modifier = Modifier
+                .clickable {
+                    onSideEffectsClicked()
                 }
                 .padding(24.dp)
         )

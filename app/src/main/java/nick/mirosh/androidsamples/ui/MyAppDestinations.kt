@@ -47,3 +47,6 @@ object TodoList: MyAppDestinations {
 object TodoDetails: MyAppDestinations {
     override val route = "todo_details"
 }
+object SideEffects: MyAppDestinations {
+    override val route = "side_effects"
+}

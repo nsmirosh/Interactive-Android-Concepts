@@ -17,18 +17,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import nick.mirosh.androidsamples.ui.BottomNavigation
-import nick.mirosh.androidsamples.ui.MainScreen
-import nick.mirosh.androidsamples.ui.ProgressBar
-import nick.mirosh.androidsamples.ui.SimpleList
-import nick.mirosh.androidsamples.ui.TodoDetails
-import nick.mirosh.androidsamples.ui.TodoList
+import nick.mirosh.androidsamples.ui.*
 import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
 import nick.mirosh.androidsamples.ui.progress.ProgressBarContent
 import nick.mirosh.androidsamples.ui.progress.ProgressBarViewModel
+import nick.mirosh.androidsamples.ui.side_effects.SideEffectsScreen
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 import nick.mirosh.androidsamples.ui.todo.TodoViewModel
 import nick.mirosh.androidsamples.ui.todo.details.TodoDetailsScreen
@@ -59,7 +55,12 @@ class MainActivity : ComponentActivity() {
                                         BottomNavigation.route
                                     )
                                 },
-                                onTodoClick = { navController.navigateSingleTopTo(TodoList.route) }
+                                onTodoClick = { navController.navigateSingleTopTo(TodoList.route) },
+                                onSideEffectsClicked = {
+                                    navController.navigateSingleTopTo(
+                                        SideEffects.route
+                                    )
+                                }
                             )
                         }
                         composable(route = SimpleList.route) {
@@ -93,6 +94,9 @@ class MainActivity : ComponentActivity() {
                                 )
                                 navController.popBackStack()
                             }
+                        }
+                        composable(route = SideEffects.route) {
+                            SideEffectsScreen()
                         }
                     }
                 }

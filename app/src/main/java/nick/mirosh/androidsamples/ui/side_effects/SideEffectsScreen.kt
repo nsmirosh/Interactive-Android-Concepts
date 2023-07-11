@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -47,20 +48,34 @@ fun Timer(value: Int) {
 @Composable
 fun MainLayout() {
     Scaffold {
-        Content()
+        val viewModel = hiltViewModel<SideEffectsViewModel>()
+        val result by viewModel.initialTimer.collectAsStateWithLifecycle()
+        var initialMessageSet by remember { mutableStateOf(false) }
+        if (!initialMessageSet) {
+            Content { message, time ->
+                viewModel.scheduleMessage(message, time)
+                initialMessageSet = true
+            }
+        } else {
+
+            Content { message, time ->
+                viewModel.scheduleUpdate(message, time)
+                initialMessageSet = true
+            }
+        }
     }
 }
 
 @Composable
-fun Content() {
-    val viewModel = hiltViewModel<SideEffectsViewModel>()
-    val result by viewModel.updatedValue.collectAsStateWithLifecycle()
+fun Content(onMessageScheduled: (String, Int) -> Unit) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
         val (title, up, down, text, startTimer, messageId) = createRefs()
+        var message by remember { mutableStateOf("") }
+        var timeSet by remember { mutableIntStateOf(0) }
         Text(
             "Schedule an initial message to send",
             modifier = Modifier
@@ -69,7 +84,6 @@ fun Content() {
                     start.linkTo(parent.start)
                 },
         )
-        var message by remember { mutableStateOf("") }
         TextField(modifier = Modifier
             .constrainAs(messageId) {
                 top.linkTo(title.bottom)
@@ -81,8 +95,8 @@ fun Content() {
             }, label = {}
         )
 
-        val deciSeconds = result % 10
-        val seconds = result / 10
+        val deciSeconds = timeSet % 10
+        val seconds = timeSet / 10
         Text(
             "$seconds,$deciSeconds",
             fontSize = 32.sp,
@@ -94,7 +108,7 @@ fun Content() {
                 .padding(16.dp)
         )
         Button(onClick = {
-            viewModel.increaseTimer()
+            timeSet += 10
         },
             modifier = Modifier.constrainAs(up) {
                 top.linkTo(text.top)
@@ -107,7 +121,7 @@ fun Content() {
             )
         }
         Button(onClick = {
-            viewModel.decreaseTimer()
+            timeSet -= 10
         },
             modifier = Modifier.constrainAs(down) {
                 top.linkTo(up.bottom)
@@ -120,7 +134,7 @@ fun Content() {
             )
         }
         Button(onClick = {
-            viewModel.startTimer()
+            onMessageScheduled(message, timeSet)
         },
             modifier = Modifier.constrainAs(startTimer) {
                 top.linkTo(down.bottom)

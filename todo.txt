@@ -40,3 +40,14 @@ Pagination screen
 
 Progress bar screen
 [ ] - add animated number counter to progress bar - https:www.youtube.com/watch?v=07ZdBCyh7sc
+
+    Smile progress bar indicator
+    https://www.youtube.com/watch?v=LbktxnviLKI&ab_channel=UXFLAME
+    https://proandroiddev.com/utilising-the-canvas-in-jetpack-compose-to-build-a-squaresegmentedprogressindicator-facb7944086b
+
+
+Cool animations
+https://interfacemarket.com/design-blog/12-beautiful-mobile-app-ui-animations-inspiration
+I can do animations of designers and they're going to be happy with it
+https://codepen.io/davidkpiano/full/ByNPQw/
+

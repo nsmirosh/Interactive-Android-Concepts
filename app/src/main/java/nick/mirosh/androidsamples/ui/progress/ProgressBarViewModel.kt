@@ -28,4 +28,5 @@ class ProgressBarViewModel @Inject constructor() :
             }
         }
     }
+
 }

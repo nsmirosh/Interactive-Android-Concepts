@@ -15,8 +15,8 @@ class SideEffectsViewModel : ViewModel() {
     private val _messageToDisplay = MutableStateFlow<() -> Unit>({})
     val messageToDisplay = _messageToDisplay.asStateFlow()
 
-    private val _initialTimer = MutableStateFlow(0)
-    val initialTimer = _initialTimer.asStateFlow()
+    private val _timerValue = MutableStateFlow("")
+    val timerValue = _timerValue.asStateFlow()
 
     private var initialMessage = ""
     private var newMessage = ""
@@ -31,7 +31,7 @@ class SideEffectsViewModel : ViewModel() {
     }
 
     fun reset() {
-        _initialTimer.value = 0
+        _timerValue.value = "0"
     }
 
     private fun start() {
@@ -40,15 +40,14 @@ class SideEffectsViewModel : ViewModel() {
         _messageToDisplay.value = { initialMessage }
         viewModelScope.launch {
             _messageToDisplay.value = { initialMessage }
-            for (i in initialTimer.value downTo 0) {
-                _initialTimer.value = i
-                if (i == 3) {
+            for (i in 50 downTo 0) {
+                _timerValue.value = " ${i / 10},${i % 10}s"
+                if (i == 30) {
                     _progressMessage.value =
                         "Updating initial message with new message -  $newMessage "
                     _messageToDisplay.value = { newMessage }
                 }
                 delay(100)
-
             }
         }
     }

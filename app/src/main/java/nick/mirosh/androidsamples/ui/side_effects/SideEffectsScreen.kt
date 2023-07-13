@@ -35,40 +35,40 @@ fun SideEffectsScreen() {
 fun MainLayout() {
     Scaffold {
         val viewModel = hiltViewModel<SideEffectsViewModel>()
-        val timerUpdate by viewModel.initialTimer.collectAsStateWithLifecycle()
+        val timerUpdate by viewModel.timerValue.collectAsStateWithLifecycle()
         var shouldShowSecondButton by remember { mutableStateOf(false) }
         var shouldShowTimer by remember { mutableStateOf(false) }
-        Column {
-            Content { message, isFirstMessageSet, isSecondMessageSet ->
-                shouldShowSecondButton =
-                    isFirstMessageSet && !isSecondMessageSet
-                if (isFirstMessageSet)
-                    viewModel.scheduleMessage(message)
-                else if (isSecondMessageSet)
-                    viewModel.scheduleUpdate(message)
-                shouldShowTimer = isSecondMessageSet
-            }
-
-            if (shouldShowSecondButton) {
-                Button(
-                    onClick = {
-                        shouldShowTimer = true
-                    },
-                ) {
-                    Text(text = "Schedule without rememberUpdatedState")
-                }
-            }
-        }
 
         if (shouldShowTimer) {
-            val deciSeconds = timerUpdate % 10
-            val seconds = timerUpdate / 10
             Text(
-                " $seconds,${deciSeconds}s",
+                timerUpdate,
                 fontSize = 32.sp,
                 modifier = Modifier
                     .padding(16.dp)
             )
+        } else {
+
+            Column {
+                Content { message, isFirstMessageSet, isSecondMessageSet ->
+                    shouldShowSecondButton =
+                        isFirstMessageSet && !isSecondMessageSet
+                    if (isFirstMessageSet)
+                        viewModel.scheduleMessage(message)
+                    else if (isSecondMessageSet)
+                        viewModel.scheduleUpdate(message)
+                    shouldShowTimer = isSecondMessageSet
+                }
+
+                if (shouldShowSecondButton) {
+                    Button(
+                        onClick = {
+                            shouldShowTimer = true
+                        },
+                    ) {
+                        Text(text = "Schedule without rememberUpdatedState")
+                    }
+                }
+            }
         }
         // [ ] Write a message "emitted initial lambda with message .... "
         // [ ] Write a message "emitted an update lambda with message .... "

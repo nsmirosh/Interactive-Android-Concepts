@@ -1,21 +1,12 @@
 package nick.mirosh.androidsamples.ui.progress
 
-import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,11 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -122,167 +108,4 @@ fun IncrementDecrement() {
         Text("decrement")
     }
 }
-
-@Composable
-fun ProgressBarContent(
-    viewModel: ProgressBarViewModel,
-    modifier: Modifier = Modifier
-) {
-    var isAnimationRunning by remember { mutableStateOf(false) }
-    Column {
-
-        Content(isAnimationRunning)
-        Button(
-            modifier = Modifier.padding(top = 16.dp),
-            onClick = {
-                isAnimationRunning = true
-            }) {
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    "Start",
-                    fontSize = 30.sp,
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun DrawCanvas() {
-    Canvas(
-        modifier = Modifier
-            .height(100.dp)
-            .width(100.dp)
-    ) {
-        //Draw a half circle line
-        drawArc(
-            color = Color.Red,
-            topLeft = Offset(100f, 100f),
-            startAngle = 0f,
-            sweepAngle = 180f,
-            useCenter = false,
-            style = Stroke(width = 10f)
-        )
-    }
-}
-
-
-@Composable
-fun AnimatedArc() {
-    val infiniteTransition = rememberInfiniteTransition(label = "")
-    val sweepAngle by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 180f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ), label = ""
-    )
-
-    Canvas(
-        modifier = Modifier
-            .height(100.dp)
-            .width(100.dp)
-    ) {
-        // Draw a half circle line
-        drawArc(
-            color = Color.Red,
-            topLeft = Offset(100f, 100f),
-            startAngle = 0f,
-            sweepAngle = sweepAngle,
-            useCenter = false,
-            style = Stroke(width = 15f)
-        )
-        drawCircle(
-            radius = 15f,
-            color = Color.Red,
-        )
-
-    }
-}
-
-
-@Composable
-fun Content(isAnimationRunning: Boolean) {
-    // Define the animation duration
-    val animationDuration = 1000 // in milliseconds
-    val density = LocalDensity.current
-    val widthInPixels = with(density) { 400.dp.toPx() }
-    val oneThird = widthInPixels / 3
-    val twoThirds = widthInPixels / 3 * 2
-    // Define the animated value for the x-coordinate
-    var firstAnimationFinished by remember { mutableStateOf(false) }
-    val animatedX: Float by animateFloatAsState(
-        targetValue = if (firstAnimationFinished) twoThirds else oneThird,
-        animationSpec = tween(durationMillis = animationDuration), label = ""
-    )
-    val animatedX2: Float by animateFloatAsState(
-        targetValue = if (firstAnimationFinished) widthInPixels else twoThirds,
-        animationSpec = tween(durationMillis = animationDuration), label = ""
-    )
-
-    val animatedX3: Float by animateFloatAsState(
-        targetValue = if (firstAnimationFinished) oneThird else 0f,
-        animationSpec = tween(durationMillis = animationDuration), label = ""
-    )
-    val sweepAngle by animateFloatAsState(
-        targetValue = if (isAnimationRunning) 0f else -180f,
-        animationSpec = tween(delayMillis = animationDuration, durationMillis = animationDuration),
-        label = "",
-    )
-    val sweepAngleFirst by animateFloatAsState(
-        targetValue = if (isAnimationRunning) 180f else 0f,
-        animationSpec = tween(durationMillis = animationDuration), label = "", finishedListener = {
-            Log.d("Animation", "first animation finished")
-            firstAnimationFinished = true
-        }
-    )
-    Box(
-        modifier = Modifier
-            .height(400.dp)
-            .width(400.dp)
-            .border(1.dp, Color.Black)
-            .onSizeChanged {
-            }
-    ) {
-
-        Canvas(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // Draw the circle with the animated x-coordinate
-            drawCircle(
-                radius = 25f,
-                color = Color.Red,
-                center = Offset(animatedX, size.height / 2 + 15)
-            )
-            drawCircle(
-                radius = 25f,
-                color = Color.Red,
-                center = Offset(animatedX2, size.height / 2 + 15)
-            )
-            drawCircle(
-                radius = 25f,
-                color = Color.Red,
-                center = Offset(animatedX2, size.height / 2 + 15)
-            )
-            drawArc(
-                color = Color.Red,
-                topLeft = Offset(if (firstAnimationFinished) animatedX3 else 0f, 0f),
-                startAngle = if (firstAnimationFinished) 180f else 0f,
-                sweepAngle = if (firstAnimationFinished) sweepAngle else sweepAngleFirst,
-                useCenter = false,
-                style = Stroke(width = 50f)
-            )
-        }
-    }
-}
-
-
-
-
 

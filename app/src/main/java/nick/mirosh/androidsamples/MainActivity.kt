@@ -12,22 +12,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import nick.mirosh.androidsamples.ui.Animation
 import nick.mirosh.androidsamples.ui.BottomNavigation
 import nick.mirosh.androidsamples.ui.MainScreen
 import nick.mirosh.androidsamples.ui.ProgressBar
 import nick.mirosh.androidsamples.ui.SimpleList
 import nick.mirosh.androidsamples.ui.TodoDetails
 import nick.mirosh.androidsamples.ui.TodoList
+import nick.mirosh.androidsamples.ui.animation.AnimationContent
 import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
-import nick.mirosh.androidsamples.ui.progress.ProgressBarContent
+import nick.mirosh.androidsamples.ui.progress.ProgressBarContent2
 import nick.mirosh.androidsamples.ui.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 import nick.mirosh.androidsamples.ui.todo.TodoViewModel
@@ -50,50 +53,7 @@ class MainActivity : ComponentActivity() {
                         startDestination = MainScreen.route,
                         modifier = Modifier
                     ) {
-                        composable(route = MainScreen.route) {
-                            MainScreenContent(
-                                onSimpleListClick = { navController.navigateSingleTopTo(SimpleList.route) },
-                                onProgressBarClick = { navController.navigateSingleTopTo(ProgressBar.route) },
-                                onBottomNavClick = {
-                                    navController.navigateSingleTopTo(
-                                        BottomNavigation.route
-                                    )
-                                },
-                                onTodoClick = { navController.navigateSingleTopTo(TodoList.route) }
-                            )
-                        }
-                        composable(route = SimpleList.route) {
-                            val viewModel = hiltViewModel<MainViewModel>()
-                            SimpleListScreenContent(
-                                viewModel = viewModel,
-                                onDeleteItem = { viewModel.onDeleteItem(it) }
-                            )
-                        }
-                        composable(route = ProgressBar.route) {
-                            val viewModel = hiltViewModel<ProgressBarViewModel>()
-                            ProgressBarContent(
-                                viewModel = viewModel
-                            )
-                        }
-                        composable(route = BottomNavigation.route) {
-                            BottomNavigationScreen()
-                        }
-                        composable(route = TodoList.route) {
-                            val viewModel = hiltViewModel<TodoViewModel>()
-                            TodoListScreen(viewModel = viewModel, onNewTodoClicked = {
-                                navController.navigateSingleTopTo(TodoDetails.route)
-                            })
-                        }
-                        composable(route = TodoDetails.route) {
-                            val viewModel = hiltViewModel<TodoDetailsViewModel>()
-                            TodoDetailsScreen { titleText, descriptionText ->
-                                viewModel.insertTodo(
-                                    title = titleText,
-                                    description = descriptionText
-                                )
-                                navController.popBackStack()
-                            }
-                        }
+                        Navigation(navController)
                     }
                 }
             }
@@ -101,6 +61,56 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+fun NavGraphBuilder.Navigation(navController: NavHostController) {
+
+    composable(route = MainScreen.route) {
+        MainScreenContent(
+            onSimpleListClick = { navController.navigateSingleTopTo(SimpleList.route) },
+            onProgressBarClick = { navController.navigateSingleTopTo(ProgressBar.route) },
+            onBottomNavClick = {
+                navController.navigateSingleTopTo(
+                    BottomNavigation.route
+                )
+            },
+            onTodoClick = { navController.navigateSingleTopTo(TodoList.route) }
+        )
+    }
+    composable(route = SimpleList.route) {
+        val viewModel = hiltViewModel<MainViewModel>()
+        SimpleListScreenContent(
+            viewModel = viewModel,
+            onDeleteItem = { viewModel.onDeleteItem(it) }
+        )
+    }
+    composable(route = ProgressBar.route) {
+        val viewModel = hiltViewModel<ProgressBarViewModel>()
+        ProgressBarContent2(
+            viewModel = viewModel
+        )
+    }
+    composable(route = BottomNavigation.route) {
+        BottomNavigationScreen()
+    }
+    composable(route = TodoList.route) {
+        val viewModel = hiltViewModel<TodoViewModel>()
+        TodoListScreen(viewModel = viewModel, onNewTodoClicked = {
+            navController.navigateSingleTopTo(TodoDetails.route)
+        })
+    }
+    composable(route = TodoDetails.route) {
+        val viewModel = hiltViewModel<TodoDetailsViewModel>()
+        TodoDetailsScreen { titleText, descriptionText ->
+            viewModel.insertTodo(
+                title = titleText,
+                description = descriptionText
+            )
+            navController.popBackStack()
+        }
+    }
+    composable(route = Animation.route) {
+        AnimationContent()
+    }
+}
 
 fun NavHostController.navigateSingleTopTo(route: String) =
     this.navigate(route) { launchSingleTop = true }

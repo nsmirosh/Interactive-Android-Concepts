@@ -36,7 +36,7 @@ object SimpleListWithDeletion : MyAppDestinations {
     override val route = "simple_list_with_deletion"
 }
 object ProgressBar: MyAppDestinations {
-    override val route = "progres_bar"
+    override val route = "progress_bar"
 }
 object BottomNavigation: MyAppDestinations {
     override val route = "bottom_navigation"
@@ -46,4 +46,7 @@ object TodoList: MyAppDestinations {
 }
 object TodoDetails: MyAppDestinations {
     override val route = "todo_details"
+}
+object Animation: MyAppDestinations {
+    override val route = "animation"
 }

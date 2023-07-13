@@ -1,21 +1,15 @@
 package nick.mirosh.androidsamples.ui.side_effects
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -24,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
@@ -34,114 +27,74 @@ fun SideEffectsScreen() {
     MainLayout()
 }
 
-@Composable
-fun Timer(value: Int) {
-    val deciSeconds = value % 10
-    val seconds = value / 10
-    Text(
-        "$seconds,$deciSeconds",
-        style = MaterialTheme.typography.labelLarge
-    )
-}
 
+// [ ] Add an explanation for the timer
+// [ ] Add seconds for the timer
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainLayout() {
     Scaffold {
         val viewModel = hiltViewModel<SideEffectsViewModel>()
-        val result by viewModel.initialTimer.collectAsStateWithLifecycle()
-        var initialMessageSet by remember { mutableStateOf(false) }
-        if (!initialMessageSet) {
-            Content { message, time ->
-                viewModel.scheduleMessage(message, time)
-                initialMessageSet = true
+        val timerUpdate by viewModel.initialTimer.collectAsStateWithLifecycle()
+        var shouldShowSecondButton by remember { mutableStateOf(false) }
+        var isSecondMessageSet by remember { mutableStateOf(false) }
+        Column {
+            Content { message, isFirstMessageSet ->
+                shouldShowSecondButton = isFirstMessageSet
+                if (isFirstMessageSet)
+                    viewModel.scheduleMessage(message)
+                else
+                    viewModel.scheduleUpdate(message)
             }
-        } else {
 
-            Content { message, time ->
-                viewModel.scheduleUpdate(message, time)
-                initialMessageSet = true
+            if (shouldShowSecondButton) {
+                Button(
+                    onClick = {
+                        isSecondMessageSet = true
+                    },
+                ) {
+                    Text(text = "Schedule without rememberUpdatedState")
+                }
             }
+        }
+
+        if (isSecondMessageSet) {
+            val deciSeconds = timerUpdate % 10
+            val seconds = timerUpdate / 10
+            Text(
+                " $seconds,${deciSeconds}s",
+                fontSize = 32.sp,
+                modifier = Modifier
+                    .padding(16.dp)
+            )
         }
     }
 }
 
 @Composable
-fun Content(onMessageScheduled: (String, Int) -> Unit) {
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        val (title, up, down, text, startTimer, messageId) = createRefs()
+fun Content(
+    onMessageScheduled: (String, Boolean) -> Unit
+) {
+    Column {
+        var isFirstMessageSet by remember { mutableStateOf(false) }
         var message by remember { mutableStateOf("") }
-        var timeSet by remember { mutableIntStateOf(0) }
         Text(
-            "Schedule an initial message to send",
+            text = if (isFirstMessageSet) "Schedule an update to the message after 3 secs" else "Schedule message to be sent in 5 secs",
             modifier = Modifier
-                .constrainAs(title) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                },
         )
-        TextField(modifier = Modifier
-            .constrainAs(messageId) {
-                top.linkTo(title.bottom)
-                start.linkTo(parent.start)
-            },
+        TextField(modifier = Modifier,
             value = message,
             onValueChange = {
                 message = it
             }, label = {}
         )
-
-        val deciSeconds = timeSet % 10
-        val seconds = timeSet / 10
-        Text(
-            "$seconds,$deciSeconds",
-            fontSize = 32.sp,
-            modifier = Modifier
-                .constrainAs(text) {
-                    top.linkTo(messageId.bottom)
-                    start.linkTo(parent.start)
-                }
-                .padding(16.dp)
-        )
-        Button(onClick = {
-            timeSet += 10
-        },
-            modifier = Modifier.constrainAs(up) {
-                top.linkTo(text.top)
-                start.linkTo(text.end)
-            }
+        Button(
+            onClick = {
+                onMessageScheduled(message, true)
+                isFirstMessageSet = true
+            },
         ) {
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowUp,
-                contentDescription = "Navigation Icon"
-            )
-        }
-        Button(onClick = {
-            timeSet -= 10
-        },
-            modifier = Modifier.constrainAs(down) {
-                top.linkTo(up.bottom)
-                start.linkTo(text.end)
-            }
-        ) {
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowDown,
-                contentDescription = "Navigation Icon"
-            )
-        }
-        Button(onClick = {
-            onMessageScheduled(message, timeSet)
-        },
-            modifier = Modifier.constrainAs(startTimer) {
-                top.linkTo(down.bottom)
-                start.linkTo(text.start)
-            }
-        ) {
-            Text(text = "Schedule message")
+            Text(text = if (isFirstMessageSet) "Schedule with rememberUpdatedState" else "Schedule message")
         }
     }
 }

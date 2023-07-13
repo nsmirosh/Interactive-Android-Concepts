@@ -19,14 +19,12 @@ class SideEffectsViewModel : ViewModel() {
     private var newMessage = ""
     private var newMessageTimer = 0
 
-    fun scheduleMessage(message: String, delay: Int) {
-        _initialTimer.value = delay
+    fun scheduleMessage(message: String) {
         initialMessage = message
     }
 
-    fun scheduleUpdate(message: String, delay: Int) {
+    fun scheduleUpdate(message: String) {
         newMessage = message
-        newMessageTimer = delay
     }
 
     fun reset() {

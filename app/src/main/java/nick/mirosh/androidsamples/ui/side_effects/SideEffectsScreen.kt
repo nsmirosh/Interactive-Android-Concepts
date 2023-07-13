@@ -37,20 +37,22 @@ fun MainLayout() {
         val viewModel = hiltViewModel<SideEffectsViewModel>()
         val timerUpdate by viewModel.initialTimer.collectAsStateWithLifecycle()
         var shouldShowSecondButton by remember { mutableStateOf(false) }
-        var isSecondMessageSet by remember { mutableStateOf(false) }
+        var shouldShowTimer by remember { mutableStateOf(false) }
         Column {
-            Content { message, isFirstMessageSet ->
-                shouldShowSecondButton = isFirstMessageSet
+            Content { message, isFirstMessageSet, isSecondMessageSet ->
+                shouldShowSecondButton =
+                    isFirstMessageSet && !isSecondMessageSet
                 if (isFirstMessageSet)
                     viewModel.scheduleMessage(message)
-                else
+                else if (isSecondMessageSet)
                     viewModel.scheduleUpdate(message)
+                shouldShowTimer = isSecondMessageSet
             }
 
             if (shouldShowSecondButton) {
                 Button(
                     onClick = {
-                        isSecondMessageSet = true
+                        shouldShowTimer = true
                     },
                 ) {
                     Text(text = "Schedule without rememberUpdatedState")
@@ -58,7 +60,7 @@ fun MainLayout() {
             }
         }
 
-        if (isSecondMessageSet) {
+        if (shouldShowTimer) {
             val deciSeconds = timerUpdate % 10
             val seconds = timerUpdate / 10
             Text(
@@ -68,12 +70,14 @@ fun MainLayout() {
                     .padding(16.dp)
             )
         }
+        // [ ] Write a message "emitted initial lambda with message .... "
+        // [ ] Write a message "emitted an update lambda with message .... "
     }
 }
 
 @Composable
 fun Content(
-    onMessageScheduled: (String, Boolean) -> Unit
+    onMessageScheduled: (String, Boolean, Boolean) -> Unit
 ) {
     Column {
         var isFirstMessageSet by remember { mutableStateOf(false) }
@@ -90,8 +94,13 @@ fun Content(
         )
         Button(
             onClick = {
-                onMessageScheduled(message, true)
-                isFirstMessageSet = true
+                message = ""
+                if (isFirstMessageSet) {
+                    onMessageScheduled(message, true, true)
+                } else {
+                    onMessageScheduled(message, true, false)
+                    isFirstMessageSet = true
+                }
             },
         ) {
             Text(text = if (isFirstMessageSet) "Schedule with rememberUpdatedState" else "Schedule message")

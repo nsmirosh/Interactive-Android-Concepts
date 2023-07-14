@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 const val TAG = "SideEffectsViewModel"
+
 class SideEffectsViewModel : ViewModel() {
 
     private val _progressMessage = MutableStateFlow("")
@@ -41,7 +42,7 @@ class SideEffectsViewModel : ViewModel() {
     private fun start() {
         Log.d("SideEffectsViewModel", "start: ")
         _progressMessage.value =
-            "Message $initialMessage is scheduled to be displayed in 5 seconds "
+            "Message $initialMessage is scheduled"
         _messageToDisplay.value = { initialMessage }
         viewModelScope.launch {
             for (i in (messageDelay / 100).toInt() downTo 0) {

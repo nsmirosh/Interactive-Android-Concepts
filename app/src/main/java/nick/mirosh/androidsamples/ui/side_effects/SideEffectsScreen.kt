@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,15 +50,22 @@ fun MainLayout() {
                 Column(
                     modifier = Modifier
                         .align(
-                            androidx.compose.ui.Alignment.TopCenter
+                            TopCenter
                         )
                         .padding(16.dp)
                 ) {
                     val message by viewModel.messageToDisplay.collectAsStateWithLifecycle()
                     val timerUpdate by viewModel.timerValue.collectAsStateWithLifecycle()
+                    val progressMessage by viewModel.progressMessage.collectAsStateWithLifecycle()
                     Text(
                         timerUpdate,
                         fontSize = 48.sp,
+                        modifier = Modifier
+                            .padding(16.dp)
+                    )
+                    Text(
+                        progressMessage,
+                        fontSize = 24.sp,
                         modifier = Modifier
                             .padding(16.dp)
                     )

@@ -5,11 +5,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TextField
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,83 +30,107 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 
+const val messageDelay = 8000L
+
 @Composable
 fun SideEffectsScreen() {
     MainLayout()
 }
 
-
-// [ ] Add an explanation for the timer
-// [ ] Add seconds for the timer
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainLayout() {
     Scaffold {
         val viewModel = hiltViewModel<SideEffectsViewModel>()
-        val timerUpdate by viewModel.timerValue.collectAsStateWithLifecycle()
-        val message by viewModel.messageToDisplay.collectAsStateWithLifecycle()
         var shouldShowTimer by remember { mutableStateOf(false) }
-
-        if (shouldShowTimer) {
-            Box(modifier = Modifier.fillMaxSize()) {
+        var useRememberUpdatedState by remember { mutableStateOf(false) }
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (shouldShowTimer) {
                 Column(
                     modifier = Modifier
                         .align(
-                            androidx.compose.ui.Alignment.Center
+                            androidx.compose.ui.Alignment.TopCenter
                         )
+                        .padding(16.dp)
                 ) {
+                    val message by viewModel.messageToDisplay.collectAsStateWithLifecycle()
+                    val timerUpdate by viewModel.timerValue.collectAsStateWithLifecycle()
                     Text(
                         timerUpdate,
                         fontSize = 48.sp,
                         modifier = Modifier
                             .padding(16.dp)
                     )
-                    val context = LocalContext.current
-                    val check = true
-                    var actualTrueMessage: State<(() -> String)?>? = null
-                    if (check) {
-                        actualTrueMessage =  rememberUpdatedState(message)
-                    }
-                    LaunchedEffect(Unit) {
-                        delay(8000)
-                        Toast.makeText(
-                            context,
-                            actualTrueMessage?.value?.invoke(),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-        } else {
-            Column {
-                var secondPhase by remember { mutableStateOf(false) }
-                Content { message, isFirstMessageSet, isSecondMessageSet ->
-                    Log.d(
-                        "SideEffectsScreen",
-                        "MainLayout() called with: message = $message, isFirstMessageSet = $isFirstMessageSet, isSecondMessageSet = $isSecondMessageSet"
+                    ShowToast(
+                        useRememberUpdatedState = useRememberUpdatedState,
+                        message
                     )
-                    secondPhase =
-                        isFirstMessageSet && !isSecondMessageSet
-                    if (secondPhase)
-                        viewModel.scheduleMessage(message)
-                    else if (isSecondMessageSet)
-                        viewModel.scheduleUpdate(message)
-                    shouldShowTimer = isSecondMessageSet
                 }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .align(androidx.compose.ui.Alignment.TopCenter)
+                        .padding(16.dp)
+                ) {
+                    var secondPhase by remember { mutableStateOf(false) }
+                    Content { message, isFirstMessageSet, isSecondMessageSet ->
+                        Log.d(
+                            "SideEffectsScreen",
+                            "MainLayout() called with: message = $message, isFirstMessageSet = $isFirstMessageSet, isSecondMessageSet = $isSecondMessageSet"
+                        )
+                        secondPhase =
+                            isFirstMessageSet && !isSecondMessageSet
+                        if (secondPhase)
+                            viewModel.scheduleMessage(message)
+                        else if (isSecondMessageSet)
+                            viewModel.scheduleUpdate(message)
+                        shouldShowTimer = isSecondMessageSet
+                    }
 
-                if (secondPhase) {
-                    Button(
-                        onClick = {
-                            shouldShowTimer = true
-                        },
-                    ) {
-                        Text(text = "Schedule without rememberUpdatedState")
+                    if (secondPhase) {
+                        Row {
+                            Text(
+                                text = "Use rememberUpdatedState: ",
+                                modifier = Modifier.padding(16.dp)
+                            )
+                            Checkbox(
+                                checked = useRememberUpdatedState,
+                                onCheckedChange = {
+                                    useRememberUpdatedState = it
+                                })
+                        }
                     }
                 }
             }
         }
-        // [ ] Write a message "emitted initial lambda with message .... "
-        // [ ] Write a message "emitted an update lambda with message .... "
+    }
+}
+
+
+@Composable
+fun ShowToast(
+    useRememberUpdatedState: Boolean,
+    message: (() -> String)? = null
+) {
+
+    val context = LocalContext.current
+    var actualTrueMessage: State<(() -> String)?>? = null
+    if (useRememberUpdatedState) {
+        actualTrueMessage = rememberUpdatedState(message)
+        Log.d(
+            "SideEffectsScreen",
+            "MainLayout() called actualTrueMessage = $actualTrueMessage"
+        )
+    }
+    LaunchedEffect(Unit) {
+        Log.d("SideEffectsScreen", " Entered LaunchedEffect")
+        delay(messageDelay)
+        Toast.makeText(
+            context,
+            actualTrueMessage?.value?.invoke()
+                ?: message?.invoke(),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
 
@@ -116,7 +142,7 @@ fun Content(
         var isFirstMessageSet by remember { mutableStateOf(false) }
         var message by remember { mutableStateOf("") }
         Text(
-            text = if (isFirstMessageSet) "Schedule an update to the message after 3 secs" else "Schedule message to be sent in 5 secs",
+            text = if (isFirstMessageSet) "Schedule an update to the message after 5 secs" else "Schedule message to be sent in 8 secs",
             modifier = Modifier
         )
         TextField(modifier = Modifier,
@@ -136,7 +162,7 @@ fun Content(
                 message = ""
             },
         ) {
-            Text(text = if (isFirstMessageSet) "Schedule with rememberUpdatedState" else "Schedule message")
+            Text(text = "Schedule message")
         }
     }
 }
@@ -145,33 +171,4 @@ fun Content(
 @Composable
 fun MainLayoutPreview() {
     MainLayout()
-}
-
-@Composable
-fun SideEffectsNew(
-    onTimeout: () -> Unit
-) {
-    val currentOnTimeout by rememberUpdatedState(onTimeout)
-    LaunchedEffect(Unit)
-    {
-        delay(
-            500
-        )
-        currentOnTimeout()
-    }
-}
-
-
-@Composable
-fun SideEffectsIncorrect(
-    onTimeout: () -> Unit
-) {
-
-    LaunchedEffect(Unit)
-    {
-        delay(
-            500
-        )
-        onTimeout()
-    }
 }

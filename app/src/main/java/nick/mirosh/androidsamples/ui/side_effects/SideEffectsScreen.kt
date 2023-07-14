@@ -21,7 +21,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment.Companion.TopCenter
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,88 +48,97 @@ fun MainLayout() {
         var shouldShowTimer by remember { mutableStateOf(false) }
         var useRememberUpdatedState by remember { mutableStateOf(false) }
         Box(modifier = Modifier.fillMaxSize()) {
-            if (shouldShowTimer) {
-                Column(
-                    modifier = Modifier
-                        .align(
-                            TopCenter
-                        )
-                        .padding(16.dp)
-                ) {
-                    val message by viewModel.messageToDisplay.collectAsStateWithLifecycle()
-                    val timerUpdate by viewModel.timerValue.collectAsStateWithLifecycle()
-                    val progressMessage by viewModel.progressMessage.collectAsStateWithLifecycle()
-                    Text(
-                        timerUpdate,
-                        fontSize = 48.sp,
-                        modifier = Modifier
-                            .padding(16.dp)
-                    )
-                    Text(
-                        progressMessage,
-                        fontSize = 24.sp,
-                        modifier = Modifier
-                            .padding(16.dp)
-                    )
-                    ShowToast(
-                        useRememberUpdatedState = useRememberUpdatedState,
-                        message
-                    )
-                }
-            } else {
+            if (shouldShowTimer)
+                TimerUpdates(viewModel, useRememberUpdatedState)
+            else
                 Column(
                     modifier = Modifier
                         .align(androidx.compose.ui.Alignment.TopCenter)
                         .padding(16.dp)
                 ) {
-                    var secondPhase by remember { mutableStateOf(false) }
-                    Content { message, isFirstMessageSet, isSecondMessageSet ->
+                    var inSecondScreen by remember { mutableStateOf(false) }
+                    Input { message, isFirstMessageSet, isSecondMessageSet ->
                         Log.d(
                             "SideEffectsScreen",
                             "MainLayout() called with: message = $message, isFirstMessageSet = $isFirstMessageSet, isSecondMessageSet = $isSecondMessageSet"
                         )
-                        secondPhase =
+                        inSecondScreen =
                             isFirstMessageSet && !isSecondMessageSet
-                        if (secondPhase)
-                            viewModel.scheduleMessage(message)
-                        else if (isSecondMessageSet)
-                            viewModel.scheduleUpdate(message)
+                        if (inSecondScreen) viewModel.scheduleMessage(message)
+                        else if (isSecondMessageSet) viewModel.scheduleUpdate(
+                            message
+                        )
                         shouldShowTimer = isSecondMessageSet
                     }
 
-                    if (secondPhase) {
+                    if (inSecondScreen) {
                         Row {
                             Text(
-                                text = "Use rememberUpdatedState: ",
-                                modifier = Modifier.padding(16.dp)
+                                text = "Use rememberUpdatedState ",
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .align(CenterVertically)
+
                             )
-                            Checkbox(
-                                checked = useRememberUpdatedState,
+                            Checkbox(checked = useRememberUpdatedState,
+                                modifier = Modifier.align(CenterVertically),
                                 onCheckedChange = {
                                     useRememberUpdatedState = it
                                 })
                         }
                     }
                 }
-            }
+        }
+    }
+
+}
+
+@Composable
+fun TimerUpdates(
+    viewModel: SideEffectsViewModel,
+    useRememberUpdatedState: Boolean
+) {
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .align(
+                    Alignment.TopCenter
+                )
+                .padding(16.dp)
+        ) {
+            val message by viewModel.messageToDisplay.collectAsStateWithLifecycle()
+            val timerUpdate by viewModel.timerValue.collectAsStateWithLifecycle()
+            val progressMessage by viewModel.progressMessage.collectAsStateWithLifecycle()
+            Text(
+                timerUpdate,
+                fontSize = 48.sp,
+                modifier = Modifier.padding(16.dp)
+            )
+            Text(
+                progressMessage,
+                fontSize = 24.sp,
+                modifier = Modifier.padding(16.dp)
+            )
+            ShowToast(
+                useRememberUpdatedState = useRememberUpdatedState,
+                message
+            )
         }
     }
 }
 
-
 @Composable
 fun ShowToast(
-    useRememberUpdatedState: Boolean,
-    message: (() -> String)? = null
+    useRememberUpdatedState: Boolean, message: (() -> String)? = null
 ) {
-
     val context = LocalContext.current
     var actualTrueMessage: State<(() -> String)?>? = null
     if (useRememberUpdatedState) {
         actualTrueMessage = rememberUpdatedState(message)
         Log.d(
             "SideEffectsScreen",
-            "MainLayout() called actualTrueMessage = $actualTrueMessage"
+            "actualTrueMessage = $actualTrueMessage"
         )
     }
     LaunchedEffect(Unit) {
@@ -135,42 +146,51 @@ fun ShowToast(
         delay(messageDelay)
         Toast.makeText(
             context,
-            actualTrueMessage?.value?.invoke()
-                ?: message?.invoke(),
+            actualTrueMessage?.value?.invoke() ?: message?.invoke(),
             Toast.LENGTH_SHORT
         ).show()
     }
 }
 
+
 @Composable
-fun Content(
+fun Input(
     onMessageScheduled: (String, Boolean, Boolean) -> Unit
 ) {
     Column {
         var isFirstMessageSet by remember { mutableStateOf(false) }
         var message by remember { mutableStateOf("") }
         Text(
-            text = if (isFirstMessageSet) "Schedule an update to the message after 5 secs" else "Schedule message to be sent in 8 secs",
+            text = if (isFirstMessageSet) "Schedule an update to the message after 5 seconds"
+            else "Schedule message to be sent in 8 seconds",
             modifier = Modifier
+                .padding(16.dp)
+                .align(CenterHorizontally)
         )
-        TextField(modifier = Modifier,
+        TextField(modifier = Modifier
+            .padding(16.dp)
+            .align(CenterHorizontally),
             value = message,
             onValueChange = {
                 message = it
-            }, label = {}
-        )
+            },
+            label = {})
         Button(
+            modifier = Modifier
+                .align(CenterHorizontally)
+                .padding(16.dp),
             onClick = {
                 if (isFirstMessageSet) {
                     onMessageScheduled(message, true, true)
-                } else {
+                }
+                else {
                     onMessageScheduled(message, true, false)
                     isFirstMessageSet = true
                 }
                 message = ""
             },
         ) {
-            Text(text = "Schedule message")
+            Text(text = "Schedule message", fontSize = 24.sp)
         }
     }
 }

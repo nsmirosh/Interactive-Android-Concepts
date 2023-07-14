@@ -104,20 +104,27 @@ fun Content(isAnimationRunning: Boolean) {
             modifier = Modifier.fillMaxSize()
         ) {
             // Draw the circle with the animated x-coordinate
-            drawCircle(
-                radius = 25f,
+            //drawCircle(
+            //    radius = 25f,
+            //    color = Color.Red,
+            //    center = Offset(animatedX, size.height / 2 + 15)
+            //)
+            //draw a 50 by 50 pixel red rectangle
+
+            drawRect(
                 color = Color.Red,
-                center = Offset(animatedX, size.height / 2 + 15)
+                topLeft = Offset(animatedX, size.height / 2),
+                size = size.copy(width = 50f, height = 50f)
             )
-            drawCircle(
-                radius = 25f,
+            //drawCircle(
+            //    radius = 25f,
+            //    color = Color.Red,
+            //    center = Offset(animatedX2, size.height / 2 + 15)
+            //)
+            drawRect(
                 color = Color.Red,
-                center = Offset(animatedX2, size.height / 2 + 15)
-            )
-            drawCircle(
-                radius = 25f,
-                color = Color.Red,
-                center = Offset(animatedX2, size.height / 2 + 15)
+                topLeft = Offset(animatedX2, size.height / 2),
+                size = size.copy(width = 50f, height = 50f)
             )
             drawArc(
                 color = Color.Red,

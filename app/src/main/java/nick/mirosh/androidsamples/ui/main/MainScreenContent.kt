@@ -14,7 +14,9 @@ fun MainScreenContent(
     onSimpleListClick: () -> Unit,
     onProgressBarClick: () -> Unit,
     onBottomNavClick: () -> Unit,
-    onTodoClick: () -> Unit
+    onTodoClick: () -> Unit,
+    onAnimationClick: () -> Unit,
+
 ) {
     Column {
         Text(
@@ -46,6 +48,14 @@ fun MainScreenContent(
             modifier = Modifier
                 .clickable {
                     onTodoClick()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "Animation",
+            modifier = Modifier
+                .clickable {
+                    onAnimationClick()
                 }
                 .padding(24.dp)
         )

@@ -44,7 +44,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
                 val navController = rememberNavController()
-
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
@@ -53,7 +52,7 @@ class MainActivity : ComponentActivity() {
                         startDestination = MainScreen.route,
                         modifier = Modifier
                     ) {
-                        Navigation(navController)
+                        setUpNavigation(navController)
                     }
                 }
             }
@@ -61,7 +60,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun NavGraphBuilder.Navigation(navController: NavHostController) {
+fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
 
     composable(route = MainScreen.route) {
         MainScreenContent(
@@ -72,7 +71,8 @@ fun NavGraphBuilder.Navigation(navController: NavHostController) {
                     BottomNavigation.route
                 )
             },
-            onTodoClick = { navController.navigateSingleTopTo(TodoList.route) }
+            onTodoClick = { navController.navigateSingleTopTo(TodoList.route) },
+            onAnimationClick = { navController.navigateSingleTopTo(Animation.route) }
         )
     }
     composable(route = SimpleList.route) {

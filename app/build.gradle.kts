@@ -24,7 +24,11 @@ android {
     buildFeatures.buildConfig = true
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"https://pokeapi.co/api/v2/\"")
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"https://pokeapi.co/api/v2/\""
+            )
         }
         release {
             isMinifyEnabled = false
@@ -108,6 +112,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
 
 }
 kapt {

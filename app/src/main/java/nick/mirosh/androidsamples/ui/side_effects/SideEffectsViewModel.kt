@@ -1,6 +1,5 @@
 package nick.mirosh.androidsamples.ui.side_effects
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -25,12 +24,12 @@ class SideEffectsViewModel : ViewModel() {
     private var newMessage = ""
 
     fun scheduleMessage(message: String) {
-        Log.d(TAG, "scheduleMessage() called with: message = $message")
+//        Log.d(TAG, "scheduleMessage() called with: message = $message")
         initialMessage = message
     }
 
     fun scheduleUpdate(message: String) {
-        Log.d(TAG, "scheduleUpdate() called with: message = $message")
+//        log.d(tag, "scheduleupdate() called with: message = $message")
         newMessage = message
         start()
     }
@@ -40,7 +39,7 @@ class SideEffectsViewModel : ViewModel() {
     }
 
     private fun start() {
-        Log.d("SideEffectsViewModel", "start: ")
+//        Log.d("SideEffectsViewModel", "start: ")
         _progressMessage.value =
             "Message $initialMessage is scheduled"
         _messageToDisplay.value = { initialMessage }
@@ -48,9 +47,9 @@ class SideEffectsViewModel : ViewModel() {
             for (i in (MESSAGE_DELAY / 100).toInt() downTo 0) {
                 _timerValue.value = " ${i / 10},${i % 10}s"
                 if (i == 50) {
-                    Log.d("SideEffectsViewModel", "updating message")
+//                    Log.d("SideEffectsViewModel", "updating message")
                     _progressMessage.value =
-                        "Updating initial message with new message -  $newMessage "
+                        "Updating initial message with new message -  $newMessage"
                     _messageToDisplay.value = { newMessage }
                 }
                 delay(100)

@@ -45,7 +45,7 @@ class SideEffectsViewModel : ViewModel() {
             "Message $initialMessage is scheduled"
         _messageToDisplay.value = { initialMessage }
         viewModelScope.launch {
-            for (i in (messageDelay / 100).toInt() downTo 0) {
+            for (i in (MESSAGE_DELAY / 100).toInt() downTo 0) {
                 _timerValue.value = " ${i / 10},${i % 10}s"
                 if (i == 50) {
                     Log.d("SideEffectsViewModel", "updating message")

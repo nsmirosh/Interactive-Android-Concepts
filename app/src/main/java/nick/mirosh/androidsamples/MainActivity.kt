@@ -17,7 +17,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import nick.mirosh.androidsamples.ui.*
+import nick.mirosh.androidsamples.ui.BottomNavigation
+import nick.mirosh.androidsamples.ui.MainScreen
+import nick.mirosh.androidsamples.ui.ProgressBar
+import nick.mirosh.androidsamples.ui.SideEffects
+import nick.mirosh.androidsamples.ui.SimpleList
+import nick.mirosh.androidsamples.ui.TodoDetails
+import nick.mirosh.androidsamples.ui.TodoList
 import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
@@ -37,7 +43,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
                 val navController = rememberNavController()
-
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {

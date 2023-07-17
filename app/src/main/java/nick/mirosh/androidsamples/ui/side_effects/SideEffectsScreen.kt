@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,8 +34,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 
-const val messageDelay = 8000L
-
+const val MESSAGE_DELAY = 8000L
+const val MESSAGE_INPUT_TAG = "message_input"
+const val TIMER_UPDATE_TAG = "timer_update"
+const val CHECKBOX_TAG = "checkbox"
 @Composable
 fun SideEffectsScreen() {
     MainLayout()
@@ -81,7 +84,7 @@ fun MainLayout() {
 
                             )
                             Checkbox(checked = useRememberUpdatedState,
-                                modifier = Modifier.align(CenterVertically),
+                                modifier = Modifier.align(CenterVertically).testTag(CHECKBOX_TAG),
                                 onCheckedChange = {
                                     useRememberUpdatedState = it
                                 })
@@ -113,7 +116,9 @@ fun TimerUpdates(
             Text(
                 timerUpdate,
                 fontSize = 48.sp,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .padding(16.dp)
+                    .testTag(TIMER_UPDATE_TAG)
             )
             Text(
                 progressMessage,
@@ -143,7 +148,7 @@ fun ShowToast(
     }
     LaunchedEffect(Unit) {
         Log.d("SideEffectsScreen", " Entered LaunchedEffect")
-        delay(messageDelay)
+        delay(MESSAGE_DELAY)
         Toast.makeText(
             context,
             actualTrueMessage?.value?.invoke() ?: message?.invoke(),
@@ -169,7 +174,8 @@ fun Input(
         )
         TextField(modifier = Modifier
             .padding(16.dp)
-            .align(CenterHorizontally),
+            .align(CenterHorizontally)
+            .testTag(MESSAGE_INPUT_TAG),
             value = message,
             onValueChange = {
                 message = it

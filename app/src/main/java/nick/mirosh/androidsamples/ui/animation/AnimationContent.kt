@@ -188,14 +188,24 @@ fun AnimatedCircle() {
 fun HalfCircleMotion() {
     val infiniteTransition = rememberInfiniteTransition()
     val angle by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
+        initialValue = 360f,
+        targetValue = 0f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 2000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         )
     )
+    var lastXPosition by remember { mutableStateOf(0f)}
+    var lastYPosition by remember { mutableStateOf(0f)}
 
+//    val animation = animateFloatAsState(
+//        targetValue = 0f,
+//        animationSpec = infiniteRepeatable(
+//            animation = tween(durationMillis = 2000, easing = LinearEasing),
+//            repeatMode = RepeatMode.Restart
+//        )
+//    )
+//
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color.White
@@ -206,13 +216,20 @@ fun HalfCircleMotion() {
             val angleRad = Math.toRadians(angle.toDouble())
             val x = center.x + radius * cos(angleRad)
             val y = center.y - radius * sin(angleRad)
-
             if (angle in 180f..360f) {
                 drawCircle(
                     Color.Red,
-                    50.dp.toPx(),
+                    50f,
                     center = center.copy(x = x.toFloat(), y = y.toFloat()),
-                    style = Stroke(2.dp.toPx())
+                )
+                lastXPosition = x.toFloat()
+                lastYPosition = y.toFloat()
+            }
+            else {
+                drawCircle(
+                    Color.Red,
+                    50f,
+                    center = center.copy(x = lastXPosition, y = lastYPosition),
                 )
             }
         }

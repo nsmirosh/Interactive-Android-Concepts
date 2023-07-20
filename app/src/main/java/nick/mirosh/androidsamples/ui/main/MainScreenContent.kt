@@ -15,7 +15,7 @@ fun MainScreenContent(
     onProgressBarClick: () -> Unit,
     onBottomNavClick: () -> Unit,
     onTodoClick: () -> Unit,
-   onSideEffectsClicked: () -> Unit
+    onSideEffectsClicked: () -> Unit
 ) {
     Column {
         Text(

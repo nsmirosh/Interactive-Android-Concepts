@@ -3,6 +3,7 @@
 This is a collection of various code samples of Android that I want to try out.
 
 ## Side Effects
+### `LaunchedEffect` and `rememberUpdatedState()` usage
 
 Contains the demonstration of usage of `LaunchedEffect` and `rememberUpdatedState` in Jetpack
 Compose.

@@ -1,4 +1,4 @@
-package nick.mirosh.androidsamples.ui.side_effects
+package com.example.androidcomposeexample.ui.sideeffects.launchedeffect
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-const val TAG = "SideEffectsViewModel"
+const val UPDATE_DELAY_IN_DECISECONDS = 50
 
 class SideEffectsViewModel : ViewModel() {
 
@@ -24,30 +24,27 @@ class SideEffectsViewModel : ViewModel() {
     private var newMessage = ""
 
     fun scheduleMessage(message: String) {
-//        Log.d(TAG, "scheduleMessage() called with: message = $message")
         initialMessage = message
     }
 
     fun scheduleUpdate(message: String) {
-//        log.d(tag, "scheduleupdate() called with: message = $message")
         newMessage = message
-        start()
+        startTimerAndUpdates()
     }
 
-    fun reset() {
-        _timerValue.value = "0"
-    }
-
-    private fun start() {
-//        Log.d("SideEffectsViewModel", "start: ")
+   /*
+   In this function we're scheduling our initial message and an update message.
+   We're also starting a timer that will count down from 8 seconds to 0 every decisecond.
+   After UPDATE_DELAY_IN_DECISECONDS we're updating the message to display the new message.
+     */
+    private fun startTimerAndUpdates() {
         _progressMessage.value =
             "Message $initialMessage is scheduled"
         _messageToDisplay.value = { initialMessage }
         viewModelScope.launch {
             for (i in (MESSAGE_DELAY / 100).toInt() downTo 0) {
                 _timerValue.value = " ${i / 10},${i % 10}s"
-                if (i == 50) {
-//                    Log.d("SideEffectsViewModel", "updating message")
+                if (i == UPDATE_DELAY_IN_DECISECONDS) {
                     _progressMessage.value =
                         "Updating initial message with new message -  $newMessage"
                     _messageToDisplay.value = { newMessage }

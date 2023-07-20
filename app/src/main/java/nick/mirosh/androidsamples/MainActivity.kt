@@ -16,6 +16,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.androidcomposeexample.ui.sideeffects.launchedeffect.LaunchedEffectScreen
 import dagger.hilt.android.AndroidEntryPoint
 import nick.mirosh.androidsamples.ui.BottomNavigation
 import nick.mirosh.androidsamples.ui.MainScreen
@@ -30,7 +31,6 @@ import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
 import nick.mirosh.androidsamples.ui.progress.ProgressBarContent
 import nick.mirosh.androidsamples.ui.progress.ProgressBarViewModel
-import nick.mirosh.androidsamples.ui.side_effects.SideEffectsScreen
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 import nick.mirosh.androidsamples.ui.todo.TodoViewModel
 import nick.mirosh.androidsamples.ui.todo.details.TodoDetailsScreen
@@ -44,7 +44,8 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 val navController = rememberNavController()
                 Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     NavHost(
                         navController = navController,
@@ -53,14 +54,26 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(route = MainScreen.route) {
                             MainScreenContent(
-                                onSimpleListClick = { navController.navigateSingleTopTo(SimpleList.route) },
-                                onProgressBarClick = { navController.navigateSingleTopTo(ProgressBar.route) },
+                                onSimpleListClick = {
+                                    navController.navigateSingleTopTo(
+                                        SimpleList.route
+                                    )
+                                },
+                                onProgressBarClick = {
+                                    navController.navigateSingleTopTo(
+                                        ProgressBar.route
+                                    )
+                                },
                                 onBottomNavClick = {
                                     navController.navigateSingleTopTo(
                                         BottomNavigation.route
                                     )
                                 },
-                                onTodoClick = { navController.navigateSingleTopTo(TodoList.route) },
+                                onTodoClick = {
+                                    navController.navigateSingleTopTo(
+                                        TodoList.route
+                                    )
+                                },
                                 onSideEffectsClicked = {
                                     navController.navigateSingleTopTo(
                                         SideEffects.route
@@ -76,7 +89,8 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(route = ProgressBar.route) {
-                            val viewModel = hiltViewModel<ProgressBarViewModel>()
+                            val viewModel =
+                                hiltViewModel<ProgressBarViewModel>()
                             ProgressBarContent(
                                 viewModel = viewModel
                             )
@@ -86,12 +100,17 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = TodoList.route) {
                             val viewModel = hiltViewModel<TodoViewModel>()
-                            TodoListScreen(viewModel = viewModel, onNewTodoClicked = {
-                                navController.navigateSingleTopTo(TodoDetails.route)
-                            })
+                            TodoListScreen(
+                                viewModel = viewModel,
+                                onNewTodoClicked = {
+                                    navController.navigateSingleTopTo(
+                                        TodoDetails.route
+                                    )
+                                })
                         }
                         composable(route = TodoDetails.route) {
-                            val viewModel = hiltViewModel<TodoDetailsViewModel>()
+                            val viewModel =
+                                hiltViewModel<TodoDetailsViewModel>()
                             TodoDetailsScreen { titleText, descriptionText ->
                                 viewModel.insertTodo(
                                     title = titleText,
@@ -101,7 +120,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         composable(route = SideEffects.route) {
-                            SideEffectsScreen()
+                            LaunchedEffectScreen()
                         }
                     }
                 }

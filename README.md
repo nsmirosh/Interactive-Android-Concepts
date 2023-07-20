@@ -8,4 +8,4 @@ Contains the demonstration of usage of `LaunchedEffect` and `rememberUpdatedStat
 Compose.
 Detailed description of the functionality is inside `LaunchedEffectScreen.kt` file. 
 
-![pr_launchedeffect](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/a402ea75-99fb-4283-9b55-c9fc6656e4b1)
+![Screen_recording_20230720_224107 (3)](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/33007064-06b6-45ee-ba3b-a465f09c91d8)

@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material3.Button
@@ -44,6 +45,7 @@ const val TAG = "AnimationContent"
 @Composable
 fun AnimationContent() {
     var isAnimationRunning by remember { mutableStateOf(false) }
+   val state = rememberLazyListState()
     Column {
 
         Content(isAnimationRunning)
@@ -51,6 +53,7 @@ fun AnimationContent() {
             modifier = Modifier.padding(top = 16.dp),
             onClick = {
                 isAnimationRunning = true
+                state.scrollToItem()
             }) {
 
             Row(

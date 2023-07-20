@@ -30,6 +30,10 @@ List screen
 - use this for reference - https://dribbble.com/shots/14848933-Rengse-To-Do-List-App-Design/attachments/6558496?mode=media
 [ ] - add the ability to change the name of the task while it's in the list
 
+
+Apply State holders as a new solution for holding state
+[ ] - watch the video - https://www.youtube.com/watch?v=pCX9wvu-Bq0&ab_channel=AndroidDevelopers
+
 Bottom navigation screen
 [ ] - Add bottom navigation via icons to switch between list and favorites
 [ ] - Change icon colors on unselection

@@ -4,10 +4,10 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import nick.mirosh.androidsamples.ui.side_effects.CHECKBOX_TAG
-import nick.mirosh.androidsamples.ui.side_effects.MESSAGE_INPUT_TAG
-import nick.mirosh.androidsamples.ui.side_effects.SideEffectsScreen
-import nick.mirosh.androidsamples.ui.side_effects.TIMER_UPDATE_TAG
+import com.example.androidcomposeexample.ui.sideeffects.launchedeffect.CHECKBOX_TAG
+import com.example.androidcomposeexample.ui.sideeffects.launchedeffect.LaunchedEffectScreen
+import com.example.androidcomposeexample.ui.sideeffects.launchedeffect.MESSAGE_INPUT_TAG
+import com.example.androidcomposeexample.ui.sideeffects.launchedeffect.TIMER_UPDATE_TAG
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 import org.junit.Rule
 import org.junit.Test
@@ -22,7 +22,7 @@ class SideEffectsScreenTest {
         // Start the app
         composeTestRule.setContent {
             MyApplicationTheme {
-                SideEffectsScreen()
+                LaunchedEffectScreen()
             }
         }
         composeTestRule.onNodeWithTag(MESSAGE_INPUT_TAG)
@@ -39,7 +39,7 @@ class SideEffectsScreenTest {
         // Start the app
         composeTestRule.setContent {
             MyApplicationTheme {
-                SideEffectsScreen()
+                LaunchedEffectScreen()
             }
         }
         composeTestRule.onNodeWithTag(MESSAGE_INPUT_TAG)

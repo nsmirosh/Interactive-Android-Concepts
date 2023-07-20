@@ -17,11 +17,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.androidcomposeexample.ui.sideeffects.launchedeffect.LaunchedEffectScreen
 import dagger.hilt.android.AndroidEntryPoint
 import nick.mirosh.androidsamples.ui.Animation
 import nick.mirosh.androidsamples.ui.BottomNavigation
 import nick.mirosh.androidsamples.ui.MainScreen
 import nick.mirosh.androidsamples.ui.ProgressBar
+import nick.mirosh.androidsamples.ui.SideEffects
 import nick.mirosh.androidsamples.ui.SimpleList
 import nick.mirosh.androidsamples.ui.TodoDetails
 import nick.mirosh.androidsamples.ui.TodoList
@@ -30,7 +32,7 @@ import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
-import nick.mirosh.androidsamples.ui.progress.ProgressBarContent2
+import nick.mirosh.androidsamples.ui.progress.ProgressBarContent
 import nick.mirosh.androidsamples.ui.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 import nick.mirosh.androidsamples.ui.todo.TodoViewModel
@@ -45,7 +47,8 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 val navController = rememberNavController()
                 Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     NavHost(
                         navController = navController,
@@ -72,6 +75,12 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
                 )
             },
             onTodoClick = { navController.navigateSingleTopTo(TodoList.route) },
+            onSideEffectsClicked = {
+                navController.navigateSingleTopTo(
+                    SideEffects.route
+                )
+            },
+
             onAnimationClick = { navController.navigateSingleTopTo(Animation.route) }
         )
     }
@@ -113,7 +122,11 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
 //        AnimatedCircle()
         HalfCircleMotion()
     }
+    composable(route = SideEffects.route) {
+        LaunchedEffectScreen()
+    }
 }
+
 
 fun NavHostController.navigateSingleTopTo(route: String) =
     this.navigate(route) { launchSingleTop = true }

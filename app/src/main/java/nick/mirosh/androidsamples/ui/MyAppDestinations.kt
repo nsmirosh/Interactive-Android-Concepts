@@ -50,3 +50,6 @@ object TodoDetails: MyAppDestinations {
 object Animation: MyAppDestinations {
     override val route = "animation"
 }
+object SideEffects: MyAppDestinations {
+    override val route = "side_effects"
+}

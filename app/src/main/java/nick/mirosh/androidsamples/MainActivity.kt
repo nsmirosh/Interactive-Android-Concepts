@@ -32,7 +32,7 @@ import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
-import nick.mirosh.androidsamples.ui.progress.ProgressBarContent
+import nick.mirosh.androidsamples.ui.progress.ProgressBarContent2
 import nick.mirosh.androidsamples.ui.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 import nick.mirosh.androidsamples.ui.todo.TodoViewModel

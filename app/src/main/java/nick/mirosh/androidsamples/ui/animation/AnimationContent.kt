@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -138,7 +139,7 @@ fun Content(isAnimationRunning: Boolean) {
                 startAngle = startAngleRadians,
                 sweepAngle = endAngleRadians,
                 useCenter = false,
-                style = Stroke(width = 50f)
+                style = Stroke(width = 50f, cap = StrokeCap.Round)
             )
         }
     }

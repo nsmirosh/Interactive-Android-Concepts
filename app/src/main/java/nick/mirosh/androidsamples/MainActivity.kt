@@ -27,7 +27,7 @@ import nick.mirosh.androidsamples.ui.SideEffects
 import nick.mirosh.androidsamples.ui.SimpleList
 import nick.mirosh.androidsamples.ui.TodoDetails
 import nick.mirosh.androidsamples.ui.TodoList
-import nick.mirosh.androidsamples.ui.animation.HalfCircleMotion
+import nick.mirosh.androidsamples.ui.animation.AnimationContent
 import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
@@ -118,9 +118,9 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
         }
     }
     composable(route = Animation.route) {
-//        AnimationContent()
+        AnimationContent()
 //        AnimatedCircle()
-        HalfCircleMotion()
+//        HalfCircleMotion()
     }
     composable(route = SideEffects.route) {
         LaunchedEffectScreen()

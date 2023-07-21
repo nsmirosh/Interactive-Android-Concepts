@@ -16,19 +16,13 @@
 
 package nick.mirosh.androidsamples.ui
 
-/**
- * Contract for information needed on every Rally navigation destination
- */
 interface MyAppDestinations {
     val route: String
 }
-
 object MainScreen: MyAppDestinations {
     override val route = "main_screen"
 }
-/**
- * Rally app navigation destinations
- */
+
 object SimpleList : MyAppDestinations {
     override val route = "simple_list"
 }
@@ -52,4 +46,8 @@ object Animation: MyAppDestinations {
 }
 object SideEffects: MyAppDestinations {
     override val route = "side_effects"
+}
+
+object Recomposition: MyAppDestinations {
+    override val route = "recomposition"
 }

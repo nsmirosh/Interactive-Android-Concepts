@@ -16,7 +16,9 @@ fun MainScreenContent(
     onBottomNavClick: () -> Unit,
     onTodoClick: () -> Unit,
     onAnimationClick: () -> Unit,
-    onSideEffectsClicked: () -> Unit
+    onSideEffectsClicked: () -> Unit,
+    onRecompositionClicked: () -> Unit
+
 ) {
     Column {
         Text(
@@ -64,6 +66,14 @@ fun MainScreenContent(
             modifier = Modifier
                 .clickable {
                     onSideEffectsClicked()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "Recomposition",
+            modifier = Modifier
+                .clickable {
+                    onRecompositionClicked()
                 }
                 .padding(24.dp)
         )

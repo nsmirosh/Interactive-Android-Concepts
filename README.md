@@ -16,3 +16,5 @@ Detailed description of the functionality is inside `LaunchedEffectScreen.kt` fi
 
 I decided to build a cool progress animation using `Canvas`. The animation is located in the main menu under "Animation" section.
 The idea and the design belong completely to UX flame - https://www.youtube.com/watch?v=LbktxnviLKI&ab_channel=UXFLAME.
+
+![circle_loading](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/a44115bc-9d96-4e7a-b290-5b7d392ebea2)

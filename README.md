@@ -14,5 +14,5 @@ Detailed description of the functionality is inside `LaunchedEffectScreen.kt` fi
 ## Progress Animation 
 ### Usage of `Canvas` in order to build an animation 
 
-I decided to build a cool progress animation using `Canvas`. 
+I decided to build a cool progress animation using `Canvas`. The animation is located in the main menu under "Animation" section.
 The idea and the design belong completely to UX flame - https://www.youtube.com/watch?v=LbktxnviLKI&ab_channel=UXFLAME.

@@ -17,7 +17,8 @@ fun MainScreenContent(
     onTodoClick: () -> Unit,
     onAnimationClick: () -> Unit,
     onSideEffectsClicked: () -> Unit,
-    onRecompositionClicked: () -> Unit
+    onRecompositionClicked: () -> Unit,
+    onParallaxScreenClicked: () -> Unit,
 
 ) {
     Column {
@@ -74,6 +75,14 @@ fun MainScreenContent(
             modifier = Modifier
                 .clickable {
                     onRecompositionClicked()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "Parallax",
+            modifier = Modifier
+                .clickable {
+                    onParallaxScreenClicked()
                 }
                 .padding(24.dp)
         )

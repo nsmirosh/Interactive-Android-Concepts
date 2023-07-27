@@ -47,7 +47,9 @@ object Animation: MyAppDestinations {
 object SideEffects: MyAppDestinations {
     override val route = "side_effects"
 }
-
 object Recomposition: MyAppDestinations {
     override val route = "recomposition"
+}
+object Parallax: MyAppDestinations {
+    override val route = "parallax"
 }

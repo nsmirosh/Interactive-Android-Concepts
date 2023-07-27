@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import nick.mirosh.androidsamples.ui.Animation
 import nick.mirosh.androidsamples.ui.BottomNavigation
 import nick.mirosh.androidsamples.ui.MainScreen
+import nick.mirosh.androidsamples.ui.Parallax
 import nick.mirosh.androidsamples.ui.ProgressBar
 import nick.mirosh.androidsamples.ui.Recomposition
 import nick.mirosh.androidsamples.ui.SideEffects
@@ -33,6 +34,7 @@ import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
+import nick.mirosh.androidsamples.ui.parallax.ParallaxScreen
 import nick.mirosh.androidsamples.ui.progress.ProgressBarContent2
 import nick.mirosh.androidsamples.ui.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.recomposition.RecompositionLobbyScreen
@@ -88,6 +90,11 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
                 navController.navigateSingleTopTo(
                     Recomposition.route
                 )
+            },
+            onParallaxScreenClicked = {
+                navController.navigateSingleTopTo(
+                    Parallax.route
+                )
             }
         )
     }
@@ -132,6 +139,9 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     }
     composable(route = Recomposition.route) {
         RecompositionLobbyScreen()
+    }
+    composable(route = Parallax.route) {
+        ParallaxScreen()
     }
 }
 

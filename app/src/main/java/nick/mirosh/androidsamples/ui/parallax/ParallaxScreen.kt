@@ -1,5 +1,7 @@
 package nick.mirosh.androidsamples.ui.parallax
 
+import android.R.attr.bitmap
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -47,51 +49,48 @@ private const val TAG = "ParallaxScreen"
 // picture scroll = rest of the height of the picture / rest of the scroll left in the column
 // rest of the height of the picture =  pictureHeight - heighOfTheCardInPixels
 // rest of the scroll left in the column = screenHeight - card height * no of items in the column
+
+
+const val PICTURE_HEIGHT = 2280
+var screenWidthPx = 0
+var screenHeightPx = 0
+
 @Composable
 fun ParallaxScreen() {
     var bitmap by remember {
         mutableStateOf<Bitmap?>(null)
     }
     val resources = LocalContext.current.resources
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current.density
 
     LaunchedEffect(Unit) {
-        bitmap = decodeBitmap(resources)
+        initScreenWidthAndHeight(configuration, density)
+        decodeBitmap(resources)?.let {
+            bitmap = Bitmap.createScaledBitmap(
+                it,
+                screenWidthPx,
+                screenHeightPx,
+                true
+            )
+        }
     }
     bitmap?.let { ScrollableColumn(it) }
 }
-
 
 @Composable
 fun ScrollableColumn(bitmap: Bitmap) {
     val columnScrollState = rememberScrollState()
     val cardHeight = with(LocalDensity.current) { 200.dp.roundToPx() }
+    Log.d(TAG, "ScrollableColumn: cardHeight $cardHeight")
 
-    val configuration = LocalConfiguration.current
-    val screenHeightDp = configuration.screenHeightDp
-    val density = LocalDensity.current.density
-    val screenHeightPx = screenHeightDp * density
-
-    val initialUnscrolledPartOfThePicture = 1920 - cardHeight
-    Log.d(
-        TAG,
-        "ScrollableColumn: unscrolledPartOfThePicture $initialUnscrolledPartOfThePicture"
-    )
-    val noOfItems = 7
+    val initialUnscrolledPartOfThePicture = PICTURE_HEIGHT - cardHeight
+    val noOfItems = 4
     val initialScrollLeftInColumn = abs(screenHeightPx - cardHeight * noOfItems)
 
-    Log.d(
-        TAG,
-        "ScrollableColumn: scrollLeftInColumn $initialScrollLeftInColumn"
-    )
     val pictureYMovementRatioPx =
         initialUnscrolledPartOfThePicture / initialScrollLeftInColumn
-    Log.d(TAG, "ScrollableColumn: yMovementRatio $pictureYMovementRatioPx")
 
-    val amountOfPixelsPictureShouldBeScrolledBy = screenHeightPx / cardHeight
-    Log.d(
-        TAG,
-        "ScrollableColumn: item $amountOfPixelsPictureShouldBeScrolledBy"
-    )
     var prevScrollValue by remember { mutableIntStateOf(0) }
     val columnScrollFromTopInPx =
         columnScrollState.value
@@ -105,34 +104,20 @@ fun ScrollableColumn(bitmap: Bitmap) {
             .fillMaxWidth()
             .verticalScroll(columnScrollState),
     ) {
-        InvertedCard(
-            originalBitmap = bitmap,
-            cardHeight = cardHeight,
-            totalColumnScrollFromTop = columnScrollFromTopInPx,
-            yMovementRatioPx = pictureYMovementRatioPx
-        )
-        RenderingCard(
-            originalBitmap = bitmap,
-            cardHeight = cardHeight,
-            totalColumnScrollFromTop = columnScrollFromTopInPx
-        )
-        InvertedCard(
-            originalBitmap = bitmap,
-            cardHeight = cardHeight,
-            totalColumnScrollFromTop = columnScrollFromTopInPx,
-            yMovementRatioPx = pictureYMovementRatioPx
-        )
-        RenderingCard(
-            originalBitmap = bitmap,
-            cardHeight = cardHeight,
-            totalColumnScrollFromTop = columnScrollFromTopInPx
-        )
-        InvertedCard(
-            originalBitmap = bitmap,
-            cardHeight = cardHeight,
-            totalColumnScrollFromTop = columnScrollFromTopInPx,
-            yMovementRatioPx = pictureYMovementRatioPx
-        )
+        repeat(noOfItems) {
+            if (it % 2 == 0)
+                RenderingCard(
+                    originalBitmap = bitmap,
+                    cardHeight = cardHeight,
+                    totalColumnScrollFromTop = columnScrollFromTopInPx
+                )
+            else
+                InvertedCard(
+                    originalBitmap = bitmap,
+                    cardHeight = cardHeight,
+                    totalColumnScrollFromTop = columnScrollFromTopInPx
+                )
+        }
     }
 }
 
@@ -166,14 +151,12 @@ fun RenderingCard(
             modifier = Modifier.fillMaxSize()
         ) {
             drawIntoCanvas { canvas ->
-                val width = originalBitmap.width
-                Log.d(TAG, "GetEverythingByPixels: $width")
                 val newBitmap =
                     Bitmap.createBitmap(
                         originalBitmap,
                         0,
-                        (totalColumnScrollFromTop * 2) / 10,
-                        width,
+                        totalColumnScrollFromTop,
+                        originalBitmap.width,
                         cardHeight
                     )
                 canvas.nativeCanvas.drawBitmap(newBitmap, 0f, 0f, null)
@@ -188,7 +171,7 @@ fun InvertedCard(
     originalBitmap: Bitmap,
     cardHeight: Int,
     totalColumnScrollFromTop: Int = 0,
-    yMovementRatioPx: Float
+    //yMovementRatioPx: Float
 ) {
     Card(
         modifier = Modifier.height(200.dp)
@@ -198,20 +181,29 @@ fun InvertedCard(
         ) {
             drawIntoCanvas { canvas ->
                 val width = originalBitmap.width
-                Log.d(TAG, "GetEverythingByPixels: $width")
+                Log.d(TAG, "GetEverythingByPixels: oldBitmap.width $width")
+                val height = originalBitmap.height
+                Log.d(TAG, "GetEverythingByPixels: oldBitmap.height $height")
+                val yOffset = calculateYOffset(
+                    totalColumnScrollFromTop,
+                    cardHeight,
+                    height
+                )
+                Log.d(TAG, "InvertedCard: yOffset $yOffset")
+                Log.d(TAG, "InvertedCard: original picture height = $height")
+                //y + height must be <= bitmap.height()
+                Log.d(TAG, "InvertedCard: y + height = ${yOffset + cardHeight}")
+                Log.d(TAG, "originalBitmap.height ${originalBitmap.height}")
                 val newBitmap =
                     Bitmap.createBitmap(
                         originalBitmap,
                         0,
-                        calculateYOffset(
-                            totalColumnScrollFromTop,
-                            cardHeight
-                        ),
-//                        ((1920f - (totalColumnScrollFromTop.toFloat() * yMovementRatioPx))).toInt(),
-//                        1920 - (totalColumnScrollFromTop * 30) / 10,
+                        yOffset,
                         width,
                         cardHeight
                     )
+                Log.d(TAG, "InvertedCard: newBitmap.height ${newBitmap.height}")
+                Log.d(TAG, "InvertedCard: newBitmap.width ${newBitmap.width}")
                 canvas.nativeCanvas.drawBitmap(newBitmap, 0f, 0f, null)
             }
         }
@@ -221,34 +213,19 @@ fun InvertedCard(
 fun calculateYOffset(
     totalColumnScrollFromTop: Int,
     cardHeight: Int,
-    pictureHeight: Int = 2880
+    pictureHeight: Int
 ) =
-    //there is no scroll yet
     if (totalColumnScrollFromTop <= 0) {
-        Log.d(TAG, "calculateYOffset: pictureHeight - cardHeight ${pictureHeight - cardHeight}")
-        pictureHeight - cardHeight
+        Log.d(
+            TAG,
+            "calculateYOffset: pictureHeight - cardHeight - 100 ${pictureHeight - cardHeight - 100}"
+        )
+        pictureHeight - cardHeight - 100
     }
     else {
-        pictureHeight - cardHeight - (totalColumnScrollFromTop  * 5) / 10
+        pictureHeight - cardHeight - 100
     }
 
-
-fun Modifier.gesturesDisabled(disabled: Boolean = true) =
-    if (disabled) {
-        pointerInput(Unit) {
-            awaitPointerEventScope {
-                // we should wait for all new pointer events
-                while (true) {
-                    awaitPointerEvent(pass = PointerEventPass.Initial)
-                        .changes
-                        .forEach(PointerInputChange::consume)
-                }
-            }
-        }
-    }
-    else {
-        this
-    }
 
 @Composable
 fun OuterClickCounter() {
@@ -273,4 +250,11 @@ fun InnerClickCounter(outerClicks: Int) {
         }
         Text("Outer clicks= $outerClicks")
     }
+}
+
+fun initScreenWidthAndHeight(configuration: Configuration, density: Float) {
+    val screenHeightDp = configuration.screenHeightDp
+    val screenWidthDp = configuration.screenWidthDp
+    screenHeightPx = (screenHeightDp * density).toInt()
+    screenWidthPx = (screenWidthDp * density).toInt()
 }

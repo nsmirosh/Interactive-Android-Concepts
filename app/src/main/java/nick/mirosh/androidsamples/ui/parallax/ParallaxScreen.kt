@@ -1,12 +1,15 @@
 package nick.mirosh.androidsamples.ui.parallax
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +26,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
@@ -35,9 +39,6 @@ import kotlin.math.abs
 
 
 private const val TAG = "ParallaxScreen"
-
-
-
 
 const val PICTURE_HEIGHT = 2280
 var screenWidthPx = 0
@@ -73,7 +74,7 @@ fun ScrollableColumn(bitmap: Bitmap) {
     Log.d(TAG, "ScrollableColumn: cardHeight $cardHeight")
 
     val initialUnscrolledPartOfThePicture = PICTURE_HEIGHT - cardHeight
-    val noOfItems = 20
+    val noOfItems = 10
     val initialScrollLeftInColumn = abs(screenHeightPx - cardHeight * noOfItems)
 
     val pictureYMovementRatioPx =
@@ -96,7 +97,9 @@ fun ScrollableColumn(bitmap: Bitmap) {
             InvertedCard(
                 originalBitmap = bitmap,
                 cardHeight = cardHeight,
-                totalColumnScrollFromTop = columnScrollFromTopInPx
+                totalColumnScrollFromTop = columnScrollFromTopInPx,
+                authorLink = "",
+                authorName = ""
             )
         }
     }
@@ -108,7 +111,7 @@ fun decodeBitmap(resources: Resources): Bitmap? {
         inScaled =
             false  // ensure the bitmap is not scaled based on device density
     }
-    val inputStream = resources.openRawResource(R.raw.picture1)
+    val inputStream = resources.openRawResource(R.raw.amine_msiouri)
     return BitmapFactory.decodeResourceStream(
         resources,
         TypedValue(),
@@ -152,31 +155,49 @@ fun InvertedCard(
     originalBitmap: Bitmap,
     cardHeight: Int,
     totalColumnScrollFromTop: Int = 0,
+    authorName: String,
+    authorLink: String
 ) {
     val modifier = Modifier.height(200.dp)
     Card(
         modifier = Modifier.height(200.dp)
     ) {
-        Canvas(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            drawIntoCanvas { canvas ->
-                val width = originalBitmap.width
-                val height = originalBitmap.height
-                val yOffset = calculateYOffset(
-                    (totalColumnScrollFromTop * 2) / 10,
-                    cardHeight,
-                    height
-                )
-                val newBitmap =
-                    Bitmap.createBitmap(
-                        originalBitmap,
-                        0,
-                        yOffset,
-                        width,
-                        cardHeight
+        Box {
+            Canvas(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                drawIntoCanvas { canvas ->
+                    val width = originalBitmap.width
+                    val height = originalBitmap.height
+                    val yOffset = calculateYOffset(
+                        (totalColumnScrollFromTop * 2) / 10,
+                        cardHeight,
+                        height
                     )
-                canvas.nativeCanvas.drawBitmap(newBitmap, 0f, 0f, null)
+                    val newBitmap =
+                        Bitmap.createBitmap(
+                            originalBitmap,
+                            0,
+                            yOffset,
+                            width,
+                            cardHeight
+                        )
+                    canvas.nativeCanvas.drawBitmap(newBitmap, 0f, 0f, null)
+                }
+            }
+            val context = LocalContext.current
+            val intent = remember {
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(authorLink)
+                )
+            }
+
+            Button(
+                modifier = Modifier.align(Alignment.BottomStart),
+                onClick = { context.startActivity(intent) },
+            ) {
+                Text(text = "photo by $authorName")
             }
         }
     }

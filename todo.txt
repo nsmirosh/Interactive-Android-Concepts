@@ -55,5 +55,12 @@ https://codepen.io/davidkpiano/full/ByNPQw/
 
 Parallax scrolling
 [ ] - insert multiple pictures of the same size as the one there right now
+    [ ] - get 10 images and download them
+    [ ] - make sure the images are prefetched and propagated via array
+    [ ] - pass the imag author
+    [ ] - pass the link to author's profile
 [ ] - add the authors of the images in the slide
 [ ] - turn this into a library
+https://www.pexels.com/@connor-danylenko-534256/
+https://www.pexels.com/@julia-volk/
+https://www.pexels.com/@lukas-dlutko-1278617/

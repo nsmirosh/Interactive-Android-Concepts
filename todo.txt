@@ -51,3 +51,9 @@ https://interfacemarket.com/design-blog/12-beautiful-mobile-app-ui-animations-in
 I can do animations of designers and they're going to be happy with it
 https://codepen.io/davidkpiano/full/ByNPQw/
 
+
+
+Parallax scrolling
+[ ] - insert multiple pictures of the same size as the one there right now
+[ ] - add the authors of the images in the slide
+[ ] - turn this into a library

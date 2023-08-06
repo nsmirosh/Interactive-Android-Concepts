@@ -1,6 +1,5 @@
 package nick.mirosh.androidsamples.ui.parallax
 
-import android.R.attr.bitmap
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
@@ -27,9 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.PointerInputChange
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -41,14 +37,6 @@ import kotlin.math.abs
 private const val TAG = "ParallaxScreen"
 
 
-// [ ] - Make the picture scroll the whole height
-// [x] - Implement picture scrolling in the opposite direction
-// height of the picture / no of non-visible items left in the column (i.e. how much left to scroll)
-
-
-// picture scroll = rest of the height of the picture / rest of the scroll left in the column
-// rest of the height of the picture =  pictureHeight - heighOfTheCardInPixels
-// rest of the scroll left in the column = screenHeight - card height * no of items in the column
 
 
 const val PICTURE_HEIGHT = 2280
@@ -85,7 +73,7 @@ fun ScrollableColumn(bitmap: Bitmap) {
     Log.d(TAG, "ScrollableColumn: cardHeight $cardHeight")
 
     val initialUnscrolledPartOfThePicture = PICTURE_HEIGHT - cardHeight
-    val noOfItems = 4
+    val noOfItems = 20
     val initialScrollLeftInColumn = abs(screenHeightPx - cardHeight * noOfItems)
 
     val pictureYMovementRatioPx =
@@ -105,18 +93,11 @@ fun ScrollableColumn(bitmap: Bitmap) {
             .verticalScroll(columnScrollState),
     ) {
         repeat(noOfItems) {
-            if (it % 2 == 0)
-                RenderingCard(
-                    originalBitmap = bitmap,
-                    cardHeight = cardHeight,
-                    totalColumnScrollFromTop = columnScrollFromTopInPx
-                )
-            else
-                InvertedCard(
-                    originalBitmap = bitmap,
-                    cardHeight = cardHeight,
-                    totalColumnScrollFromTop = columnScrollFromTopInPx
-                )
+            InvertedCard(
+                originalBitmap = bitmap,
+                cardHeight = cardHeight,
+                totalColumnScrollFromTop = columnScrollFromTopInPx
+            )
         }
     }
 }
@@ -171,8 +152,8 @@ fun InvertedCard(
     originalBitmap: Bitmap,
     cardHeight: Int,
     totalColumnScrollFromTop: Int = 0,
-    //yMovementRatioPx: Float
 ) {
+    val modifier = Modifier.height(200.dp)
     Card(
         modifier = Modifier.height(200.dp)
     ) {
@@ -181,19 +162,12 @@ fun InvertedCard(
         ) {
             drawIntoCanvas { canvas ->
                 val width = originalBitmap.width
-                Log.d(TAG, "GetEverythingByPixels: oldBitmap.width $width")
                 val height = originalBitmap.height
-                Log.d(TAG, "GetEverythingByPixels: oldBitmap.height $height")
                 val yOffset = calculateYOffset(
-                    totalColumnScrollFromTop,
+                    (totalColumnScrollFromTop * 2) / 10,
                     cardHeight,
                     height
                 )
-                Log.d(TAG, "InvertedCard: yOffset $yOffset")
-                Log.d(TAG, "InvertedCard: original picture height = $height")
-                //y + height must be <= bitmap.height()
-                Log.d(TAG, "InvertedCard: y + height = ${yOffset + cardHeight}")
-                Log.d(TAG, "originalBitmap.height ${originalBitmap.height}")
                 val newBitmap =
                     Bitmap.createBitmap(
                         originalBitmap,
@@ -202,8 +176,6 @@ fun InvertedCard(
                         width,
                         cardHeight
                     )
-                Log.d(TAG, "InvertedCard: newBitmap.height ${newBitmap.height}")
-                Log.d(TAG, "InvertedCard: newBitmap.width ${newBitmap.width}")
                 canvas.nativeCanvas.drawBitmap(newBitmap, 0f, 0f, null)
             }
         }
@@ -216,14 +188,24 @@ fun calculateYOffset(
     pictureHeight: Int
 ) =
     if (totalColumnScrollFromTop <= 0) {
+        pictureHeight - cardHeight
+    }
+    else if (totalColumnScrollFromTop + cardHeight >= pictureHeight) {
+        Log.d(TAG, "Entering second case")
         Log.d(
             TAG,
-            "calculateYOffset: pictureHeight - cardHeight - 100 ${pictureHeight - cardHeight - 100}"
+            "calculateYOffset: totalColumnScrollFromTop $totalColumnScrollFromTop"
         )
-        pictureHeight - cardHeight - 100
+        Log.d(TAG, "calculateYOffset: cardHeight $cardHeight")
+        Log.d(TAG, "calculateYOffset: pictureHeight $pictureHeight")
+        Log.d(
+            TAG,
+            "totalColumnScrollFromTop + cardHeight >= pictureHeight ${totalColumnScrollFromTop + cardHeight >= pictureHeight}"
+        )
+        0
     }
     else {
-        pictureHeight - cardHeight - 100
+        pictureHeight - cardHeight - (totalColumnScrollFromTop)
     }
 
 

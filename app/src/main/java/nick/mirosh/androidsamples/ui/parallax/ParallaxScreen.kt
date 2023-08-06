@@ -11,9 +11,11 @@ import android.util.TypedValue
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,36 +49,68 @@ var screenHeightPx = 0
 
 @Composable
 fun ParallaxScreen() {
-    var bitmap by remember {
-        mutableStateOf<Bitmap?>(null)
+    var bitmaps = remember {
+        mutableStateListOf<Bitmap?>(null)
     }
+    val pictures =
+        listOf(
+            R.raw.amine_msiouri,
+            R.raw.connor_danylenko,
+            R.raw.julia_volk,
+            R.raw.lukas_dlutko,
+            R.raw.pixabay
+        )
+    val authorsAndLinks =
+        listOf(
+            "Pixabay" to "https://www.pexels.com/@pixabay/",
+            "Connor Danylenko" to "https://www.pexels.com/@connor-danylenko-534256/",
+            "Julia Volk" to "https://www.pexels.com/@julia-volk/",
+            "Amine M'siouri" to "https://www.pexels.com/@amine-m-siouri-1025778/",
+            "Lukáš Dlutko" to "https://www.pexels.com/@lukas-dlutko-1278617/"
+        )
     val resources = LocalContext.current.resources
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current.density
 
     LaunchedEffect(Unit) {
         initScreenWidthAndHeight(configuration, density)
-        decodeBitmap(resources)?.let {
-            bitmap = Bitmap.createScaledBitmap(
-                it,
-                screenWidthPx,
-                screenHeightPx,
-                true
-            )
+        bitmaps.removeFirstOrNull()
+        pictures.forEach {
+            decodeBitmap(resources, it)?.let { decodedBitmap ->
+                bitmaps.add(
+                    Bitmap.createScaledBitmap(
+                        decodedBitmap,
+                        screenWidthPx,
+                        screenHeightPx,
+                        true
+                    )
+                )
+                Log.d(
+                    TAG,
+                    "ParallaxScreen: updating bitmaps, bitmap size ${bitmaps.size}"
+                )
+            }
         }
     }
-    bitmap?.let { ScrollableColumn(it) }
+    Log.d(TAG, "ParallaxScreen: bitmaps size ${bitmaps.size}")
+    if (bitmaps.size == pictures.size) {
+        Log.d(TAG, "ParallaxScreen: showing column")
+        ScrollableColumn(bitmaps.toList(), authorsAndLinks)
+    }
 }
 
 @Composable
-fun ScrollableColumn(bitmap: Bitmap) {
+fun ScrollableColumn(
+    bitmaps: List<Bitmap?>,
+    authorAndLinkList: List<Pair<String, String>>
+) {
     val columnScrollState = rememberScrollState()
     val cardHeight = with(LocalDensity.current) { 200.dp.roundToPx() }
     Log.d(TAG, "ScrollableColumn: cardHeight $cardHeight")
 
     val initialUnscrolledPartOfThePicture = PICTURE_HEIGHT - cardHeight
-    val noOfItems = 10
-    val initialScrollLeftInColumn = abs(screenHeightPx - cardHeight * noOfItems)
+    val initialScrollLeftInColumn =
+        abs(screenHeightPx - cardHeight * bitmaps.size)
 
     val pictureYMovementRatioPx =
         initialUnscrolledPartOfThePicture / initialScrollLeftInColumn
@@ -93,25 +128,25 @@ fun ScrollableColumn(bitmap: Bitmap) {
             .fillMaxWidth()
             .verticalScroll(columnScrollState),
     ) {
-        repeat(noOfItems) {
+        repeat(bitmaps.size) {
+            Spacer(modifier = Modifier.height(16.dp))
             InvertedCard(
-                originalBitmap = bitmap,
+                originalBitmap = bitmaps[it]!!,
                 cardHeight = cardHeight,
                 totalColumnScrollFromTop = columnScrollFromTopInPx,
-                authorLink = "",
-                authorName = ""
+                authorName = authorAndLinkList[it].first,
+                authorLink = authorAndLinkList[it].second,
             )
         }
     }
 }
 
-fun decodeBitmap(resources: Resources): Bitmap? {
-//    val resources = LocalContext.current.resources
+fun decodeBitmap(resources: Resources, pictureId: Int): Bitmap? {
     val opts = BitmapFactory.Options().apply {
         inScaled =
             false  // ensure the bitmap is not scaled based on device density
     }
-    val inputStream = resources.openRawResource(R.raw.amine_msiouri)
+    val inputStream = resources.openRawResource(pictureId)
     return BitmapFactory.decodeResourceStream(
         resources,
         TypedValue(),
@@ -160,7 +195,9 @@ fun InvertedCard(
 ) {
     val modifier = Modifier.height(200.dp)
     Card(
-        modifier = Modifier.height(200.dp)
+        modifier = Modifier
+            .height(200.dp)
+            .padding(start = 16.dp, end = 16.dp)
     ) {
         Box {
             Canvas(
@@ -170,7 +207,7 @@ fun InvertedCard(
                     val width = originalBitmap.width
                     val height = originalBitmap.height
                     val yOffset = calculateYOffset(
-                        (totalColumnScrollFromTop * 2) / 10,
+                        (totalColumnScrollFromTop * 5) / 10,
                         cardHeight,
                         height
                     )
@@ -194,7 +231,9 @@ fun InvertedCard(
             }
 
             Button(
-                modifier = Modifier.align(Alignment.BottomStart),
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(8.dp),
                 onClick = { context.startActivity(intent) },
             ) {
                 Text(text = "photo by $authorName")

@@ -55,18 +55,24 @@ fun ParallaxScreen() {
     val pictures =
         listOf(
             R.raw.amine_msiouri,
-            R.raw.connor_danylenko,
-            R.raw.julia_volk,
             R.raw.lukas_dlutko,
+            R.raw.connor_danylenko,
+            R.raw.felix,
+            R.raw.julia_volk,
+            R.raw.matthew_montrone,
+            R.raw.sam_willis,
             R.raw.pixabay
         )
     val authorsAndLinks =
         listOf(
-            "Pixabay" to "https://www.pexels.com/@pixabay/",
-            "Connor Danylenko" to "https://www.pexels.com/@connor-danylenko-534256/",
-            "Julia Volk" to "https://www.pexels.com/@julia-volk/",
             "Amine M'siouri" to "https://www.pexels.com/@amine-m-siouri-1025778/",
-            "Lukáš Dlutko" to "https://www.pexels.com/@lukas-dlutko-1278617/"
+            "Lukáš Dlutko" to "https://www.pexels.com/@lukas-dlutko-1278617/",
+            "Connor Danylenko" to "https://www.pexels.com/@connor-danylenko-534256/",
+            "Felix Mittermeier" to "https://www.pexels.com/@felixmittermeier/",
+            "Julia Volk" to "https://www.pexels.com/@julia-volk/",
+            "Matthew Montrone" to "https://www.pexels.com/@matthew-montrone-230847/",
+            "Sam Willis" to "https://www.pexels.com/@sam-willis-457311/",
+            "Pixabay" to "https://www.pexels.com/@pixabay/",
         )
     val resources = LocalContext.current.resources
     val configuration = LocalConfiguration.current
@@ -193,7 +199,6 @@ fun InvertedCard(
     authorName: String,
     authorLink: String
 ) {
-    val modifier = Modifier.height(200.dp)
     Card(
         modifier = Modifier
             .height(200.dp)

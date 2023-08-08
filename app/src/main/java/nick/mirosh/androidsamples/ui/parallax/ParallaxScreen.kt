@@ -1,12 +1,10 @@
 package nick.mirosh.androidsamples.ui.parallax
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder.decodeBitmap
 import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
@@ -40,13 +38,12 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.invoke
 import kotlinx.coroutines.withContext
 import nick.mirosh.androidsamples.R
 import nick.mirosh.androidsamples.utils.decodeImageFromInternalStorage
+import nick.mirosh.androidsamples.utils.decodeRawResource
 import nick.mirosh.androidsamples.utils.downloadImage
-import java.util.Locale.filter
-import kotlin.system.measureTimeMillis
+import nick.mirosh.androidsamples.utils.loadPictureFromNetwork
 
 
 private const val TAG = "ParallaxScreen"
@@ -116,7 +113,6 @@ fun InvertedParallaxColumn(
                     pictureUrls.forEachIndexed { index, url ->
                         val imageName =
                             authorsAndLinks[index].first.filter { !it.isWhitespace() }
-
                         loadPictureFromNetwork(
                             imageName,
                             url,
@@ -137,7 +133,7 @@ fun InvertedParallaxColumn(
         }
         else {
             pictureIds?.forEach {
-                decodeBitmap(resources, it)?.let { decodedBitmap ->
+                decodeRawResource(resources, it)?.let { decodedBitmap ->
                     bitmaps.add(
                         Bitmap.createScaledBitmap(
                             decodedBitmap,
@@ -161,24 +157,6 @@ fun InvertedParallaxColumn(
     }
 }
 
-fun loadPictureFromNetwork(
-    imageName: String,
-    url: String,
-    context: Context
-): Bitmap? {
-
-    Log.d(TAG, "loadPictureFromNetwork: loading image $imageName from network")
-    downloadImage(
-        context = context,
-        imageUrl = url,
-        imageName = imageName
-    )
-    return decodeImageFromInternalStorage(
-        context,
-        imageName
-    )
-
-}
 
 @Composable
 fun ScrollableColumn(
@@ -214,43 +192,6 @@ fun ScrollableColumn(
         }
     }
 }
-
-fun decodeBitmap(resources: Resources, pictureId: Int): Bitmap? {
-    val opts = BitmapFactory.Options().apply {
-        inScaled =
-            false  // ensure the bitmap is not scaled based on device density
-    }
-    val inputStream = resources.openRawResource(pictureId)
-    return BitmapFactory.decodeResourceStream(
-        resources,
-        TypedValue(),
-        inputStream,
-        null,
-        opts
-    )
-}
-
-@Composable
-fun ParallaxScreen2() {
-    val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        Log.d(TAG, "ParallaxScreen: downloading image")
-        withContext(Dispatchers.IO) {
-            downloadImage(
-                context = context,
-                imageUrl = "https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg",
-                imageName = "some image"
-            )
-            decodeImageFromInternalStorage(context, "some image")?.let {
-                Log.d(TAG, "ParallaxScreen2: image decoded")
-                Log.d(TAG, "ParallaxScreen2: image width ${it.width}")
-            }
-        }
-    }
-}
-
-
 @Composable
 fun InvertedCard(
     modifier: Modifier = Modifier,

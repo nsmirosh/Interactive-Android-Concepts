@@ -1,8 +1,10 @@
 package nick.mirosh.androidsamples.utils
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.TypedValue
 import nick.mirosh.androidsamples.ui.parallax.screenHeightPx
 import nick.mirosh.androidsamples.ui.parallax.screenWidthPx
 import java.io.FileInputStream
@@ -69,5 +71,37 @@ fun scaleBitmap(decodedBitmap: Bitmap): Bitmap {
         screenWidthPx,
         screenHeightPx,
         true
+    )
+}
+
+fun loadPictureFromNetwork(
+    imageName: String,
+    url: String,
+    context: Context
+): Bitmap? {
+
+    downloadImage(
+        context = context,
+        imageUrl = url,
+        imageName = imageName
+    )
+    return decodeImageFromInternalStorage(
+        context,
+        imageName
+    )
+
+}
+fun decodeRawResource(resources: Resources, pictureId: Int): Bitmap? {
+    val opts = BitmapFactory.Options().apply {
+        inScaled =
+            false  // ensure the bitmap is not scaled based on device density
+    }
+    val inputStream = resources.openRawResource(pictureId)
+    return BitmapFactory.decodeResourceStream(
+        resources,
+        TypedValue(),
+        inputStream,
+        null,
+        opts
     )
 }

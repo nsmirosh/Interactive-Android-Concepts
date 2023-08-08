@@ -59,17 +59,17 @@ Parallax scrolling
     [x] - pass the imag author
     [x] - pass the link to author's profile
 [x] - add the authors of the images in the slide
-[ ] - show the images via the network
+[x] - show the images via the network
     [x] - prefetch the images via the network
     [x] - store them in internal storage
     [x] - retrieve from internal storage and pass to bitmap decoding functions
     [x] - extract the logic for getting the picture and getting bimatp into utils
     [x] - add an option to get all of the pictures via a network besides from the raw folder.
-    [ ] - add a placeholder image in case of a failure
-    [ ] - add a shimmer
-    [ ] - make the API "slot base" i.e. allow the users to insert their own UI over the parallax picture
-
-[ ] - turn this into a library
-https://www.pexels.com/@connor-danylenko-534256/
-https://www.pexels.com/@julia-volk/
-https://www.pexels.com/@lukas-dlutko-1278617/
+[x] - add a placeholder image in case of a failure - Aug 8
+  [x] - allow the user to add their own image
+[ ] - add a shimmer - Aug 9
+[ ] - make the API "slot base" i.e. allow the users to insert their own UI over the parallax picture - Aug 10
+[ ] - add to Compose example project - Aug 11
+[ ] - turn this into a library - Aug 15
+[ ] - add a proper README - Aug 16
+[ ] - publish library - Aug 18

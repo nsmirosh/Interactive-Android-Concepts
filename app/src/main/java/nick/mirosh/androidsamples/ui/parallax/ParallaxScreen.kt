@@ -1,15 +1,14 @@
 package nick.mirosh.androidsamples.ui.parallax
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
-import android.util.TypedValue
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,14 +34,13 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import nick.mirosh.androidsamples.R
-import nick.mirosh.androidsamples.utils.decodeImageFromInternalStorage
 import nick.mirosh.androidsamples.utils.decodeRawResource
-import nick.mirosh.androidsamples.utils.downloadImage
 import nick.mirosh.androidsamples.utils.loadPictureFromNetwork
 
 
@@ -97,7 +95,6 @@ fun InvertedParallaxColumn(
             "Sam Willis" to "https://www.pexels.com/@sam-willis-457311/",
             "Pixabay" to "https://www.pexels.com/@pixabay/",
         )
-    val resources = LocalContext.current.resources
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current.density
     val context = LocalContext.current
@@ -107,56 +104,63 @@ fun InvertedParallaxColumn(
         Log.d(TAG, "ParallaxScreen: entering Launched effect ")
         initScreenWidthAndHeight(configuration, density)
         bitmaps.removeFirstOrNull()
-        if (pictureUrls != null) {
-            withContext(Dispatchers.IO) {
-                async {
-                    pictureUrls.forEachIndexed { index, url ->
-                        val imageName =
-                            authorsAndLinks[index].first.filter { !it.isWhitespace() }
-                        loadPictureFromNetwork(
-                            imageName,
-                            url,
-                            context
-                        )?.let {
-                            bitmaps.add(
-                                Bitmap.createScaledBitmap(
-                                    it,
-                                    screenWidthPx,
-                                    screenHeightPx,
-                                    true
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-        }
-        else {
-            pictureIds?.forEach {
-                decodeRawResource(resources, it)?.let { decodedBitmap ->
-                    bitmaps.add(
-                        Bitmap.createScaledBitmap(
-                            decodedBitmap,
-                            screenWidthPx,
-                            screenHeightPx,
-                            true
-                        )
-                    )
-                    Log.d(
-                        TAG,
-                        "ParallaxScreen: updating bitmaps, bitmap size ${bitmaps.size}"
-                    )
-                }
-            }
+        loadPictures(
+            pictureUrls,
+            pictureIds,
+            context
+        ) {
+            bitmaps.add(it)
         }
     }
-    Log.d(TAG, "ParallaxScreen: bitmaps size ${bitmaps.size}")
     if (bitmaps.size == pictureUrls?.size) {
         Log.d(TAG, "ParallaxScreen: showing column")
         ScrollableColumn(bitmaps.toList(), authorsAndLinks)
     }
 }
 
+suspend fun loadPictures(
+    pictureUrls: List<String>? = null,
+    pictureIds: List<Int>? = null,
+    context: Context,
+    onBitmapLoaded: (Bitmap) -> Unit,
+) {
+    if (pictureUrls != null) {
+        withContext(Dispatchers.IO) {
+            async {
+                pictureUrls.forEachIndexed { index, url ->
+                    loadPictureFromNetwork(
+                        "$index",
+                        url,
+                        context
+                    )?.let {
+                        val scaledBitmap =
+                            Bitmap.createScaledBitmap(
+                                it,
+                                screenWidthPx,
+                                screenHeightPx,
+                                true
+                            )
+                        onBitmapLoaded(scaledBitmap)
+                    }
+                }
+            }
+        }
+    }
+    else {
+        pictureIds?.forEach {
+            decodeRawResource(context.resources, it)?.let { decodedBitmap ->
+                val scaledBitmap =
+                    Bitmap.createScaledBitmap(
+                        decodedBitmap,
+                        screenWidthPx,
+                        screenHeightPx,
+                        true
+                    )
+                onBitmapLoaded(scaledBitmap)
+            }
+        }
+    }
+}
 
 @Composable
 fun ScrollableColumn(
@@ -165,16 +169,11 @@ fun ScrollableColumn(
 ) {
     val columnScrollState = rememberScrollState()
     val cardHeight = with(LocalDensity.current) { cardHeightDp.dp.roundToPx() }
-    Log.d(TAG, "ScrollableColumn: cardHeight $cardHeight")
 
     var prevScrollValue by remember { mutableIntStateOf(0) }
     val columnScrollFromTopInPx =
         columnScrollState.value
     prevScrollValue = columnScrollState.value
-    Log.d(
-        TAG,
-        "ScrollableColumn: yMovement $columnScrollFromTopInPx, prevScrollValue $prevScrollValue"
-    )
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -183,67 +182,84 @@ fun ScrollableColumn(
         repeat(bitmaps.size) {
             Spacer(modifier = Modifier.height(16.dp))
             InvertedCard(
-                originalBitmap = bitmaps[it]!!,
+                originalBitmap = if (it == 2) null else bitmaps[it],
                 cardHeight = cardHeight,
                 totalColumnScrollFromTop = columnScrollFromTopInPx,
                 authorName = authorAndLinkList[it].first,
                 authorLink = authorAndLinkList[it].second,
-            )
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "SOMETHING WENT WRONG",
+                    )
+                }
+            }
         }
     }
 }
+
 @Composable
 fun InvertedCard(
     modifier: Modifier = Modifier,
-    originalBitmap: Bitmap,
+    originalBitmap: Bitmap?,
     cardHeight: Int,
     totalColumnScrollFromTop: Int = 0,
     authorName: String,
-    authorLink: String
+    authorLink: String,
+    errorContent: @Composable BoxScope.() -> Unit
 ) {
     Card(
         modifier = Modifier
             .height(cardHeightDp.dp)
             .padding(start = 16.dp, end = 16.dp)
     ) {
-        Box {
-            Canvas(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                drawIntoCanvas { canvas ->
-                    val width = originalBitmap.width
-                    val height = originalBitmap.height
-                    val yOffset = calculateYOffset(
-                        (totalColumnScrollFromTop * 5) / 10,
-                        cardHeight,
-                        height
-                    )
-                    val newBitmap =
-                        Bitmap.createBitmap(
-                            originalBitmap,
-                            0,
-                            yOffset,
-                            width,
-                            cardHeight
+        Box(modifier = modifier.fillMaxSize()) {
+            if (originalBitmap != null) {
+                Canvas(
+                    modifier = Modifier
+                ) {
+                    drawIntoCanvas { canvas ->
+                        val width = originalBitmap.width
+                        val height = originalBitmap.height
+                        val yOffset = calculateYOffset(
+                            (totalColumnScrollFromTop * 5) / 10,
+                            cardHeight,
+                            height
                         )
-                    canvas.nativeCanvas.drawBitmap(newBitmap, 0f, 0f, null)
+                        val newBitmap =
+                            Bitmap.createBitmap(
+                                originalBitmap,
+                                0,
+                                yOffset,
+                                width,
+                                cardHeight
+                            )
+                        canvas.nativeCanvas.drawBitmap(newBitmap, 0f, 0f, null)
+                    }
+                }
+                val context = LocalContext.current
+                val intent = remember {
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(authorLink)
+                    )
+                }
+
+                Button(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(8.dp),
+                    onClick = { context.startActivity(intent) },
+                ) {
+                    Text(text = "photo by $authorName")
                 }
             }
-            val context = LocalContext.current
-            val intent = remember {
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(authorLink)
-                )
-            }
+            else {
 
-            Button(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(8.dp),
-                onClick = { context.startActivity(intent) },
-            ) {
-                Text(text = "photo by $authorName")
+                errorContent()
             }
         }
     }

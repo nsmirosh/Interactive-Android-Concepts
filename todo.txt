@@ -54,12 +54,18 @@ https://codepen.io/davidkpiano/full/ByNPQw/
 
 
 Parallax scrolling
-[ ] - insert multiple pictures of the same size as the one there right now
-    [ ] - get 10 images and download them
-    [ ] - make sure the images are prefetched and propagated via array
-    [ ] - pass the imag author
-    [ ] - pass the link to author's profile
-[ ] - add the authors of the images in the slide
+[x] - insert multiple pictures of the same size as the one there right now
+    [x] - get 10 images and download them
+    [x] - pass the imag author
+    [x] - pass the link to author's profile
+[x] - add the authors of the images in the slide
+[ ] - show the images via the network
+    [x] - prefetch the images via the network
+    [x] - store them in internal storage
+    [x] - retrieve from internal storage and pass to bitmap decoding functions
+    [x] - extract the logic for getting the picture and getting bimatp into utils
+    [ ] - add an option to get all of the pictures via a network besides from the raw folder.
+
 [ ] - turn this into a library
 https://www.pexels.com/@connor-danylenko-534256/
 https://www.pexels.com/@julia-volk/

@@ -142,6 +142,7 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     }
     composable(route = Parallax.route) {
         ParallaxScreen()
+//        ComposableFunctionsDemo()
     }
 }
 

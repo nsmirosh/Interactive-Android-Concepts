@@ -3,6 +3,8 @@ package nick.mirosh.androidsamples.utils
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import nick.mirosh.androidsamples.ui.parallax.screenHeightPx
+import nick.mirosh.androidsamples.ui.parallax.screenWidthPx
 import java.io.FileInputStream
 import java.io.OutputStream
 import java.net.HttpURLConnection
@@ -59,4 +61,13 @@ fun decodeImageFromInternalStorage(
         e.printStackTrace()
         null
     }
+}
+
+fun scaleBitmap(decodedBitmap: Bitmap): Bitmap {
+    return Bitmap.createScaledBitmap(
+        decodedBitmap,
+        screenWidthPx,
+        screenHeightPx,
+        true
+    )
 }

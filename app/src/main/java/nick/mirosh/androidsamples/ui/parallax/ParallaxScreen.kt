@@ -1,10 +1,12 @@
 package nick.mirosh.androidsamples.ui.parallax
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder.decodeBitmap
 import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
@@ -37,10 +39,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.invoke
 import kotlinx.coroutines.withContext
 import nick.mirosh.androidsamples.R
 import nick.mirosh.androidsamples.utils.decodeImageFromInternalStorage
 import nick.mirosh.androidsamples.utils.downloadImage
+import java.util.Locale.filter
+import kotlin.system.measureTimeMillis
 
 
 private const val TAG = "ParallaxScreen"
@@ -50,10 +56,8 @@ var screenHeightPx = 0
 val cardHeightDp = 200
 
 @Composable
-fun ParallaxScreen2() {
-    val bitmaps = remember {
-        mutableStateListOf<Bitmap?>(null)
-    }
+fun ParallaxScreen() {
+
     val pictures =
         listOf(
             R.raw.lukas_dlutko,
@@ -65,6 +69,26 @@ fun ParallaxScreen2() {
             R.raw.sam_willis,
             R.raw.pixabay
         )
+    val pictureUrls =
+        listOf(
+            "https://images.pexels.com/photos/2832034/pexels-photo-2832034.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+            "https://images.pexels.com/photos/1154610/pexels-photo-1154610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+            "https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+            "https://images.pexels.com/photos/3284167/pexels-photo-3284167.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+            "https://images.pexels.com/photos/2627945/pexels-photo-2627945.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        )
+    InvertedParallaxColumn(pictureUrls)
+}
+
+@Composable
+fun InvertedParallaxColumn(
+    pictureUrls: List<String>? = null,
+    pictureIds: List<Int>? = null
+) {
+    val bitmaps = remember {
+        mutableStateListOf<Bitmap?>(null)
+    }
+
     val authorsAndLinks =
         listOf(
             "Lukáš Dlutko" to "https://www.pexels.com/@lukas-dlutko-1278617/",
@@ -79,32 +103,81 @@ fun ParallaxScreen2() {
     val resources = LocalContext.current.resources
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current.density
+    val context = LocalContext.current
 
+    Log.d(TAG, "ParallaxScreen: prior to Launched effect ")
     LaunchedEffect(Unit) {
+        Log.d(TAG, "ParallaxScreen: entering Launched effect ")
         initScreenWidthAndHeight(configuration, density)
         bitmaps.removeFirstOrNull()
-        pictures.forEach {
-            decodeBitmap(resources, it)?.let { decodedBitmap ->
-                bitmaps.add(
-                    Bitmap.createScaledBitmap(
-                        decodedBitmap,
-                        screenWidthPx,
-                        screenHeightPx,
-                        true
+        if (pictureUrls != null) {
+            withContext(Dispatchers.IO) {
+                async {
+                    pictureUrls.forEachIndexed { index, url ->
+                        val imageName =
+                            authorsAndLinks[index].first.filter { !it.isWhitespace() }
+
+                        loadPictureFromNetwork(
+                            imageName,
+                            url,
+                            context
+                        )?.let {
+                            bitmaps.add(
+                                Bitmap.createScaledBitmap(
+                                    it,
+                                    screenWidthPx,
+                                    screenHeightPx,
+                                    true
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            pictureIds?.forEach {
+                decodeBitmap(resources, it)?.let { decodedBitmap ->
+                    bitmaps.add(
+                        Bitmap.createScaledBitmap(
+                            decodedBitmap,
+                            screenWidthPx,
+                            screenHeightPx,
+                            true
+                        )
                     )
-                )
-                Log.d(
-                    TAG,
-                    "ParallaxScreen: updating bitmaps, bitmap size ${bitmaps.size}"
-                )
+                    Log.d(
+                        TAG,
+                        "ParallaxScreen: updating bitmaps, bitmap size ${bitmaps.size}"
+                    )
+                }
             }
         }
     }
     Log.d(TAG, "ParallaxScreen: bitmaps size ${bitmaps.size}")
-    if (bitmaps.size == pictures.size) {
+    if (bitmaps.size == pictureUrls?.size) {
         Log.d(TAG, "ParallaxScreen: showing column")
         ScrollableColumn(bitmaps.toList(), authorsAndLinks)
     }
+}
+
+fun loadPictureFromNetwork(
+    imageName: String,
+    url: String,
+    context: Context
+): Bitmap? {
+
+    Log.d(TAG, "loadPictureFromNetwork: loading image $imageName from network")
+    downloadImage(
+        context = context,
+        imageUrl = url,
+        imageName = imageName
+    )
+    return decodeImageFromInternalStorage(
+        context,
+        imageName
+    )
+
 }
 
 @Composable
@@ -158,12 +231,12 @@ fun decodeBitmap(resources: Resources, pictureId: Int): Bitmap? {
 }
 
 @Composable
-fun ParallaxScreen() {
+fun ParallaxScreen2() {
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         Log.d(TAG, "ParallaxScreen: downloading image")
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             downloadImage(
                 context = context,
                 imageUrl = "https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg",
@@ -268,6 +341,7 @@ fun initScreenWidthAndHeight(configuration: Configuration, density: Float) {
     screenHeightPx = (screenHeightDp * density).toInt()
     screenWidthPx = (screenWidthDp * density).toInt()
 }
+
 @Composable
 fun OuterClickCounter() {
     Column {

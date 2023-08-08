@@ -64,7 +64,10 @@ Parallax scrolling
     [x] - store them in internal storage
     [x] - retrieve from internal storage and pass to bitmap decoding functions
     [x] - extract the logic for getting the picture and getting bimatp into utils
-    [ ] - add an option to get all of the pictures via a network besides from the raw folder.
+    [x] - add an option to get all of the pictures via a network besides from the raw folder.
+    [ ] - add a placeholder image in case of a failure
+    [ ] - add a shimmer
+    [ ] - make the API "slot base" i.e. allow the users to insert their own UI over the parallax picture
 
 [ ] - turn this into a library
 https://www.pexels.com/@connor-danylenko-534256/

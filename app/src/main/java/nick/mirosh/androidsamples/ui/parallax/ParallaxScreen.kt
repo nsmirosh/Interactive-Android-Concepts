@@ -204,6 +204,7 @@ fun InvertedCard(
     totalColumnScrollFromTop: Int = 0,
     authorName: String,
     authorLink: String,
+    content: @Composable BoxScope.() -> Unit,
     errorContent: @Composable BoxScope.() -> Unit
 ) {
     Card(

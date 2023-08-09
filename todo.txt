@@ -67,9 +67,12 @@ Parallax scrolling
     [x] - add an option to get all of the pictures via a network besides from the raw folder.
 [x] - add a placeholder image in case of a failure - Aug 8
   [x] - allow the user to add their own image
-[ ] - add a shimmer - Aug 9
-[ ] - make the API "slot base" i.e. allow the users to insert their own UI over the parallax picture - Aug 10
-[ ] - add to Compose example project - Aug 11
-[ ] - turn this into a library - Aug 15
-[ ] - add a proper README - Aug 16
-[ ] - publish library - Aug 18
+[ ] - make the API "slot base" i.e. allow the users to insert their own UI over the parallax picture - Aug 9
+[ ] - allow the users to modify height of the cards - Aug 10
+[ ] - add a shimmer - Aug 11
+[ ] - add testing - Aug 15
+[ ] - add to Compose example project - Aug 16
+[ ] - turn this into a library - Aug 19
+[ ] - add a proper README - Aug 20
+[ ] - add buy me a coffee and sponsor me links - Aug 21
+[ ] - publish library - Aug 22

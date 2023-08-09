@@ -53,48 +53,44 @@ val cardHeightDp = 200
 @Composable
 fun ParallaxScreen() {
 
-    val pictures =
-        listOf(
-            R.raw.lukas_dlutko,
-            R.raw.amine_msiouri,
-            R.raw.connor_danylenko,
-            R.raw.felix,
-            R.raw.julia_volk,
-            R.raw.matthew_montrone,
-            R.raw.sam_willis,
-            R.raw.pixabay
-        )
-    val pictureUrls =
-        listOf(
-            "https://images.pexels.com/photos/2832034/pexels-photo-2832034.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-            "https://images.pexels.com/photos/1154610/pexels-photo-1154610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-            "https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-            "https://images.pexels.com/photos/3284167/pexels-photo-3284167.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-            "https://images.pexels.com/photos/2627945/pexels-photo-2627945.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        )
+    val pictures = listOf(
+        R.raw.lukas_dlutko,
+        R.raw.amine_msiouri,
+        R.raw.connor_danylenko,
+        R.raw.felix,
+        R.raw.julia_volk,
+        R.raw.matthew_montrone,
+        R.raw.sam_willis,
+        R.raw.pixabay
+    )
+    val pictureUrls = listOf(
+        "https://images.pexels.com/photos/2832034/pexels-photo-2832034.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/1154610/pexels-photo-1154610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/3284167/pexels-photo-3284167.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/2627945/pexels-photo-2627945.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    )
     InvertedParallaxColumn(pictureUrls)
 }
 
 @Composable
 fun InvertedParallaxColumn(
-    pictureUrls: List<String>? = null,
-    pictureIds: List<Int>? = null
+    pictureUrls: List<String>? = null, pictureIds: List<Int>? = null
 ) {
     val bitmaps = remember {
         mutableStateListOf<Bitmap?>(null)
     }
 
-    val authorsAndLinks =
-        listOf(
-            "Lukáš Dlutko" to "https://www.pexels.com/@lukas-dlutko-1278617/",
-            "Amine M'siouri" to "https://www.pexels.com/@amine-m-siouri-1025778/",
-            "Connor Danylenko" to "https://www.pexels.com/@connor-danylenko-534256/",
-            "Felix Mittermeier" to "https://www.pexels.com/@felixmittermeier/",
-            "Julia Volk" to "https://www.pexels.com/@julia-volk/",
-            "Matthew Montrone" to "https://www.pexels.com/@matthew-montrone-230847/",
-            "Sam Willis" to "https://www.pexels.com/@sam-willis-457311/",
-            "Pixabay" to "https://www.pexels.com/@pixabay/",
-        )
+    val authorsAndLinks = listOf(
+        "Lukáš Dlutko" to "https://www.pexels.com/@lukas-dlutko-1278617/",
+        "Amine M'siouri" to "https://www.pexels.com/@amine-m-siouri-1025778/",
+        "Connor Danylenko" to "https://www.pexels.com/@connor-danylenko-534256/",
+        "Felix Mittermeier" to "https://www.pexels.com/@felixmittermeier/",
+        "Julia Volk" to "https://www.pexels.com/@julia-volk/",
+        "Matthew Montrone" to "https://www.pexels.com/@matthew-montrone-230847/",
+        "Sam Willis" to "https://www.pexels.com/@sam-willis-457311/",
+        "Pixabay" to "https://www.pexels.com/@pixabay/",
+    )
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current.density
     val context = LocalContext.current
@@ -105,17 +101,11 @@ fun InvertedParallaxColumn(
         initScreenWidthAndHeight(configuration, density)
         bitmaps.removeFirstOrNull()
         loadPictures(
-            pictureUrls,
-            pictureIds,
-            context
+            pictureUrls, pictureIds, context
         ) {
-            val scaledBitmap =
-                Bitmap.createScaledBitmap(
-                    it,
-                    screenWidthPx,
-                    screenHeightPx,
-                    true
-                )
+            val scaledBitmap = Bitmap.createScaledBitmap(
+                it, screenWidthPx, screenHeightPx, true
+            )
             bitmaps.add(scaledBitmap)
         }
     }
@@ -135,39 +125,32 @@ suspend fun loadPictures(
         pictureUrls?.forEachIndexed { index, url ->
             async {
                 loadPictureFromNetwork(
-                    "$index",
-                    url,
-                    context
+                    "$index", url, context
+                )?.let {
+                    onBitmapLoaded(it)
+                }
+            }
+        } ?: pictureIds?.forEach {
+            async {
+                decodeRawResource(
+                    context.resources, it
                 )?.let {
                     onBitmapLoaded(it)
                 }
             }
         }
-            ?: pictureIds?.forEach {
-                async {
-                    decodeRawResource(
-                        context.resources,
-                        it
-                    )?.let {
-                        onBitmapLoaded(it)
-                    }
-                }
-            }
     }
 }
 
 @Composable
 fun ScrollableColumn(
-    bitmaps: List<Bitmap?>,
-    authorAndLinkList: List<Pair<String, String>>
+    bitmaps: List<Bitmap?>, authorAndLinkList: List<Pair<String, String>>
 ) {
     val columnScrollState = rememberScrollState()
-    val cardHeight =
-        with(LocalDensity.current) { cardHeightDp.dp.roundToPx() }
+    val cardHeight = with(LocalDensity.current) { cardHeightDp.dp.roundToPx() }
 
     var prevScrollValue by remember { mutableIntStateOf(0) }
-    val columnScrollFromTopInPx =
-        columnScrollState.value
+    val columnScrollFromTopInPx = columnScrollState.value
     prevScrollValue = columnScrollState.value
     Column(
         modifier = Modifier
@@ -176,20 +159,33 @@ fun ScrollableColumn(
     ) {
         repeat(bitmaps.size) {
             Spacer(modifier = Modifier.height(16.dp))
-            InvertedCard(
-                originalBitmap = if (it == 2) null else bitmaps[it],
+            InvertedCard(originalBitmap = if (it == 2) null else bitmaps[it],
                 cardHeight = cardHeight,
                 totalColumnScrollFromTop = columnScrollFromTopInPx,
-                authorName = authorAndLinkList[it].first,
-                authorLink = authorAndLinkList[it].second,
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(
-                        text = "SOMETHING WENT WRONG",
+                errorContent = {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Text(
+                            text = "SOMETHING WENT WRONG",
+                        )
+                    }
+                }) {
+                val context = LocalContext.current
+                val intent = remember {
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(authorAndLinkList[it].second)
                     )
+                }
+                Button(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(8.dp),
+                    onClick = { context.startActivity(intent) },
+                ) {
+                    Text(text = "photo by ${authorAndLinkList[it].first}")
                 }
             }
         }
@@ -202,10 +198,8 @@ fun InvertedCard(
     originalBitmap: Bitmap?,
     cardHeight: Int,
     totalColumnScrollFromTop: Int = 0,
-    authorName: String,
-    authorLink: String,
-    content: @Composable BoxScope.() -> Unit,
-    errorContent: @Composable BoxScope.() -> Unit
+    errorContent: @Composable BoxScope.() -> Unit,
+    content: @Composable BoxScope.() -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -225,38 +219,15 @@ fun InvertedCard(
                             cardHeight,
                             height
                         )
-                        val newBitmap =
-                            Bitmap.createBitmap(
-                                originalBitmap,
-                                0,
-                                yOffset,
-                                width,
-                                cardHeight
-                            )
+                        val newBitmap = Bitmap.createBitmap(
+                            originalBitmap, 0, yOffset, width, cardHeight
+                        )
                         canvas.nativeCanvas.drawBitmap(
-                            newBitmap,
-                            0f,
-                            0f,
-                            null
+                            newBitmap, 0f, 0f, null
                         )
                     }
                 }
-                val context = LocalContext.current
-                val intent = remember {
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(authorLink)
-                    )
-                }
-
-                Button(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(8.dp),
-                    onClick = { context.startActivity(intent) },
-                ) {
-                    Text(text = "photo by $authorName")
-                }
+                content()
             }
             else {
                 errorContent()
@@ -266,19 +237,16 @@ fun InvertedCard(
 }
 
 fun calculateYOffset(
-    totalColumnScrollFromTop: Int,
-    cardHeight: Int,
-    pictureHeight: Int
-) =
-    if (totalColumnScrollFromTop <= 0) {
-        pictureHeight - cardHeight
-    }
-    else if (totalColumnScrollFromTop + cardHeight >= pictureHeight) {
-        0
-    }
-    else {
-        pictureHeight - cardHeight - (totalColumnScrollFromTop)
-    }
+    totalColumnScrollFromTop: Int, cardHeight: Int, pictureHeight: Int
+) = if (totalColumnScrollFromTop <= 0) {
+    pictureHeight - cardHeight
+}
+else if (totalColumnScrollFromTop + cardHeight >= pictureHeight) {
+    0
+}
+else {
+    pictureHeight - cardHeight - (totalColumnScrollFromTop)
+}
 
 
 fun initScreenWidthAndHeight(configuration: Configuration, density: Float) {
@@ -305,8 +273,7 @@ fun InnerClickCounter(outerClicks: Int) {
     Column {
         Button(onClick = {
             innerClicks++
-        })
-        {
+        }) {
             Text("Inner clicks = $innerClicks")
         }
         Text("Outer clicks= $outerClicks")

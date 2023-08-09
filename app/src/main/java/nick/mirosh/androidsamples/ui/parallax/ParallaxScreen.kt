@@ -109,7 +109,14 @@ fun InvertedParallaxColumn(
             pictureIds,
             context
         ) {
-            bitmaps.add(it)
+            val scaledBitmap =
+                Bitmap.createScaledBitmap(
+                    it,
+                    screenWidthPx,
+                    screenHeightPx,
+                    true
+                )
+            bitmaps.add(scaledBitmap)
         }
     }
     if (bitmaps.size == pictureUrls?.size) {
@@ -124,41 +131,28 @@ suspend fun loadPictures(
     context: Context,
     onBitmapLoaded: (Bitmap) -> Unit,
 ) {
-    if (pictureUrls != null) {
-        withContext(Dispatchers.IO) {
+    withContext(Dispatchers.IO) {
+        pictureUrls?.forEachIndexed { index, url ->
             async {
-                pictureUrls.forEachIndexed { index, url ->
-                    loadPictureFromNetwork(
-                        "$index",
-                        url,
-                        context
-                    )?.let {
-                        val scaledBitmap =
-                            Bitmap.createScaledBitmap(
-                                it,
-                                screenWidthPx,
-                                screenHeightPx,
-                                true
-                            )
-                        onBitmapLoaded(scaledBitmap)
-                    }
+                loadPictureFromNetwork(
+                    "$index",
+                    url,
+                    context
+                )?.let {
+                    onBitmapLoaded(it)
                 }
             }
         }
-    }
-    else {
-        pictureIds?.forEach {
-            decodeRawResource(context.resources, it)?.let { decodedBitmap ->
-                val scaledBitmap =
-                    Bitmap.createScaledBitmap(
-                        decodedBitmap,
-                        screenWidthPx,
-                        screenHeightPx,
-                        true
-                    )
-                onBitmapLoaded(scaledBitmap)
+            ?: pictureIds?.forEach {
+                async {
+                    decodeRawResource(
+                        context.resources,
+                        it
+                    )?.let {
+                        onBitmapLoaded(it)
+                    }
+                }
             }
-        }
     }
 }
 
@@ -168,7 +162,8 @@ fun ScrollableColumn(
     authorAndLinkList: List<Pair<String, String>>
 ) {
     val columnScrollState = rememberScrollState()
-    val cardHeight = with(LocalDensity.current) { cardHeightDp.dp.roundToPx() }
+    val cardHeight =
+        with(LocalDensity.current) { cardHeightDp.dp.roundToPx() }
 
     var prevScrollValue by remember { mutableIntStateOf(0) }
     val columnScrollFromTopInPx =
@@ -237,7 +232,12 @@ fun InvertedCard(
                                 width,
                                 cardHeight
                             )
-                        canvas.nativeCanvas.drawBitmap(newBitmap, 0f, 0f, null)
+                        canvas.nativeCanvas.drawBitmap(
+                            newBitmap,
+                            0f,
+                            0f,
+                            null
+                        )
                     }
                 }
                 val context = LocalContext.current
@@ -258,7 +258,6 @@ fun InvertedCard(
                 }
             }
             else {
-
                 errorContent()
             }
         }
@@ -274,17 +273,6 @@ fun calculateYOffset(
         pictureHeight - cardHeight
     }
     else if (totalColumnScrollFromTop + cardHeight >= pictureHeight) {
-        Log.d(TAG, "Entering second case")
-        Log.d(
-            TAG,
-            "calculateYOffset: totalColumnScrollFromTop $totalColumnScrollFromTop"
-        )
-        Log.d(TAG, "calculateYOffset: cardHeight $cardHeight")
-        Log.d(TAG, "calculateYOffset: pictureHeight $pictureHeight")
-        Log.d(
-            TAG,
-            "totalColumnScrollFromTop + cardHeight >= pictureHeight ${totalColumnScrollFromTop + cardHeight >= pictureHeight}"
-        )
         0
     }
     else {

@@ -1,6 +1,5 @@
 package nick.mirosh.androidsamples.ui.parallax
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -10,11 +9,13 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -25,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -34,14 +36,9 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
 import nick.mirosh.androidsamples.R
-import nick.mirosh.androidsamples.utils.decodeRawResource
-import nick.mirosh.androidsamples.utils.loadPictureFromNetwork
+import nick.mirosh.androidsamples.utils.loadPictures
 
 
 private const val TAG = "ParallaxScreen"
@@ -51,7 +48,7 @@ var screenHeightPx = 0
 val cardHeightDp = 200
 
 @Composable
-fun ParallaxScreen() {
+fun ParallaxScreen2() {
 
     val pictures = listOf(
         R.raw.lukas_dlutko,
@@ -70,81 +67,157 @@ fun ParallaxScreen() {
         "https://images.pexels.com/photos/3284167/pexels-photo-3284167.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
         "https://images.pexels.com/photos/2627945/pexels-photo-2627945.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     )
-    InvertedParallaxColumn(pictureUrls)
+//    InvertedParallaxColumn(pictureUrls)
+
+    LazyColumn {
+        items(
+            pictureUrls.size,
+            {
+                pictureUrls[it]
+            },
+        ) {
+            Button(modifier = Modifier.padding(16.dp), onClick = {}) {
+                Text(text = pictureUrls[it])
+            }
+        }
+    }
 }
 
 @Composable
-fun InvertedParallaxColumn(
-    pictureUrls: List<String>? = null, pictureIds: List<Int>? = null
+fun ParallaxScreenTest() {
+
+    val pictureUrls = listOf(
+        "https://images.pexels.com/photos/2832034/pexels-photo-2832034.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/1154610/pexels-photo-1154610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/3284167/pexels-photo-3284167.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/2627945/pexels-photo-2627945.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    )
+
+
+    val pictureIds = listOf(
+        R.raw.lukas_dlutko,
+        R.raw.amine_msiouri,
+        R.raw.connor_danylenko,
+        R.raw.felix,
+        R.raw.julia_volk,
+        R.raw.matthew_montrone,
+        R.raw.sam_willis,
+        R.raw.pixabay
+    )
+    ParallaxScreen(pictureIds = pictureIds) {
+        items(pictureIds) {
+            val context = LocalContext.current
+            val intent = remember {
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(pictureUrls[it])
+                )
+            }
+            Button(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(8.dp),
+                onClick = { context.startActivity(intent) },
+            ) {
+                Text(text = "photo by balls")
+            }
+        }
+    }
+}
+
+@Composable
+fun ParallaxScreen(
+    bitmaps: List<Bitmap>? = null,
+    pictureUrls: List<String>? = null,
+    pictureIds: List<Int>? = null,
+    content: @Composable BoxScope.() -> Unit
 ) {
-    val bitmaps = remember {
+    var shimmer by remember {
+        mutableStateOf(false)
+    }
+    val parsedBitmaps = remember {
         mutableStateListOf<Bitmap?>(null)
     }
 
-    val authorsAndLinks = listOf(
-        "Lukáš Dlutko" to "https://www.pexels.com/@lukas-dlutko-1278617/",
-        "Amine M'siouri" to "https://www.pexels.com/@amine-m-siouri-1025778/",
-        "Connor Danylenko" to "https://www.pexels.com/@connor-danylenko-534256/",
-        "Felix Mittermeier" to "https://www.pexels.com/@felixmittermeier/",
-        "Julia Volk" to "https://www.pexels.com/@julia-volk/",
-        "Matthew Montrone" to "https://www.pexels.com/@matthew-montrone-230847/",
-        "Sam Willis" to "https://www.pexels.com/@sam-willis-457311/",
-        "Pixabay" to "https://www.pexels.com/@pixabay/",
-    )
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current.density
     val context = LocalContext.current
 
-    Log.d(TAG, "ParallaxScreen: prior to Launched effect ")
-    LaunchedEffect(Unit) {
-        Log.d(TAG, "ParallaxScreen: entering Launched effect ")
-        initScreenWidthAndHeight(configuration, density)
-        bitmaps.removeFirstOrNull()
-        loadPictures(
-            pictureUrls, pictureIds, context
-        ) {
-            val scaledBitmap = Bitmap.createScaledBitmap(
-                it, screenWidthPx, screenHeightPx, true
+    if (bitmaps == null) {
+        LaunchedEffect(Unit) {
+            Log.d(TAG, "ParallaxScreen: starting download")
+            shimmer = true
+            initScreenWidthAndHeight(configuration, density)
+            parsedBitmaps.removeFirstOrNull()
+            parsedBitmaps + loadPictures(
+                pictureUrls, pictureIds, context
             )
-            bitmaps.add(scaledBitmap)
+            Log.d(TAG, "ParallaxScreen: parsedBitmaps.size = ${parsedBitmaps.size}")
+            shimmer = false
+            Log.d(TAG, "ParallaxScreen: download ended")
         }
     }
-    if (bitmaps.size == pictureUrls?.size) {
-        Log.d(TAG, "ParallaxScreen: showing column")
-        ScrollableColumn(bitmaps.toList(), authorsAndLinks)
-    }
-}
 
-suspend fun loadPictures(
-    pictureUrls: List<String>? = null,
-    pictureIds: List<Int>? = null,
-    context: Context,
-    onBitmapLoaded: (Bitmap) -> Unit,
-) {
-    withContext(Dispatchers.IO) {
-        pictureUrls?.forEachIndexed { index, url ->
-            async {
-                loadPictureFromNetwork(
-                    "$index", url, context
-                )?.let {
-                    onBitmapLoaded(it)
-                }
-            }
-        } ?: pictureIds?.forEach {
-            async {
-                decodeRawResource(
-                    context.resources, it
-                )?.let {
-                    onBitmapLoaded(it)
-                }
-            }
+    if (parsedBitmaps.size == (pictureUrls?.size ?: pictureIds?.size)) {
+        InvertedParallaxColumn2(parsedBitmaps.toList().filterNotNull()) {
+            content()
         }
     }
 }
 
 @Composable
+fun BoxScope.items(
+    items: List<Any>,
+    itemContent: @Composable (index: Int) -> Unit,
+) {
+    for (index in items.indices) {
+        itemContent(index)
+    }
+}
+
+
+@Composable
+fun InvertedParallaxColumn2(
+    bitmaps: List<Bitmap>,
+    content: @Composable BoxScope.() -> Unit
+) {
+    val columnScrollState = rememberScrollState()
+    val cardHeight = with(LocalDensity.current) { cardHeightDp.dp.roundToPx() }
+
+    var prevScrollValue by remember { mutableIntStateOf(0) }
+    val columnScrollFromTopInPx = columnScrollState.value
+    prevScrollValue = columnScrollState.value
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(columnScrollState),
+    ) {
+        repeat(bitmaps.size) {
+            Spacer(modifier = Modifier.height(16.dp))
+            InvertedCard(originalBitmap = bitmaps[it],
+                cardHeight = cardHeight,
+                totalColumnScrollFromTop = columnScrollFromTopInPx,
+                errorContent = {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Text(
+                            text = "SOMETHING WENT WRONG",
+                        )
+                    }
+                }) {
+                content()
+            }
+        }
+    }
+}
+
+
+@Composable
 fun ScrollableColumn(
-    bitmaps: List<Bitmap?>, authorAndLinkList: List<Pair<String, String>>
+    bitmaps: List<Bitmap?>
 ) {
     val columnScrollState = rememberScrollState()
     val cardHeight = with(LocalDensity.current) { cardHeightDp.dp.roundToPx() }
@@ -172,21 +245,6 @@ fun ScrollableColumn(
                         )
                     }
                 }) {
-                val context = LocalContext.current
-                val intent = remember {
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(authorAndLinkList[it].second)
-                    )
-                }
-                Button(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(8.dp),
-                    onClick = { context.startActivity(intent) },
-                ) {
-                    Text(text = "photo by ${authorAndLinkList[it].first}")
-                }
             }
         }
     }
@@ -277,5 +335,35 @@ fun InnerClickCounter(outerClicks: Int) {
             Text("Inner clicks = $innerClicks")
         }
         Text("Outer clicks= $outerClicks")
+    }
+}
+
+@Composable
+fun ButtonThatDisappearsOnClick() {
+    var showButton by remember { mutableStateOf(true) }
+    if (showButton) {
+        Button(onClick = {
+            check(showButton)
+            showButton = false
+        }) {
+            Text("My button")
+        }
+    }
+    LimitedCounter()
+}
+
+@Composable
+fun LimitedCounter() {
+    var count by remember { mutableIntStateOf(3) }
+    if (count < 5) {
+        Button(onClick = {
+            check(count < 5) { "Counter should not exceed the limit of 5" }
+            count += 1
+        }) {
+            Text("Clicked $count times")
+        }
+    }
+    else {
+        Text("Counter limit reached")
     }
 }

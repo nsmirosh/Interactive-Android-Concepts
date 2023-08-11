@@ -6,6 +6,19 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.util.TypedValue
+import android.widget.Toast
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -63,34 +76,22 @@ fun decodeImageFromInternalStorage(
         val fis: FileInputStream = context.openFileInput(imageName)
         BitmapFactory.decodeStream(fis)
     } catch (e: Exception) {
+        Log.d("ParallaxScreen", "decodeImageFromInternalStorage: failure")
         e.printStackTrace()
         null
     }
 }
 
-fun scaleBitmap(decodedBitmap: Bitmap): Bitmap {
-    return Bitmap.createScaledBitmap(
-        decodedBitmap,
-        screenWidthPx,
-        screenHeightPx,
-        true
-    )
-}
-
-fun loadPictureFromNetwork(
+fun downloadPictureToInternalStorage(
+    fileName: String,
     url: String,
     context: Context
-): Bitmap? {
+) {
     downloadImage(
         imageUrl = url,
     )?.let {
-        saveImageToInternalStorage(context, it, url)
+        saveImageToInternalStorage(context = context, bitmap = it, imageName = fileName)
     }
-    return decodeImageFromInternalStorage(
-        context,
-        url
-    )
-
 }
 
 fun decodeRawResource(resources: Resources, pictureId: Int): Bitmap? {
@@ -117,9 +118,18 @@ suspend fun loadPictures(
         val deferreds = mutableListOf<Deferred<Bitmap>>()
         pictureUrls?.forEach { url ->
             deferreds + async {
-                loadPictureFromNetwork(
-                    url, context
+                val fileName = "img_${System.currentTimeMillis()}"
+                downloadPictureToInternalStorage(
+                    fileName = fileName,
+                    url = url,
+                    context = context,
                 )
+                val bitmap = decodeImageFromInternalStorage(
+                    context,
+                    fileName
+                )
+                Log.d("ParallaxScreen", "bitmap.size = ${bitmap?.byteCount} bytes")
+                bitmap
             }
         } ?: pictureIds?.forEach {
             deferreds + async {
@@ -132,29 +142,4 @@ suspend fun loadPictures(
         deferreds.awaitAll()
     }
 
-//suspend fun loadPictures(
-//    pictureUrls: List<String>? = null,
-//    pictureIds: List<Int>? = null,
-//    context: Context,
-//    onBitmapsLoaded: (Bitmap) -> Unit,
-//): List<Bitmap> {
-//    withContext(Dispatchers.IO) {
-//        pictureUrls?.forEachIndexed { index, url ->
-//            async {
-//                loadPictureFromNetwork(
-//                    "$index", url, context
-//                )?.let {
-//                    onBitmapsLoaded(it)
-//                }
-//            }
-//        } ?: pictureIds?.forEach {
-//            async {
-//                decodeRawResource(
-//                    context.resources, it
-//                )?.let {
-//                    onBitmapsLoaded(it)
-//                }
-//            }
-//        }
-//    }
-//}
+

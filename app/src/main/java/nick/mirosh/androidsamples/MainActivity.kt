@@ -34,7 +34,6 @@ import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
-import nick.mirosh.androidsamples.ui.parallax.ParallaxScreenTest
 import nick.mirosh.androidsamples.ui.progress.ProgressBarContent2
 import nick.mirosh.androidsamples.ui.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.recomposition.RecompositionLobbyScreen
@@ -42,6 +41,7 @@ import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 import nick.mirosh.androidsamples.ui.todo.TodoViewModel
 import nick.mirosh.androidsamples.ui.todo.details.TodoDetailsScreen
 import nick.mirosh.androidsamples.ui.todo.details.TodoDetailsViewModel
+import nick.mirosh.androidsamples.utils.StatefulCounter
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -141,7 +141,11 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
         RecompositionLobbyScreen()
     }
     composable(route = Parallax.route) {
-        ParallaxScreenTest()
+//        ParallaxScreenTest()
+//        ExampleRunner()
+//        ParallelExample()
+        StatefulCounter()
+//        OuterClickCounter()
     }
 }
 

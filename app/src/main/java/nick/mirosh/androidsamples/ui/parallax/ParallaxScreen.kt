@@ -9,7 +9,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -105,8 +104,8 @@ fun ParallaxScreenTest() {
         R.raw.sam_willis,
         R.raw.pixabay
     )
-    ParallaxScreen(pictureIds = pictureIds) {
-        items(pictureIds) {
+    ParallaxScreen( pictureUrls = pictureUrls) {
+        items(pictureUrls) {
             val context = LocalContext.current
             val intent = remember {
                 Intent(
@@ -312,58 +311,4 @@ fun initScreenWidthAndHeight(configuration: Configuration, density: Float) {
     val screenWidthDp = configuration.screenWidthDp
     screenHeightPx = (screenHeightDp * density).toInt()
     screenWidthPx = (screenWidthDp * density).toInt()
-}
-
-@Composable
-fun OuterClickCounter() {
-    Column {
-        var outerClicks by remember { mutableIntStateOf(0) }
-        Button(onClick = { outerClicks++ }) {
-            Text("Outer click trigger")
-        }
-        InnerClickCounter(outerClicks)
-    }
-}
-
-@Composable
-fun InnerClickCounter(outerClicks: Int) {
-    var innerClicks by mutableIntStateOf(0)
-    Column {
-        Button(onClick = {
-            innerClicks++
-        }) {
-            Text("Inner clicks = $innerClicks")
-        }
-        Text("Outer clicks= $outerClicks")
-    }
-}
-
-@Composable
-fun ButtonThatDisappearsOnClick() {
-    var showButton by remember { mutableStateOf(true) }
-    if (showButton) {
-        Button(onClick = {
-            check(showButton)
-            showButton = false
-        }) {
-            Text("My button")
-        }
-    }
-    LimitedCounter()
-}
-
-@Composable
-fun LimitedCounter() {
-    var count by remember { mutableIntStateOf(3) }
-    if (count < 5) {
-        Button(onClick = {
-            check(count < 5) { "Counter should not exceed the limit of 5" }
-            count += 1
-        }) {
-            Text("Clicked $count times")
-        }
-    }
-    else {
-        Text("Counter limit reached")
-    }
 }

@@ -149,9 +149,14 @@ fun ParallaxScreen(
             shimmer = true
             initScreenWidthAndHeight(configuration, density)
             parsedBitmaps.removeFirstOrNull()
-            parsedBitmaps + loadPictures(
+            val startTime = System.currentTimeMillis()
+            Log.d(TAG, "ParallaxScreen: time $startTime")
+            val pictures = loadPictures(
                 pictureUrls, pictureIds, context
             )
+            Log.d(TAG, "ParallaxScreen: loaded pictures = $pictures")
+            parsedBitmaps.addAll(pictures)
+            Log.d(TAG, "time for loading pictures ${System.currentTimeMillis() - startTime}")
             Log.d(TAG, "ParallaxScreen: parsedBitmaps.size = ${parsedBitmaps.size}")
             shimmer = false
             Log.d(TAG, "ParallaxScreen: download ended")

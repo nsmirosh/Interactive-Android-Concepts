@@ -6,26 +6,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.util.TypedValue
-import android.widget.Toast
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
-import nick.mirosh.androidsamples.ui.parallax.screenHeightPx
-import nick.mirosh.androidsamples.ui.parallax.screenWidthPx
 import java.io.FileInputStream
 import java.io.OutputStream
 import java.net.HttpURLConnection
@@ -115,31 +100,36 @@ suspend fun loadPictures(
     context: Context,
 ) =
     withContext(Dispatchers.IO) {
-        val deferreds = mutableListOf<Deferred<Bitmap>>()
-        pictureUrls?.forEach { url ->
-            deferreds + async {
-                val fileName = "img_${System.currentTimeMillis()}"
-                downloadPictureToInternalStorage(
-                    fileName = fileName,
-                    url = url,
-                    context = context,
-                )
-                val bitmap = decodeImageFromInternalStorage(
-                    context,
-                    fileName
-                )
-                Log.d("ParallaxScreen", "bitmap.size = ${bitmap?.byteCount} bytes")
-                bitmap
+        mutableListOf<Deferred<Bitmap?>>().apply {
+            pictureUrls?.forEach { url ->
+                add(async {
+                    context.getPictureWithUrl(url)
+                })
+            } ?: pictureIds?.forEach {
+                add(async {
+                    context.loadLocalPictures(it)
+                })
             }
-        } ?: pictureIds?.forEach {
-            deferreds + async {
-                decodeRawResource(
-                    context.resources, it
-                )
-                Log.d("ParallaxScreen", "loadPictures: $it decoded")
-            }
-        }
-        deferreds.awaitAll()
+        }.awaitAll()
     }
 
+fun Context.loadLocalPictures(pictureId: Int) =
+    decodeRawResource(
+        this.resources, pictureId
+    )
 
+
+fun Context.getPictureWithUrl(url: String): Bitmap? {
+    val fileName = "img_${System.currentTimeMillis()}"
+    downloadPictureToInternalStorage(
+        fileName = fileName,
+        url = url,
+        context = this,
+    )
+    val bitmap = decodeImageFromInternalStorage(
+        this,
+        fileName
+    )
+    Log.d("ParallaxScreen", "bitmap.size = ${bitmap?.byteCount} bytes")
+    return bitmap
+}

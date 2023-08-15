@@ -1,6 +1,9 @@
-package nick.mirosh.androidsamples.utils
+package nick.mirosh.androidsamples.ui.presentations
 
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.interaction.Interaction
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -13,14 +16,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.withContext
 
-// ======// ======// ======// ======// ======// ======// ======// ======// ======// ======// ======// ======// ===================
 
 @Composable
-fun ExampleRunner() {
-    FirstComposable()
-    SecondComposable()
+fun PresentationScreen() {
+//    Column {
+//        StatefulCounter()
+//        StatefulCounter2()
+//    }
+    Log.d("PresentationScreen", "PresentationScreen: recomposing")
+    StatelessCounterRunner()
 }
 
 @Composable
@@ -43,8 +51,6 @@ fun SecondComposable() {
     ).show()
 }
 
-
-var sharedCounter = 0
 
 @Composable
 fun ParallelExample() {
@@ -77,8 +83,18 @@ fun ComposableB(followHappyPath: Boolean) {
 
 @Composable
 fun StatefulCounter() {
-    var count by mutableIntStateOf(0)
     Column {
+        var count by remember { mutableIntStateOf(0) }
+        Button(onClick = { count++ }) {
+            Text("Count is $count")
+        }
+    }
+}
+
+@Composable
+fun StatefulCounter2() {
+    Column {
+        var count by remember { mutableIntStateOf(0) }
         Text("count is $count")
         Button(onClick = { count++ }) {
             Text("Add one")
@@ -87,13 +103,23 @@ fun StatefulCounter() {
 }
 
 @Composable
-fun StatefulCounter2() {
-    var count by mutableIntStateOf(0)
-    Column {
-        Button(onClick = { count++ }) {
-            Text("Count is $count")
-        }
+fun StatelessCounterRunner() {
+    var count by remember { mutableIntStateOf(0) }
+    StatelessCounter(count = count, onCountIncremented = { count++ })
+}
+
+@Composable
+fun StatelessCounter(count: Int, onCountIncremented: () -> Unit) {
+    Button(
+        onClick = { onCountIncremented() }) {
+        Text("Count is $count")
     }
+}
+
+class NoRippleInteractionSource : MutableInteractionSource {
+    override val interactions: Flow<Interaction> = emptyFlow()
+    override suspend fun emit(interaction: Interaction) {}
+    override fun tryEmit(interaction: Interaction) = true
 }
 
 @Composable

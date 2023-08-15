@@ -1,10 +1,7 @@
 package nick.mirosh.androidsamples.ui.parallax
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -66,7 +63,6 @@ fun ParallaxScreen2() {
         "https://images.pexels.com/photos/3284167/pexels-photo-3284167.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
         "https://images.pexels.com/photos/2627945/pexels-photo-2627945.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     )
-//    InvertedParallaxColumn(pictureUrls)
 
     LazyColumn {
         items(
@@ -95,29 +91,29 @@ fun ParallaxScreenTest() {
 
 
     val pictureIds = listOf(
-        R.raw.lukas_dlutko,
-        R.raw.amine_msiouri,
-        R.raw.connor_danylenko,
-        R.raw.felix,
-        R.raw.julia_volk,
-        R.raw.matthew_montrone,
-        R.raw.sam_willis,
-        R.raw.pixabay
+        Pair(R.raw.lukas_dlutko, "Lukas Ldutko"),
+        Pair(R.raw.amine_msiouri, "Amine Msiouri"),
+        Pair(R.raw.connor_danylenko, "Connor Danylenko"),
+        Pair(R.raw.felix, "Felix"),
+        Pair(R.raw.julia_volk, "Julia Volk"),
+        Pair(R.raw.matthew_montrone, "Matthew Montrone"),
+        Pair(R.raw.sam_willis, "Sam Willis"),
+        Pair(R.raw.pixabay, "Pixabay"),
     )
-    ParallaxScreen( pictureUrls = pictureUrls) {
-        items(pictureUrls) {
+    ParallaxScreen(pictureIds = pictureIds.map { it.first }) {
+        items(pictureIds) { index, item ->
             val context = LocalContext.current
-            val intent = remember {
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(pictureUrls[it])
-                )
-            }
+//            val intent = remember {
+//                Intent(
+//                    Intent.ACTION_VIEW,
+//                    Uri.parse(item)
+//                )
+//            }
             Button(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(8.dp),
-                onClick = { context.startActivity(intent) },
+                onClick = {/* context.startActivity(intent) */},
             ) {
                 Text(text = "photo by balls")
             }
@@ -145,21 +141,15 @@ fun ParallaxScreen(
 
     if (bitmaps == null) {
         LaunchedEffect(Unit) {
-            Log.d(TAG, "ParallaxScreen: starting download")
             shimmer = true
             initScreenWidthAndHeight(configuration, density)
             parsedBitmaps.removeFirstOrNull()
-            val startTime = System.currentTimeMillis()
-            Log.d(TAG, "ParallaxScreen: time $startTime")
-            val pictures = loadPictures(
-                pictureUrls, pictureIds, context
+            parsedBitmaps.addAll(
+                loadPictures(
+                    pictureUrls, pictureIds, context
+                )
             )
-            Log.d(TAG, "ParallaxScreen: loaded pictures = $pictures")
-            parsedBitmaps.addAll(pictures)
-            Log.d(TAG, "time for loading pictures ${System.currentTimeMillis() - startTime}")
-            Log.d(TAG, "ParallaxScreen: parsedBitmaps.size = ${parsedBitmaps.size}")
             shimmer = false
-            Log.d(TAG, "ParallaxScreen: download ended")
         }
     }
 
@@ -171,12 +161,12 @@ fun ParallaxScreen(
 }
 
 @Composable
-fun BoxScope.items(
-    items: List<Any>,
-    itemContent: @Composable (index: Int) -> Unit,
+fun <T> BoxScope.items(
+    items: List<T>,
+    itemContent: @Composable (index: Int, item: T) -> Unit,
 ) {
     for (index in items.indices) {
-        itemContent(index)
+        itemContent(index, items[index])
     }
 }
 

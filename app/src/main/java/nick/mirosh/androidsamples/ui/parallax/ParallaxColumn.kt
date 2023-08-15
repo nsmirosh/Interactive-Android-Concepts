@@ -1,7 +1,10 @@
 package nick.mirosh.androidsamples.ui.parallax
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -11,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -43,86 +45,44 @@ var screenWidthPx = 0
 var screenHeightPx = 0
 val cardHeightDp = 200
 
-@Composable
-fun ParallaxScreen2() {
+data class Picture(
+    val pictureId: Int,
+    val author: String,
+    val authorUrl: String,
+)
 
-    val pictures = listOf(
-        R.raw.lukas_dlutko,
-        R.raw.amine_msiouri,
-        R.raw.connor_danylenko,
-        R.raw.felix,
-        R.raw.julia_volk,
-        R.raw.matthew_montrone,
-        R.raw.sam_willis,
-        R.raw.pixabay
-    )
-    val pictureUrls = listOf(
-        "https://images.pexels.com/photos/2832034/pexels-photo-2832034.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/1154610/pexels-photo-1154610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/3284167/pexels-photo-3284167.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/2627945/pexels-photo-2627945.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    )
-
-    LazyColumn {
-        items(
-            pictureUrls.size,
-            {
-                pictureUrls[it]
-            },
-        ) {
-            Button(modifier = Modifier.padding(16.dp), onClick = {}) {
-                Text(text = pictureUrls[it])
-            }
-        }
-    }
-}
+data class PictureWithUrl(
+    val pictureUrl: String,
+    val author: String,
+    val authorUrl: String,
+)
 
 @Composable
 fun ParallaxScreenTest() {
-
-    val pictureUrls = listOf(
-        "https://images.pexels.com/photos/2832034/pexels-photo-2832034.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/1154610/pexels-photo-1154610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/3284167/pexels-photo-3284167.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-        "https://images.pexels.com/photos/2627945/pexels-photo-2627945.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    )
-
-
-    val pictureIds = listOf(
-        Pair(R.raw.lukas_dlutko, "Lukas Ldutko"),
-        Pair(R.raw.amine_msiouri, "Amine Msiouri"),
-        Pair(R.raw.connor_danylenko, "Connor Danylenko"),
-        Pair(R.raw.felix, "Felix"),
-        Pair(R.raw.julia_volk, "Julia Volk"),
-        Pair(R.raw.matthew_montrone, "Matthew Montrone"),
-        Pair(R.raw.sam_willis, "Sam Willis"),
-        Pair(R.raw.pixabay, "Pixabay"),
-    )
-    ParallaxScreen(pictureIds = pictureIds.map { it.first }) {
-        items(pictureIds) { index, item ->
+//    ParallaxColumn(pictureIds = picturesWithLocalIds.map { it.pictureId }) {
+    ParallaxColumn(pictureUrls = picturesWithUrls.map { it.pictureUrl }) {
+        items(picturesWithUrls) { _, item ->
             val context = LocalContext.current
-//            val intent = remember {
-//                Intent(
-//                    Intent.ACTION_VIEW,
-//                    Uri.parse(item)
-//                )
-//            }
+            val intent =
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(item.authorUrl)
+                )
+
             Button(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(8.dp),
-                onClick = {/* context.startActivity(intent) */},
+                onClick = { context.startActivity(intent) },
             ) {
-                Text(text = "photo by balls")
+                Text(text = "photo by ${item.author}")
             }
         }
     }
 }
 
 @Composable
-fun ParallaxScreen(
+fun ParallaxColumn(
     bitmaps: List<Bitmap>? = null,
     pictureUrls: List<String>? = null,
     pictureIds: List<Int>? = null,
@@ -149,6 +109,7 @@ fun ParallaxScreen(
                     pictureUrls, pictureIds, context
                 )
             )
+            Log.d(TAG, "ParallaxColumn: parsedBitmaps.size = ${parsedBitmaps.size}")
             shimmer = false
         }
     }
@@ -307,3 +268,60 @@ fun initScreenWidthAndHeight(configuration: Configuration, density: Float) {
     screenHeightPx = (screenHeightDp * density).toInt()
     screenWidthPx = (screenWidthDp * density).toInt()
 }
+
+
+val picturesWithLocalIds = listOf(
+    Picture(
+        pictureId = R.raw.lukas_dlutko,
+        author = "Lukas Ldutko",
+        authorUrl = "https://www.pexels.com/@lukas-dlutko-1278617/"
+    ),
+    Picture(
+        pictureId = R.raw.amine_msiouri,
+        author = "Amine Msiouri",
+        authorUrl = "https://www.pexels.com/@amine-m-siouri-1025778/"
+    ),
+    Picture(
+        pictureId = R.raw.connor_danylenko,
+        author = "Connor Danylenko",
+        authorUrl = "https://www.pexels.com/@connor-danylenko-534256/"
+    ),
+    Picture(
+        pictureId = R.raw.julia_volk,
+        author = "Julia Volk",
+        authorUrl = "https://www.pexels.com/@julia-volk/"
+    ),
+    Picture(
+        pictureId = R.raw.matthew_montrone,
+        author = "Matthew Montrone",
+        authorUrl = "https://www.pexels.com/th-th/@matthew-montrone-230847/"
+    ),
+    Picture(
+        pictureId = R.raw.sam_willis,
+        author = "Sam Willis",
+        authorUrl = "https://www.pexels.com/@sam-willis-457311/"
+    ),
+    Picture(
+        pictureId = R.raw.pixabay,
+        author = "Pixabay",
+        authorUrl = "https://www.pexels.com/@pixabay/"
+    ),
+)
+val picturesWithUrls = listOf(
+
+    PictureWithUrl(
+        pictureUrl = "https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        author = "Lukas Ldutko",
+        authorUrl = "https://www.pexels.com/@lukas-dlutko-1278617/"
+    ),
+    PictureWithUrl(
+        pictureUrl = "https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        author = "Lukas Ldutko",
+        authorUrl = "https://www.pexels.com/@lukas-dlutko-1278617/"
+    ),
+    PictureWithUrl(
+        pictureUrl = "https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        author = "Lukas Ldutko",
+        authorUrl = "https://www.pexels.com/@lukas-dlutko-1278617/"
+    ),
+)

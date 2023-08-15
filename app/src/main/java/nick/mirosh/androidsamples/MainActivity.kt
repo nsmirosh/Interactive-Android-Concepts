@@ -34,7 +34,7 @@ import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
-import nick.mirosh.androidsamples.ui.presentations.PresentationScreen
+import nick.mirosh.androidsamples.ui.parallax.ParallaxScreenTest
 import nick.mirosh.androidsamples.ui.progress.ProgressBarContent2
 import nick.mirosh.androidsamples.ui.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.recomposition.RecompositionLobbyScreen
@@ -141,8 +141,8 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
         RecompositionLobbyScreen()
     }
     composable(route = Parallax.route) {
-//        ParallaxScreenTest()
-        PresentationScreen()
+        ParallaxScreenTest()
+//        PresentationScreen()
     }
 }
 

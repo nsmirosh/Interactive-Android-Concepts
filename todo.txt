@@ -69,7 +69,7 @@ Parallax scrolling
   [x] - allow the user to add their own image
 [x] - make the API "slot base" i.e. allow the users to insert their own UI over the parallax picture - Aug 9
 [x] - load all pictures at once - Aug 9
-[ ] - don't return just and index of the elements - return the whole element, an id or a url - cause that way there are goin to be problems
+[x] - don't return just and index of the elements - return the whole element, an id or a url - cause that way there are goin to be problems
 [ ] - add a shimmer - Aug 10
 [ ] - allow the users to modify height of the cards - Aug 11
 [ ] - add testing - Aug 15

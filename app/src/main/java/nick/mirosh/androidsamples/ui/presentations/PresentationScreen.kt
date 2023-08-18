@@ -5,20 +5,25 @@ import android.widget.Toast
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.withContext
+import kotlin.random.Random
 
 
 @Composable
@@ -27,8 +32,10 @@ fun PresentationScreen() {
 //        StatefulCounter()
 //        StatefulCounter2()
 //    }
+    OuterClickCounter()
     Log.d("PresentationScreen", "PresentationScreen: recomposing")
-    StatelessCounterRunner()
+//    StatelessCounterRunner()
+//    OuterClickCounter()
 }
 
 @Composable
@@ -51,6 +58,15 @@ fun SecondComposable() {
     ).show()
 }
 
+@Composable
+fun FunctionThatRunsFrequently() {
+    functionThatDoesSomeHeavyLifting()
+    Text("Something")
+}
+
+fun functionThatDoesSomeHeavyLifting() {
+    //Something that takes a long time
+}
 
 @Composable
 fun ParallelExample() {
@@ -83,9 +99,12 @@ fun ComposableB(followHappyPath: Boolean) {
 
 @Composable
 fun StatefulCounter() {
+    LogCompositions(msg = "StatefulCounter WHOLE SCOPE")
     Column {
-        var count by remember { mutableIntStateOf(0) }
+        LogCompositions(msg = "StatefulCounter ColumnScope")
+        var count by mutableIntStateOf(0)
         Button(onClick = { count++ }) {
+            LogCompositions(msg = "StatefulCounter ButtonScope")
             Text("Count is $count")
         }
     }
@@ -93,10 +112,13 @@ fun StatefulCounter() {
 
 @Composable
 fun StatefulCounter2() {
+    LogCompositions(msg = "StatefulCounter2 WHOLE SCOPE")
     Column {
-        var count by remember { mutableIntStateOf(0) }
+        LogCompositions(msg = "StatefulCounter2 ColumnScope")
+        var count by mutableIntStateOf(0)
         Text("count is $count")
         Button(onClick = { count++ }) {
+            LogCompositions(msg = "StatefulCounter2 ButtonScope")
             Text("Add one")
         }
     }
@@ -122,43 +144,98 @@ class NoRippleInteractionSource : MutableInteractionSource {
     override fun tryEmit(interaction: Interaction) = true
 }
 
-@Composable
-fun Counter(count: Int, onCountChanged: (Int) -> Unit) {
-
-    Column {
-        Text("count is $count")
-        Button(onClick = { onCountChanged(count + 1) }) {
-            Text("Add one")
-        }
-    }
-}
-
-@Composable
-fun ButtonThatDisappearsOnClick() {
-    var showButton by remember { mutableStateOf(true) }
-    if (showButton) {
-        androidx.compose.material3.Button(onClick = {
-            check(showButton)
-            showButton = false
-        }) {
-            androidx.compose.material3.Text("My button")
-        }
-    }
-    LimitedCounter()
-}
 
 @Composable
 fun LimitedCounter() {
-    var count by remember { mutableIntStateOf(3) }
-    if (count < 5) {
-        androidx.compose.material3.Button(onClick = {
-            check(count < 5) { "Counter should not exceed the limit of 5" }
+    var count by remember { mutableIntStateOf(4) }
+    if (count < 5)
+        Button(onClick = {
+            if (count == 5) throw Exception("Counter should not exceed the limit of 5")
             count += 1
         }) {
-            androidx.compose.material3.Text("Clicked $count times")
+            Text("Clicked $count times")
         }
+    else
+        Text("Counter limit reached")
+}
+
+
+@Composable
+fun OuterClickCounter() {
+    LogCompositions(msg = "OuterClickCounter WHOLE SCOPE")
+    Column {
+//        var outerClicks = 0
+//        var outerClicks by mutableIntStateOf(0)
+        var outerClicks by remember { mutableIntStateOf(0) }
+        Button(onClick = { outerClicks++ }) {
+            Text("Outer click trigger")
+        }
+        InnerClickCounter(outerClicks)
     }
-    else {
-        androidx.compose.material3.Text("Counter limit reached")
+}
+
+@Composable
+fun InnerClickCounter(outerClicks: Int) {
+    LogCompositions(msg = "InnerClickCounter WHOLE SCOPE")
+//    var innerClicks = 0
+    var innerClicks by remember {mutableIntStateOf(0) }
+//    var innerClicks by remember { mutableIntStateOf(0) }
+    Column {
+        Button(onClick = { innerClicks++ }) {
+            Text("Inner clicks  = $innerClicks")
+        }
+        Text("Outer clicks = $outerClicks")
+    }
+}
+
+
+//////////////////=========================================================================================================
+
+
+class Ref(var value: Int)
+
+@Composable
+inline fun LogCompositions(msg: String) {
+    val ref = remember { Ref(0) }
+    SideEffect { ref.value++ }
+    Log.d("RecompositionLog", "Compositions: $msg ${ref.value}")
+}
+
+
+@Composable
+fun Greeting() {
+    var state by remember {
+        mutableStateOf("Hi Foo")
+    }
+    LogCompositions(msg = "Greeting Scope")
+    Text(text = state)
+    Button(
+        onClick = { state = "Hi Foo ${Random.nextInt()}" },
+        modifier = Modifier
+            .padding(top = 32.dp)
+    ) {
+        LogCompositions(msg = "Button Scope")
+        Text(
+            text = "Click Me!"
+        )
+    }
+}
+
+@Composable
+fun Greeting2() {
+    LogCompositions(msg = "Greeting Scope")
+    var state by remember {  //We move this line of code after log recomposition and closer to its caller and
+        mutableStateOf("Hi Foo")
+    }
+    Text(text = state)
+    Button(
+        onClick = { state = "Hi Foo ${Random.nextInt()}" },
+        modifier = Modifier
+            .padding(top = 32.dp)
+    ) {
+        LogCompositions(msg = "Button Scope")
+        Text(
+            text = "Click Me!"
+        )
     }
 }

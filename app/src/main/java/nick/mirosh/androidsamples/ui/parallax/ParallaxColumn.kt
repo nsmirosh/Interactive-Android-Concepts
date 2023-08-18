@@ -59,16 +59,15 @@ data class PictureWithUrl(
 
 @Composable
 fun ParallaxScreenTest() {
-//    ParallaxColumn(pictureIds = picturesWithLocalIds.map { it.pictureId }) {
-    ParallaxColumn(pictureUrls = picturesWithUrls.map { it.pictureUrl }) {
-        items(picturesWithUrls) { _, item ->
+    ParallaxColumn(pictureIds = picturesWithLocalIds.map { it.pictureId }) {
+//    ParallaxColumn(pictureUrls = picturesWithUrls.map { it.pictureUrl }) {
+        items(picturesWithLocalIds) { _, item ->
             val context = LocalContext.current
             val intent =
                 Intent(
                     Intent.ACTION_VIEW,
                     Uri.parse(item.authorUrl)
                 )
-
             Button(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
@@ -150,56 +149,12 @@ fun InvertedParallaxColumn2(
     ) {
         repeat(bitmaps.size) {
             Spacer(modifier = Modifier.height(16.dp))
-            InvertedCard(originalBitmap = bitmaps[it],
+            InvertedCard(
+                originalBitmap = bitmaps[it],
                 cardHeight = cardHeight,
                 totalColumnScrollFromTop = columnScrollFromTopInPx,
-                errorContent = {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Text(
-                            text = "SOMETHING WENT WRONG",
-                        )
-                    }
-                }) {
+            ) {
                 content()
-            }
-        }
-    }
-}
-
-
-@Composable
-fun ScrollableColumn(
-    bitmaps: List<Bitmap?>
-) {
-    val columnScrollState = rememberScrollState()
-    val cardHeight = with(LocalDensity.current) { cardHeightDp.dp.roundToPx() }
-
-    var prevScrollValue by remember { mutableIntStateOf(0) }
-    val columnScrollFromTopInPx = columnScrollState.value
-    prevScrollValue = columnScrollState.value
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(columnScrollState),
-    ) {
-        repeat(bitmaps.size) {
-            Spacer(modifier = Modifier.height(16.dp))
-            InvertedCard(originalBitmap = if (it == 2) null else bitmaps[it],
-                cardHeight = cardHeight,
-                totalColumnScrollFromTop = columnScrollFromTopInPx,
-                errorContent = {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Text(
-                            text = "SOMETHING WENT WRONG",
-                        )
-                    }
-                }) {
             }
         }
     }
@@ -208,10 +163,9 @@ fun ScrollableColumn(
 @Composable
 fun InvertedCard(
     modifier: Modifier = Modifier,
-    originalBitmap: Bitmap?,
+    originalBitmap: Bitmap,
     cardHeight: Int,
     totalColumnScrollFromTop: Int = 0,
-    errorContent: @Composable BoxScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
     Card(
@@ -220,31 +174,26 @@ fun InvertedCard(
             .padding(start = 16.dp, end = 16.dp)
     ) {
         Box(modifier = modifier.fillMaxSize()) {
-            if (originalBitmap != null) {
-                Canvas(
-                    modifier = Modifier
-                ) {
-                    drawIntoCanvas { canvas ->
-                        val width = originalBitmap.width
-                        val height = originalBitmap.height
-                        val yOffset = calculateYOffset(
-                            (totalColumnScrollFromTop * 5) / 10,
-                            cardHeight,
-                            height
-                        )
-                        val newBitmap = Bitmap.createBitmap(
-                            originalBitmap, 0, yOffset, width, cardHeight
-                        )
-                        canvas.nativeCanvas.drawBitmap(
-                            newBitmap, 0f, 0f, null
-                        )
-                    }
+            Canvas(
+                modifier = Modifier
+            ) {
+                drawIntoCanvas { canvas ->
+                    val width = originalBitmap.width
+                    val height = originalBitmap.height
+                    val yOffset = calculateYOffset(
+                        (totalColumnScrollFromTop * 5) / 10,
+                        cardHeight,
+                        height
+                    )
+                    val newBitmap = Bitmap.createBitmap(
+                        originalBitmap, 0, yOffset, width, cardHeight
+                    )
+                    canvas.nativeCanvas.drawBitmap(
+                        newBitmap, 0f, 0f, null
+                    )
                 }
-                content()
             }
-            else {
-                errorContent()
-            }
+            content()
         }
     }
 }

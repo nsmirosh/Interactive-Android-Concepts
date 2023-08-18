@@ -61,21 +61,20 @@ data class PictureWithUrl(
 fun ParallaxScreenTest() {
     ParallaxColumn(pictureIds = picturesWithLocalIds.map { it.pictureId }) {
 //    ParallaxColumn(pictureUrls = picturesWithUrls.map { it.pictureUrl }) {
-        items(picturesWithLocalIds) { _, item ->
-            val context = LocalContext.current
-            val intent =
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(item.authorUrl)
-                )
-            Button(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(8.dp),
-                onClick = { context.startActivity(intent) },
-            ) {
-                Text(text = "photo by ${item.author}")
-            }
+        val item = picturesWithLocalIds[it]
+        val context = LocalContext.current
+        val intent =
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(item.authorUrl)
+            )
+        Button(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(8.dp),
+            onClick = { context.startActivity(intent) },
+        ) {
+            Text(text = "photo by ${item.author}")
         }
     }
 }
@@ -85,7 +84,7 @@ fun ParallaxColumn(
     bitmaps: List<Bitmap>? = null,
     pictureUrls: List<String>? = null,
     pictureIds: List<Int>? = null,
-    content: @Composable BoxScope.() -> Unit
+    item: @Composable BoxScope.(index: Int) -> Unit,
 ) {
     var shimmer by remember {
         mutableStateOf(false)
@@ -114,27 +113,16 @@ fun ParallaxColumn(
     }
 
     if (parsedBitmaps.size == (pictureUrls?.size ?: pictureIds?.size)) {
-        InvertedParallaxColumn2(parsedBitmaps.toList().filterNotNull()) {
-            content()
+        InvertedParallaxColumn(parsedBitmaps.toList().filterNotNull()) {
+            item(it)
         }
     }
 }
 
 @Composable
-fun <T> BoxScope.items(
-    items: List<T>,
-    itemContent: @Composable (index: Int, item: T) -> Unit,
-) {
-    for (index in items.indices) {
-        itemContent(index, items[index])
-    }
-}
-
-
-@Composable
-fun InvertedParallaxColumn2(
+fun InvertedParallaxColumn(
     bitmaps: List<Bitmap>,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.(index: Int) -> Unit,
 ) {
     val columnScrollState = rememberScrollState()
     val cardHeight = with(LocalDensity.current) { cardHeightDp.dp.roundToPx() }
@@ -147,14 +135,14 @@ fun InvertedParallaxColumn2(
             .fillMaxWidth()
             .verticalScroll(columnScrollState),
     ) {
-        repeat(bitmaps.size) {
+        repeat(bitmaps.size) { index ->
             Spacer(modifier = Modifier.height(16.dp))
             InvertedCard(
-                originalBitmap = bitmaps[it],
+                originalBitmap = bitmaps[index],
                 cardHeight = cardHeight,
                 totalColumnScrollFromTop = columnScrollFromTopInPx,
             ) {
-                content()
+                content(index)
             }
         }
     }

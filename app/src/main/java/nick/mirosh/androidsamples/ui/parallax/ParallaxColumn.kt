@@ -24,7 +24,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import nick.mirosh.androidsamples.R
+import nick.mirosh.androidsamples.utils.loadLocalPictures
 import nick.mirosh.androidsamples.utils.loadPictures
 
 
@@ -58,10 +58,45 @@ data class PictureWithUrl(
 )
 
 @Composable
+fun ParallaxScreenTestWithBitmaps() {
+    val context = LocalContext.current
+    val bitmaps = remember {
+        mutableStateListOf<Bitmap>()
+    }
+    Log.d(TAG, "ParallaxScreenTestWithBitmaps:  bitmaps = ${bitmaps.size}")
+    if (bitmaps.isNotEmpty()) {
+        ParallaxColumn(bitmaps = bitmaps.toList()) {
+            val item = picturesWithLocalIds[it]
+            val intent =
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(item.authorUrl)
+                )
+            Button(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(8.dp),
+                onClick = { context.startActivity(intent) },
+            ) {
+                Text(text = "photo by ${item.author}")
+            }
+        }
+    }
+    else {
+        LaunchedEffect(Unit) {
+            bitmaps.addAll(picturesWithLocalIds.mapNotNull {
+                context.loadLocalPictures(it.pictureId)
+            })
+        }
+    }
+}
+
+
+@Composable
 fun ParallaxScreenTest() {
-    ParallaxColumn(pictureIds = picturesWithLocalIds.map { it.pictureId }) {
-//    ParallaxColumn(pictureUrls = picturesWithUrls.map { it.pictureUrl }) {
-        val item = picturesWithLocalIds[it]
+//    ParallaxColumn(pictureIds = picturesWithLocalIds.map { it.pictureId }) {
+    ParallaxColumn(pictureUrls = picturesWithUrls.map { it.pictureUrl }) {
+        val item = picturesWithUrls[it]
         val context = LocalContext.current
         val intent =
             Intent(
@@ -84,11 +119,9 @@ fun ParallaxColumn(
     bitmaps: List<Bitmap>? = null,
     pictureUrls: List<String>? = null,
     pictureIds: List<Int>? = null,
+    cardHeightInDp: Int = cardHeightDp,
     item: @Composable BoxScope.(index: Int) -> Unit,
 ) {
-    var shimmer by remember {
-        mutableStateOf(false)
-    }
     val parsedBitmaps = remember {
         mutableStateListOf<Bitmap?>(null)
     }
@@ -99,7 +132,6 @@ fun ParallaxColumn(
 
     if (bitmaps == null) {
         LaunchedEffect(Unit) {
-            shimmer = true
             initScreenWidthAndHeight(configuration, density)
             parsedBitmaps.removeFirstOrNull()
             parsedBitmaps.addAll(
@@ -107,13 +139,22 @@ fun ParallaxColumn(
                     pictureUrls, pictureIds, context
                 )
             )
-            Log.d(TAG, "ParallaxColumn: parsedBitmaps.size = ${parsedBitmaps.size}")
-            shimmer = false
+        }
+    }
+    if (bitmaps != null) {
+        InvertedParallaxColumn(
+            bitmaps = bitmaps,
+            cardHeightInDp = cardHeightInDp
+        ) {
+            item(it)
         }
     }
 
     if (parsedBitmaps.size == (pictureUrls?.size ?: pictureIds?.size)) {
-        InvertedParallaxColumn(parsedBitmaps.toList().filterNotNull()) {
+        InvertedParallaxColumn(
+            bitmaps = parsedBitmaps.toList().filterNotNull(),
+            cardHeightInDp = cardHeightInDp
+        ) {
             item(it)
         }
     }
@@ -122,10 +163,11 @@ fun ParallaxColumn(
 @Composable
 fun InvertedParallaxColumn(
     bitmaps: List<Bitmap>,
+    cardHeightInDp: Int = cardHeightDp,
     content: @Composable BoxScope.(index: Int) -> Unit,
 ) {
     val columnScrollState = rememberScrollState()
-    val cardHeight = with(LocalDensity.current) { cardHeightDp.dp.roundToPx() }
+    val cardHeight = with(LocalDensity.current) { cardHeightInDp.dp.roundToPx() }
 
     var prevScrollValue by remember { mutableIntStateOf(0) }
     val columnScrollFromTopInPx = columnScrollState.value

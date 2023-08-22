@@ -149,8 +149,7 @@ fun ParallaxColumn(
             item(it)
         }
     }
-
-    if (parsedBitmaps.size == (pictureUrls?.size ?: pictureIds?.size)) {
+    else if (parsedBitmaps.size == (pictureUrls?.size ?: pictureIds?.size)) {
         InvertedParallaxColumn(
             bitmaps = parsedBitmaps.toList().filterNotNull(),
             cardHeightInDp = cardHeightInDp

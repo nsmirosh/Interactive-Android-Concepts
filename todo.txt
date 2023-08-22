@@ -71,7 +71,7 @@ Parallax scrolling
 [x] - load all pictures at once - Aug 9
 [x] - don't return just and index of the elements - return the whole element, an id or a url - cause that way there are goin to be problems
 [x] - allow the users to modify height of the cards - Aug 11
-[ ] - allow the user to add their own Bitmaps
+[x] - allow the user to add their own Bitmaps
 [ ] - allow the user to add the speed of the parallax scroll
 [ ] - shrink / expand the picture width to width of the screen and proportionally increase
    / decrease picture height

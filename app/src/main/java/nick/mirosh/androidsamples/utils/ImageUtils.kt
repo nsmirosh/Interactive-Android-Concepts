@@ -94,24 +94,58 @@ fun decodeRawResource(resources: Resources, pictureId: Int): Bitmap? {
     )
 }
 
-suspend fun loadPictures(
-    pictureUrls: List<String>? = null,
-    pictureIds: List<Int>? = null,
+suspend fun <T> loadPictures(
+    pictureUri: List<T>,
     context: Context,
 ) =
     withContext(Dispatchers.IO) {
         mutableListOf<Deferred<Bitmap?>>().apply {
-            pictureUrls?.forEach { url ->
+            pictureUri.forEach {
                 add(async {
-                    context.getPictureWithUrl(url)
-                })
-            } ?: pictureIds?.forEach {
-                add(async {
-                    context.loadLocalPictures(it)
+                    when (it) {
+                        is String -> context.getPictureWithUrl(it)
+                        is Int -> context.loadLocalPictures(it)
+                        else -> null
+                    }
                 })
             }
         }.awaitAll()
     }
+
+
+//suspend fun loadPictures(
+//    pictureUrls: List<String>,
+//    context: Context,
+//) =
+//    withContext(Dispatchers.IO) {
+//        mutableListOf<Deferred<Bitmap?>>().apply {
+//            pictureUrls.forEach {
+//                add(async {
+//                    context.getPictureWithUrl(it)
+//                })
+//            }
+//        }.awaitAll()
+//    }
+//
+//
+//suspend fun loadPictures(
+//    pictureUrls: List<String>? = null,
+//    pictureIds: List<Int>? = null,
+//    context: Context,
+//) =
+//    withContext(Dispatchers.IO) {
+//        mutableListOf<Deferred<Bitmap?>>().apply {
+//            pictureUrls?.forEach { url ->
+//                add(async {
+//                    context.getPictureWithUrl(url)
+//                })
+//            } ?: pictureIds?.forEach {
+//                add(async {
+//                    context.loadLocalPictures(it)
+//                })
+//            }
+//        }.awaitAll()
+//    }
 
 fun Context.loadLocalPictures(pictureId: Int) =
     decodeRawResource(

@@ -72,10 +72,12 @@ Parallax scrolling
 [x] - don't return just and index of the elements - return the whole element, an id or a url - cause that way there are goin to be problems
 [x] - allow the users to modify height of the cards - Aug 11
 [x] - allow the user to add their own Bitmaps
-[ ] - allow the user to add the speed of the parallax scroll
+[x] - allow the user to add the speed of the parallax scroll
+[x] - split the ParallaxColumn into 3 types of ParallaxColumn for each of the parameters
 [ ] - shrink / expand the picture width to width of the screen and proportionally increase
    / decrease picture height
 [ ] - add testing - Aug 15
+[x] - add method description to parallax column (documentation)
 [ ] - add to Compose example project - Aug 16
 [ ] - turn this into a library - Aug 19
 [ ] - add a proper README - Aug 20

@@ -78,6 +78,7 @@ Parallax scrolling
    / decrease picture height
 [ ] - add testing - Aug 15
 [x] - add method description to parallax column (documentation)
+[ ] - add modifiers to the Views so that the user can modify it same way the want
 [ ] - add to Compose example project - Aug 16
 [ ] - turn this into a library - Aug 19
 [ ] - add a proper README - Aug 20
@@ -85,6 +86,6 @@ Parallax scrolling
 [ ] - publish library - Aug 22
 
 Parallax scrolling v2
-[ ] - implement the "items" type of function that LazyList uses
+[ ] - implement the DSL "items" type of function that LazyList uses
 [ ] - implement download on scroll in case that's requested as a feature
 [ ] - add a shimmer - Aug 10

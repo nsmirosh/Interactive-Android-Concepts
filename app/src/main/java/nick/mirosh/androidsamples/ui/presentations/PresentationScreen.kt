@@ -30,11 +30,14 @@ import kotlin.random.Random
 fun PresentationScreen() {
 //    Column {
 //        StatefulCounter()
-//        StatefulCounter2()
-//    }
     OuterClickCounter()
+//    }
+//    OuterClickCounter()
     Log.d("PresentationScreen", "PresentationScreen: recomposing")
-//    StatelessCounterRunner()
+
+//    Column() {
+//        StatelessCounterRunner()
+//    }
 //    OuterClickCounter()
 }
 
@@ -133,6 +136,7 @@ fun StatelessCounterRunner() {
 @Composable
 fun StatelessCounter(count: Int, onCountIncremented: () -> Unit) {
     Button(
+        interactionSource = NoRippleInteractionSource(),
         onClick = { onCountIncremented() }) {
         Text("Count is $count")
     }
@@ -167,7 +171,11 @@ fun OuterClickCounter() {
 //        var outerClicks = 0
 //        var outerClicks by mutableIntStateOf(0)
         var outerClicks by remember { mutableIntStateOf(0) }
-        Button(onClick = { outerClicks++ }) {
+        Button(
+            onClick = { outerClicks++ },
+            interactionSource = NoRippleInteractionSource()
+
+        ) {
             Text("Outer click trigger")
         }
         InnerClickCounter(outerClicks)
@@ -178,10 +186,13 @@ fun OuterClickCounter() {
 fun InnerClickCounter(outerClicks: Int) {
     LogCompositions(msg = "InnerClickCounter WHOLE SCOPE")
 //    var innerClicks = 0
-    var innerClicks by remember {mutableIntStateOf(0) }
+    var innerClicks by mutableIntStateOf(0)
 //    var innerClicks by remember { mutableIntStateOf(0) }
     Column {
-        Button(onClick = { innerClicks++ }) {
+        Button(
+            onClick = { innerClicks++ },
+            interactionSource = NoRippleInteractionSource()
+        ) {
             Text("Inner clicks  = $innerClicks")
         }
         Text("Outer clicks = $outerClicks")

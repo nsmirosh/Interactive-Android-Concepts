@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,8 +31,11 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import nick.mirosh.androidsamples.R
+import nick.mirosh.androidsamples.utils.calculateYOffset
 import nick.mirosh.androidsamples.utils.loadLocalPictures
 import nick.mirosh.androidsamples.utils.loadPictures
 
@@ -42,7 +44,8 @@ private const val TAG = "ParallaxScreen"
 
 var screenWidthPx = 0
 var screenHeightPx = 0
-val cardHeightDp = 200
+val defaulCardHeightDp = 200.dp
+val defaultParallaxScrollSpeed = 0.5f
 
 data class Picture(
     val pictureId: Int,
@@ -90,11 +93,13 @@ fun ParallaxScreenTestWithBitmaps() {
     }
 }
 
-
 @Composable
 fun ParallaxScreenTest() {
-    UriParallaxColumn(pictureUris = picturesWithLocalIds.map { it.pictureId }) {
-//    UriParallaxColumn(pictureUris = picturesWithUrls.map { it.pictureUrl }) {
+//    UriInvertedParallaxColumn(
+//        pictureUris = picturesWithLocalIds.map { PictureUri.RawResource(it.pictureId) },
+//        cardHeight = 500.dp,
+//    ) {
+    UriInvertedParallaxColumn(pictureUris = picturesWithUrls.map { PictureUri.RemoteUrl(it.pictureUrl) }) {
 //        val item = picturesWithUrls[it]
         val item = picturesWithLocalIds[it]
         val context = LocalContext.current
@@ -121,17 +126,19 @@ fun ParallaxScreenTest() {
  * @param parallaxScrollSpeed - speed of the parallax effect relative to the column scroll speed
  * @param content - content to be drawn on top of the card
  */
+sealed class PictureUri {
+    data class RemoteUrl(val value: String) : PictureUri()
+    data class RawResource(val value: Int) : PictureUri()
+}
 
 @Composable
-fun <T> UriParallaxColumn(
-    pictureUris: List<T>,
-    cardHeightInDp: Int = cardHeightDp,
-    parallaxScrollSpeed: Float = 0.5f,
+fun UriInvertedParallaxColumn(
+    modifier: Modifier = Modifier,
+    pictureUris: List<PictureUri>,
+    cardHeight: Dp = defaulCardHeightDp,
+    parallaxScrollSpeed: Float = defaultParallaxScrollSpeed,
     content: @Composable BoxScope.(index: Int) -> Unit,
 ) {
-    if (pictureUris.any { it !is String } && pictureUris.any { it !is Int }) {
-        throw IllegalArgumentException("pictureUris must be either of type Int or String")
-    }
 
     val parsedBitmaps = remember {
         mutableStateListOf<Bitmap?>(null)
@@ -150,35 +157,48 @@ fun <T> UriParallaxColumn(
     val bitmaps = parsedBitmaps.toList().filterNotNull()
     if (bitmaps.isNotEmpty()) {
         InvertedParallaxColumn(
+            modifier = modifier,
             bitmaps = bitmaps,
-            cardHeightInDp = cardHeightInDp,
+            cardHeight = cardHeight,
             parallaxScrollSpeed = parallaxScrollSpeed,
             content = content
         )
     }
 }
 
+val defaultCardModifier = Modifier
+    .padding(start = 16.dp, end = 16.dp)
+    .fillMaxWidth()
+
+val defaultCanvasModifier = Modifier
+
+val defaultColumnModifier = Modifier
+    .fillMaxWidth()
+
 @Composable
 fun InvertedParallaxColumn(
+    modifier: Modifier = defaultColumnModifier,
+    cardModifier: Modifier = Modifier,
     bitmaps: List<Bitmap>,
-    cardHeightInDp: Int = cardHeightDp,
-    parallaxScrollSpeed: Float = 0.5f,
+    spacerHeight: Dp = 16.dp,
+    cardHeight: Dp = defaulCardHeightDp,
+    parallaxScrollSpeed: Float = defaultParallaxScrollSpeed,
     content: @Composable BoxScope.(index: Int) -> Unit,
 ) {
     val columnScrollState = rememberScrollState()
-    val cardHeight = with(LocalDensity.current) { cardHeightInDp.dp.roundToPx() }
 
     var prevScrollValue by remember { mutableIntStateOf(0) }
     val columnScrollFromTopInPx = columnScrollState.value
     prevScrollValue = columnScrollState.value
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(columnScrollState),
+        modifier = modifier
+            .verticalScroll(columnScrollState)
+            .testTag("column"),
     ) {
         repeat(bitmaps.size) { index ->
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(spacerHeight))
             InvertedCard(
+                cardModifier = cardModifier,
                 originalBitmap = bitmaps[index],
                 cardHeight = cardHeight,
                 totalColumnScrollFromTop = columnScrollFromTopInPx,
@@ -192,32 +212,38 @@ fun InvertedParallaxColumn(
 
 @Composable
 fun InvertedCard(
-    modifier: Modifier = Modifier,
+    cardModifier: Modifier =/* defaultCardModifier*/ Modifier,
     originalBitmap: Bitmap,
-    cardHeight: Int,
+    cardHeight: Dp = defaulCardHeightDp,
     parallaxScrollSpeed: Float,
     totalColumnScrollFromTop: Int = 0,
     content: @Composable BoxScope.() -> Unit
 ) {
+    val cardHeightInPx = with(LocalDensity.current) {
+        cardHeight.roundToPx()
+    }
     Card(
-        modifier = Modifier
-            .height(cardHeightDp.dp)
-            .padding(start = 16.dp, end = 16.dp)
+        modifier = cardModifier
+            .height(cardHeight)
+            .padding(start = 16.dp, end = 16.dp),
     ) {
-        Box(modifier = modifier.fillMaxSize()) {
+        Box(
+            modifier = cardModifier
+                .fillMaxWidth()
+        ) {
             Canvas(
-                modifier = Modifier
+                modifier = defaultCanvasModifier
             ) {
                 drawIntoCanvas { canvas ->
                     val width = originalBitmap.width
                     val height = originalBitmap.height
                     val yOffset = calculateYOffset(
                         (totalColumnScrollFromTop * parallaxScrollSpeed).toInt(),
-                        cardHeight,
+                        cardHeightInPx,
                         height
                     )
                     val newBitmap = Bitmap.createBitmap(
-                        originalBitmap, 0, yOffset, width, cardHeight
+                        originalBitmap, 0, yOffset, width, cardHeightInPx
                     )
                     canvas.nativeCanvas.drawBitmap(
                         newBitmap, 0f, 0f, null
@@ -229,26 +255,12 @@ fun InvertedCard(
     }
 }
 
-fun calculateYOffset(
-    totalColumnScrollFromTop: Int, cardHeight: Int, pictureHeight: Int
-) = if (totalColumnScrollFromTop <= 0) {
-    pictureHeight - cardHeight
-}
-else if (totalColumnScrollFromTop + cardHeight >= pictureHeight) {
-    0
-}
-else {
-    pictureHeight - cardHeight - (totalColumnScrollFromTop)
-}
-
-
 fun initScreenWidthAndHeight(configuration: Configuration, density: Float) {
     val screenHeightDp = configuration.screenHeightDp
     val screenWidthDp = configuration.screenWidthDp
     screenHeightPx = (screenHeightDp * density).toInt()
     screenWidthPx = (screenWidthDp * density).toInt()
 }
-
 
 val picturesWithLocalIds = listOf(
     Picture(
@@ -305,10 +317,3 @@ val picturesWithUrls = listOf(
         authorUrl = "https://www.pexels.com/@lukas-dlutko-1278617/"
     ),
 )
-
-
-fun main() {
-    val first = 3
-    val second = 0.5
-    println("${first * second}")
-}

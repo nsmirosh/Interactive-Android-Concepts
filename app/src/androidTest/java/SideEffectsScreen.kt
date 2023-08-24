@@ -43,6 +43,7 @@ class SideEffectsScreenTest {
             }
         }
         composeTestRule.onNodeWithTag(MESSAGE_INPUT_TAG)
+
             .performTextInput("First message")
         composeTestRule.onNodeWithText("Schedule message").performClick()
         composeTestRule.onNodeWithTag(MESSAGE_INPUT_TAG)

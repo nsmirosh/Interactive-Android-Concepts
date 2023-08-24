@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
+import nick.mirosh.androidsamples.ui.parallax.PictureUri
 import java.io.FileInputStream
 import java.io.OutputStream
 import java.net.HttpURLConnection
@@ -26,12 +27,9 @@ fun downloadImage(
     connection.connect()
 
     val inputStream = connection.inputStream
-    Log.d("ParallaxScreen", "downloadImage: success")
     BitmapFactory.decodeStream(inputStream)
-
 } catch (e: Exception) {
     e.printStackTrace()
-    Log.d("ParallaxScreen", "downloadImage: failure")
     null
 }
 
@@ -45,7 +43,6 @@ fun saveImageToInternalStorage(
             context.openFileOutput(imageName, Context.MODE_PRIVATE)
         bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos)
         fos.close()
-        Log.d("ParallaxScreen", "saveImageToInternalStorage: success")
     } catch (e: Exception) {
         e.printStackTrace()
         Log.e("ParallaxScreen", "saveImageToInternalStorage: failure")
@@ -61,7 +58,6 @@ fun decodeImageFromInternalStorage(
         val fis: FileInputStream = context.openFileInput(imageName)
         BitmapFactory.decodeStream(fis)
     } catch (e: Exception) {
-        Log.d("ParallaxScreen", "decodeImageFromInternalStorage: failure")
         e.printStackTrace()
         null
     }
@@ -94,8 +90,8 @@ fun decodeRawResource(resources: Resources, pictureId: Int): Bitmap? {
     )
 }
 
-suspend fun <T> loadPictures(
-    pictureUri: List<T>,
+suspend fun loadPictures(
+    pictureUri: List<PictureUri>,
     context: Context,
 ) =
     withContext(Dispatchers.IO) {
@@ -103,49 +99,25 @@ suspend fun <T> loadPictures(
             pictureUri.forEach {
                 add(async {
                     when (it) {
-                        is String -> context.getPictureWithUrl(it)
-                        is Int -> context.loadLocalPictures(it)
-                        else -> null
+                        is PictureUri.RemoteUrl -> context.getPictureWithUrl(it.value)
+                        is PictureUri.RawResource -> context.loadLocalPictures(it.value)
                     }
                 })
             }
         }.awaitAll()
     }
 
-
-//suspend fun loadPictures(
-//    pictureUrls: List<String>,
-//    context: Context,
-//) =
-//    withContext(Dispatchers.IO) {
-//        mutableListOf<Deferred<Bitmap?>>().apply {
-//            pictureUrls.forEach {
-//                add(async {
-//                    context.getPictureWithUrl(it)
-//                })
-//            }
-//        }.awaitAll()
-//    }
-//
-//
-//suspend fun loadPictures(
-//    pictureUrls: List<String>? = null,
-//    pictureIds: List<Int>? = null,
-//    context: Context,
-//) =
-//    withContext(Dispatchers.IO) {
-//        mutableListOf<Deferred<Bitmap?>>().apply {
-//            pictureUrls?.forEach { url ->
-//                add(async {
-//                    context.getPictureWithUrl(url)
-//                })
-//            } ?: pictureIds?.forEach {
-//                add(async {
-//                    context.loadLocalPictures(it)
-//                })
-//            }
-//        }.awaitAll()
-//    }
+fun calculateYOffset(
+    totalColumnScrollFromTop: Int, cardHeight: Int, pictureHeight: Int
+) = if (totalColumnScrollFromTop <= 0) {
+    pictureHeight - cardHeight
+}
+else if (totalColumnScrollFromTop + cardHeight >= pictureHeight) {
+    0
+}
+else {
+    pictureHeight - cardHeight - (totalColumnScrollFromTop)
+}
 
 fun Context.loadLocalPictures(pictureId: Int) =
     decodeRawResource(

@@ -28,17 +28,10 @@ import kotlin.random.Random
 
 @Composable
 fun PresentationScreen() {
-//    Column {
-//        StatefulCounter()
-    OuterClickCounter()
-//    }
-//    OuterClickCounter()
-    Log.d("PresentationScreen", "PresentationScreen: recomposing")
-
-//    Column() {
-//        StatelessCounterRunner()
-//    }
-//    OuterClickCounter()
+    Column {
+        Counter()
+        CounterWithColumn()
+    }
 }
 
 @Composable
@@ -100,32 +93,92 @@ fun ComposableB(followHappyPath: Boolean) {
 }
 
 
+//@Composable
+//fun StatefulCounter2() {
+//    LogCompositions(msg = "StatefulCounter WHOLE SCOPE")
+//    Column {
+//        LogCompositions(msg = "StatefulCounter ColumnScope")
+//        var count by mutableIntStateOf(0)
+//        Button(onClick = { count++ }) {
+//            LogCompositions(msg = "StatefulCounter ButtonScope")
+//            Text("Count is $count")
+//        }
+//    }
+//}
+
+//@Composable
+//fun CounterWithColumn() {
+//    LogCompositions(msg = "CounterWithColumn WHOLE SCOPE")
+//    Column {
+//        LogCompositions(msg = "CounterWithColumn ColumnScope")
+//        var count by remember { mutableIntStateOf(0) }
+//        Text("count is $count")
+//        Button(onClick = { count++ }) {
+//            LogCompositions(msg = "CounterWithColumn ButtonScope")
+//            Text("Add one")
+//        }
+//    }
+//}
+//
+//
+//
 @Composable
 fun StatefulCounter() {
-    LogCompositions(msg = "StatefulCounter WHOLE SCOPE")
     Column {
-        LogCompositions(msg = "StatefulCounter ColumnScope")
-        var count by mutableIntStateOf(0)
+        var count by remember { mutableIntStateOf(0) }
         Button(onClick = { count++ }) {
-            LogCompositions(msg = "StatefulCounter ButtonScope")
             Text("Count is $count")
         }
     }
 }
 
 @Composable
-fun StatefulCounter2() {
-    LogCompositions(msg = "StatefulCounter2 WHOLE SCOPE")
+fun CounterWithColumn() {
+    LogCompositions(msg = "CounterWithColumn whole scope")
     Column {
-        LogCompositions(msg = "StatefulCounter2 ColumnScope")
-        var count by mutableIntStateOf(0)
+        LogCompositions(msg = "CounterWithColumn ColumnScope")
+        var count by remember { mutableIntStateOf(0) }
         Text("count is $count")
         Button(onClick = { count++ }) {
-            LogCompositions(msg = "StatefulCounter2 ButtonScope")
+            LogCompositions(msg = "CounterWithColumn ButtonScope")
             Text("Add one")
         }
     }
 }
+
+@Composable
+fun Counter() {
+    LogCompositions(msg = "Counter whole scope")
+    var count by remember { mutableIntStateOf(0) }
+    Text("count is $count")
+    Button(onClick = { count++ }) {
+        LogCompositions(msg = "Counter ButtonScope")
+        Text("Add one")
+    }
+}
+
+
+//@Composable
+//fun CounterWithColumn() {
+//    Column {
+//        var count by remember { mutableIntStateOf(0) }
+//        Text("count is $count")
+//        Button(onClick = { count++ }) {
+//            Text("Add one")
+//        }
+//    }
+//}
+//
+//@Composable
+//fun Counter() {
+//    var count by remember { mutableIntStateOf(0) }
+//    Text("count is $count")
+//    Button(onClick = { count++ }) {
+//        Text("Add one")
+//    }
+//}
+
+
 
 @Composable
 fun StatelessCounterRunner() {
@@ -166,15 +219,12 @@ fun LimitedCounter() {
 
 @Composable
 fun OuterClickCounter() {
-    LogCompositions(msg = "OuterClickCounter WHOLE SCOPE")
+    LogCompositions(msg = "OuterClickCounter base scope")
     Column {
-//        var outerClicks = 0
-//        var outerClicks by mutableIntStateOf(0)
         var outerClicks by remember { mutableIntStateOf(0) }
         Button(
             onClick = { outerClicks++ },
             interactionSource = NoRippleInteractionSource()
-
         ) {
             Text("Outer click trigger")
         }
@@ -184,10 +234,8 @@ fun OuterClickCounter() {
 
 @Composable
 fun InnerClickCounter(outerClicks: Int) {
-    LogCompositions(msg = "InnerClickCounter WHOLE SCOPE")
-//    var innerClicks = 0
-    var innerClicks by mutableIntStateOf(0)
-//    var innerClicks by remember { mutableIntStateOf(0) }
+    LogCompositions(msg = "InnerClickCounter base scope")
+    var innerClicks by remember { mutableIntStateOf(0) }
     Column {
         Button(
             onClick = { innerClicks++ },

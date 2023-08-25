@@ -30,7 +30,15 @@ import kotlin.random.Random
 fun PresentationScreen() {
     Column {
         Counter()
-        CounterWithColumn()
+//        CounterWithColumn()
+    }
+}
+
+
+@Composable
+fun CounterComposableRunner() {
+    Column {
+        Counter()
     }
 }
 
@@ -177,7 +185,6 @@ fun Counter() {
 //        Text("Add one")
 //    }
 //}
-
 
 
 @Composable

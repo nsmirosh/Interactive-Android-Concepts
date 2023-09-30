@@ -1,13 +1,21 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id ("maven-publish")
 }
 
 android {
     namespace = "nick.mirosh.parallaxcolumn"
     compileSdk = 33
-
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
     defaultConfig {
+        aarMetadata {
+            minCompileSdk = 24
+        }
         minSdk = 24
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -29,6 +37,20 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "nick.mirosh"
+            artifactId = "parallaxcolumn"
+            version = "1.0"
+
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
     }
 }
 

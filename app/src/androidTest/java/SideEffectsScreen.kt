@@ -52,4 +52,10 @@ class SideEffectsScreenTest {
         composeTestRule.onNodeWithText("Schedule message").performClick()
         composeTestRule.onNodeWithTag(TIMER_UPDATE_TAG).assertIsDisplayed()
     }
+
+    @Test
+    fun checkOrientation() {
+
+//        composeTestRule.ac
+    }
 }

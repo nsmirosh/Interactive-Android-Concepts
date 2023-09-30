@@ -114,7 +114,27 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2")
 
+    implementation("com.github.nsmirosh:ParallaxColumn:1.0.4")
 }
 kapt {
     correctErrorTypes = true
+}
+
+tasks.register("checkManifest") {
+    doLast {
+        val manifestFile = android.sourceSets["main"].manifest.srcFile
+        val manifestContent = manifestFile.readText()
+        if (manifestContent.contains("""screenOrientation="portrait"""") ||
+            manifestContent.contains("""screenOrientation="landscape"""")
+        ) {
+            throw GradleException(
+                "A screen orientation is locked inside an Activity. " +
+                        "This is not allowed."
+            )
+        }
+    }
+}
+
+tasks.build {
+    dependsOn("checkManifest")
 }

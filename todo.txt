@@ -74,18 +74,25 @@ Parallax scrolling
 [x] - allow the user to add their own Bitmaps
 [x] - allow the user to add the speed of the parallax scroll
 [x] - split the ParallaxColumn into 3 types of ParallaxColumn for each of the parameters
+[x] - add method description to parallax column (documentation)
+[x] - add modifiers to the Views so that the user can modify it same way the want
+[x] - turn this into a library - Aug 19
+[ ] - add a proper README - Aug 20
+[ ] - include a sample application inside the library on github
+[ ] - add a crash reporting tool
+[ ] - indicate that this is an alpha release in the README and versioning
+[ ] - provide some way that people can give me feedback
+[ ] - add to Android arsenal
+[ ] -
+[x] - publish library - Aug 22
+
+Parallax scrolling v1
 [ ] - shrink / expand the picture width to width of the screen and proportionally increase
    / decrease picture height
-[ ] - add testing - Aug 15
-[x] - add method description to parallax column (documentation)
-[ ] - add modifiers to the Views so that the user can modify it same way the want
-[ ] - add to Compose example project - Aug 16
-[ ] - turn this into a library - Aug 19
-[ ] - add a proper README - Aug 20
 [ ] - add buy me a coffee and sponsor me links - Aug 21
-[ ] - publish library - Aug 22
-
-Parallax scrolling v2
+[ ] - add to Compose example project - Aug 16
+[ ] - add testing - Aug 15
 [ ] - implement the DSL "items" type of function that LazyList uses
+[ ] - delete the picture from internal storage once it's downloaded and converted to bitmap
 [ ] - implement download on scroll in case that's requested as a feature
 [ ] - add a shimmer - Aug 10

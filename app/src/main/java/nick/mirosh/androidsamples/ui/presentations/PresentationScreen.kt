@@ -28,10 +28,7 @@ import kotlin.random.Random
 
 @Composable
 fun PresentationScreen() {
-    Column {
-        Counter()
-//        CounterWithColumn()
-    }
+    CounterWithColumn()
 }
 
 

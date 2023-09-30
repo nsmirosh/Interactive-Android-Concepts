@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">My Android Samples</string>
 
     <!-- Launched Effect Screen -->
     <string name="launched_effect_title">Launched Effect</string>

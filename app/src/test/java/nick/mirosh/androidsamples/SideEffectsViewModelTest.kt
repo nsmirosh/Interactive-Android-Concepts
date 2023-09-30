@@ -30,6 +30,7 @@ class SideEffectsViewModelTest {
                 "Message $initialMessageToBeSent is scheduled",
                 viewModel.progressMessage.value
             )
+
             assertEquals(
                 initialMessageToBeSent,
                 viewModel.messageToDisplay.value?.invoke()

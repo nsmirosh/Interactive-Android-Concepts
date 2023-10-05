@@ -18,6 +18,7 @@ import com.example.androidcomposeexample.ui.sideeffects.launchedeffect.LaunchedE
 import dagger.hilt.android.AndroidEntryPoint
 import nick.mirosh.androidsamples.ui.Animation
 import nick.mirosh.androidsamples.ui.BottomNavigation
+import nick.mirosh.androidsamples.ui.Coroutines
 import nick.mirosh.androidsamples.ui.MainScreen
 import nick.mirosh.androidsamples.ui.Parallax
 import nick.mirosh.androidsamples.ui.ProgressBar
@@ -92,7 +93,13 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
                 navController.navigateSingleTopTo(
                     Parallax.route
                 )
+            },
+            onCoroutinesClicked = {
+                navController.navigateSingleTopTo(
+                    Coroutines.route
+                )
             }
+
         )
     }
     composable(route = SimpleList.route) {
@@ -138,8 +145,11 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
         RecompositionLobbyScreen()
     }
     composable(route = Parallax.route) {
-         UriParallaxColumnRunner()
+        UriParallaxColumnRunner()
 //        PresentationScreen()
+    }
+    composable(route = Coroutines.route) {
+        Coroutines()
     }
 }
 

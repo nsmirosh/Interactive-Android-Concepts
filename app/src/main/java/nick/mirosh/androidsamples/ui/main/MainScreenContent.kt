@@ -19,6 +19,7 @@ fun MainScreenContent(
     onSideEffectsClicked: () -> Unit,
     onRecompositionClicked: () -> Unit,
     onParallaxScreenClicked: () -> Unit,
+    onCoroutinesClicked: () -> Unit,
 
 ) {
     Column {
@@ -83,6 +84,14 @@ fun MainScreenContent(
             modifier = Modifier
                 .clickable {
                     onParallaxScreenClicked()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "Coroutines",
+            modifier = Modifier
+                .clickable {
+                    onCoroutinesClicked()
                 }
                 .padding(24.dp)
         )

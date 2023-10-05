@@ -29,4 +29,14 @@ class ProgressBarViewModel @Inject constructor() :
         }
     }
 
+    fun startLinearUpdate() {
+        viewModelScope.launch {
+            var counter = 0
+            while (counter < 100) {
+                counter += 10
+                _progress.value = counter
+                delay(500)
+            }
+        }
+    }
 }

@@ -53,3 +53,6 @@ object Recomposition: MyAppDestinations {
 object Parallax: MyAppDestinations {
     override val route = "parallax"
 }
+object Coroutines: MyAppDestinations {
+    override val route = "coroutines"
+}

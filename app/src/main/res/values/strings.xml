@@ -6,6 +6,6 @@
     <string name="use_remember_updated_state">Use rememberUpdatedState</string>
     <string name="enter_message">Enter message</string>
     <string name="schedule">Schedule</string>
-    <string name="launched_effect_initial_description">Schedule message to be sent in 8 seconds</string>
-    <string name="launched_effect_update_description">Schedule an update to the message after 3 seconds</string>
+    <string name="launched_effect_initial_description">Schedule a message to be sent in 6 seconds</string>
+    <string name="launched_effect_update_description">Send a new message instead of the old one after 3 seconds</string>
 </resources>

@@ -1,11 +1,12 @@
 package com.example.androidcomposeexample.ui.sideeffects.launchedeffect
 
 import android.annotation.SuppressLint
-import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.TextField
 import androidx.compose.material3.Button
@@ -21,11 +22,12 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,7 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import nick.mirosh.androidsamples.R
 
-const val MESSAGE_DELAY = 8000L
+const val MESSAGE_DELAY = 6000L
 const val MESSAGE_INPUT_TAG = "message_input"
 const val TIMER_UPDATE_TAG = "timer_update"
 const val CHECKBOX_TAG = "checkbox"
@@ -74,9 +76,14 @@ fun LaunchedEffectScreen() {
         if (shouldShowTimer) {
             TimerUpdates(
                 messageLambda = message,
-                timerUpdate = timerUpdate,
-                progressMessage = progressMessage,
-                useRememberUpdatedState = useRememberUpdatedState
+                seconds = timerUpdate,
+                messageStatus = progressMessage,
+                useRememberUpdatedState = useRememberUpdatedState,
+                onRestartClicked = {
+                    viewModel.scheduleMessage("")
+                    shouldShowTimer = false
+                    useRememberUpdatedState = false
+                }
             )
         }
         else {
@@ -101,83 +108,144 @@ fun LaunchedEffectScreen() {
                 }
 
                 if (inSecondScreen) {
-                    Row {
-                        Text(
-                            text = stringResource(id = R.string.use_remember_updated_state),
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .align(CenterVertically)
-
-                        )
-                        Checkbox(
-                            checked = useRememberUpdatedState,
-                            modifier = Modifier
-                                .align(CenterVertically)
-                                .testTag(CHECKBOX_TAG),
-                            onCheckedChange = {
-                                useRememberUpdatedState = it
-                            }
-                        )
+                    UseRememberUpdatedState(useRememberUpdatedState) {
+                        useRememberUpdatedState = it
                     }
                 }
             }
         }
     }
-
 }
+
+
+@Composable
+fun UseRememberUpdatedState(useRememberUpdatedState: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = stringResource(id = R.string.use_remember_updated_state),
+            fontSize = 24.sp,
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.CenterVertically)
+
+        )
+        Checkbox(
+            checked = useRememberUpdatedState,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .testTag(CHECKBOX_TAG),
+            onCheckedChange = {
+                onCheckedChange(it)
+            }
+        )
+    }
+}
+
 
 @Composable
 fun TimerUpdates(
     messageLambda: (() -> String)?,
-    timerUpdate: String,
-    progressMessage: String,
-    useRememberUpdatedState: Boolean
+    seconds: String,
+    messageStatus: String,
+    useRememberUpdatedState: Boolean,
+    onRestartClicked: () -> Unit = {}
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .align(
-                    Alignment.TopCenter
-                )
-                .padding(16.dp)
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = CenterHorizontally,
         ) {
             Text(
-                timerUpdate,
+                seconds,
                 fontSize = 48.sp,
                 modifier = Modifier
                     .padding(16.dp)
                     .testTag(TIMER_UPDATE_TAG)
             )
             Text(
-                progressMessage,
+                messageStatus,
                 fontSize = 24.sp,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .padding(16.dp)
             )
-            ShowToast(
+            ShowMessage(
                 useRememberUpdatedState = useRememberUpdatedState,
-                messageLambda
+                messageLambda,
+                onRestartClicked = onRestartClicked
             )
         }
     }
 }
 
 @Composable
-fun ShowToast(
+fun ShowMessage(
     useRememberUpdatedState: Boolean,
-    message: (() -> String)? = null
+    message: (() -> String)? = null,
+    onRestartClicked: () -> Unit = {}
 ) {
-    val context = LocalContext.current
     var actualTrueMessage: State<(() -> String)?>? = null
     if (useRememberUpdatedState) {
         actualTrueMessage = rememberUpdatedState(message)
     }
+    var launchedEffectFinishedWithMessage by remember {
+        mutableStateOf(
+            message?.invoke().orEmpty()
+        )
+    }
+    var showCorrectUpdate by remember { mutableStateOf(false) }
+    if (showCorrectUpdate) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                fontSize = 24.sp,
+                text = "Message received: \"$launchedEffectFinishedWithMessage\"",
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(CenterHorizontally)
+            )
+        }
+        TryAgainButton {
+            onRestartClicked()
+        }
+    }
     LaunchedEffect(Unit) {
         delay(MESSAGE_DELAY)
-        Toast.makeText(
-            context,
-            actualTrueMessage?.value?.invoke() ?: message?.invoke(),
-            Toast.LENGTH_SHORT
-        ).show()
+        launchedEffectFinishedWithMessage =
+            actualTrueMessage?.value?.invoke() ?: message?.invoke() ?: ""
+        showCorrectUpdate = true
+    }
+}
+
+
+@Composable
+fun TryAgainButton(onClick: () -> Unit) {
+    Button(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        onClick = {
+            onClick()
+        }
+    ) {
+        Text(
+            fontSize = 24.sp,
+            text = "Try again"
+        )
+    }
+
+}
+
+@Preview
+@Composable
+fun ShowMessagePreview() {
+    ShowMessage(useRememberUpdatedState = false) {
+        "Message"
     }
 }
 
@@ -190,6 +258,8 @@ fun Input(
         var isFirstMessageSet by remember { mutableStateOf(false) }
         var message by remember { mutableStateOf("") }
         Text(
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
             text = stringResource(
                 if (isFirstMessageSet) {
                     R.string.launched_effect_update_description
@@ -207,7 +277,7 @@ fun Input(
                 .padding(16.dp)
                 .align(CenterHorizontally)
                 .testTag(MESSAGE_INPUT_TAG),
-            label = { Text(text = stringResource(id = R.string.enter_message)) },
+            textStyle = TextStyle.Default.copy(fontSize = 24.sp),
             value = message,
             onValueChange = {
                 message = it
@@ -230,7 +300,7 @@ fun Input(
         ) {
             Text(
                 text = stringResource(id = R.string.schedule),
-                fontSize = 16.sp
+                fontSize = 24.sp
             )
         }
     }

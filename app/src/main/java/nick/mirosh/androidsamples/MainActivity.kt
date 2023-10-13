@@ -146,7 +146,6 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     }
     composable(route = Parallax.route) {
         UriParallaxColumnRunner()
-//        PresentationScreen()
     }
     composable(route = Coroutines.route) {
         Coroutines()

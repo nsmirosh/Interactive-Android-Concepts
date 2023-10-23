@@ -30,23 +30,23 @@ enum class AnimationState {
 }
 
 @Composable
-fun JumpingCircleRunner() {
+fun SmileyLoadingAnimation() {
     var animationState by remember {
         mutableStateOf(AnimationState.INITIAL)
     }
     LaunchedEffect(Unit) {
         while (true) {
-            delay(ANIMATION_DURATION.toLong())
             animationState = AnimationState.FIRST_IN_PROGRESS
             delay(ANIMATION_DURATION.toLong())
             animationState = AnimationState.SECOND_IN_PROGRESS
+            delay(ANIMATION_DURATION.toLong())
         }
     }
-    JumpingCircle(animationState)
+    SmileyDrawer(animationState)
 }
 
 @Composable
-fun JumpingCircle(animationState: AnimationState) {
+fun SmileyDrawer(animationState: AnimationState) {
     val widthAndHeight = 200.dp
     val density = LocalDensity.current
     val widthInPixels = with(density) { widthAndHeight.toPx() }

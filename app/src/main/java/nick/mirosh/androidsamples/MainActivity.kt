@@ -30,6 +30,7 @@ import nick.mirosh.androidsamples.ui.TodoDetails
 import nick.mirosh.androidsamples.ui.TodoList
 import nick.mirosh.androidsamples.ui.animation.SmileyLoadingAnimation
 import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
+import nick.mirosh.androidsamples.ui.coroutines.lobby.CoroutineLobbyScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
@@ -158,7 +159,7 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
         UriParallaxColumnRunner()
     }
     composable(route = Coroutines.route) {
-        Coroutines()
+        CoroutineLobbyScreen()
     }
 }
 

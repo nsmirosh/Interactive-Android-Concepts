@@ -1,4 +1,4 @@
-package nick.mirosh.androidsamples.ui
+package nick.mirosh.androidsamples.ui.coroutines.remember_coroutine_scope
 
 
 import android.util.Log

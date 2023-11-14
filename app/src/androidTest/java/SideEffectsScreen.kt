@@ -12,7 +12,7 @@ import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 import org.junit.Rule
 import org.junit.Test
 
-class SideEffectsScreenTest {
+class LaunchedEffectScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()

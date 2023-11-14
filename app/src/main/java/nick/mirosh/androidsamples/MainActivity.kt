@@ -19,11 +19,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import nick.mirosh.androidsamples.ui.Animation
 import nick.mirosh.androidsamples.ui.BottomNavigation
 import nick.mirosh.androidsamples.ui.Coroutines
+import nick.mirosh.androidsamples.ui.DisposableEffect
+import nick.mirosh.androidsamples.ui.LaunchedEffect
 import nick.mirosh.androidsamples.ui.MainScreen
 import nick.mirosh.androidsamples.ui.Parallax
 import nick.mirosh.androidsamples.ui.ProgressBar
 import nick.mirosh.androidsamples.ui.Recomposition
-import nick.mirosh.androidsamples.ui.SideEffects
 import nick.mirosh.androidsamples.ui.SimpleList
 import nick.mirosh.androidsamples.ui.TodoDetails
 import nick.mirosh.androidsamples.ui.TodoList
@@ -36,6 +37,7 @@ import nick.mirosh.androidsamples.ui.parallax.UriParallaxColumnRunner
 import nick.mirosh.androidsamples.ui.progress.ProgressBarContent2
 import nick.mirosh.androidsamples.ui.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.recomposition.RecompositionLobbyScreen
+import nick.mirosh.androidsamples.ui.side_effects.disposable_effect.DisposableEffectScreen
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 import nick.mirosh.androidsamples.ui.todo.TodoViewModel
 import nick.mirosh.androidsamples.ui.todo.details.TodoDetailsScreen
@@ -79,7 +81,7 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
             onTodoClick = { navController.navigateSingleTopTo(TodoList.route) },
             onSideEffectsClicked = {
                 navController.navigateSingleTopTo(
-                    SideEffects.route
+                    LaunchedEffect.route
                 )
             },
 
@@ -97,6 +99,11 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
             onCoroutinesClicked = {
                 navController.navigateSingleTopTo(
                     Coroutines.route
+                )
+            },
+            onDisposableEffectClicked = {
+                navController.navigateSingleTopTo(
+                    DisposableEffect.route
                 )
             }
 
@@ -138,8 +145,11 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     composable(route = Animation.route) {
         SmileyLoadingAnimation()
     }
-    composable(route = SideEffects.route) {
+    composable(route = LaunchedEffect.route) {
         LaunchedEffectScreen()
+    }
+    composable(route = DisposableEffect.route) {
+        DisposableEffectScreen()
     }
     composable(route = Recomposition.route) {
         RecompositionLobbyScreen()

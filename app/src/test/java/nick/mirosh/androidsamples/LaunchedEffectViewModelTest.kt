@@ -8,7 +8,7 @@ import org.junit.Rule
 import org.junit.Test
 
 
-class SideEffectsViewModelTest {
+class LaunchedEffectViewModelTest {
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()

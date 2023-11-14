@@ -20,8 +20,13 @@ fun MainScreenContent(
     onRecompositionClicked: () -> Unit,
     onParallaxScreenClicked: () -> Unit,
     onCoroutinesClicked: () -> Unit,
+    onDisposableEffectClicked : () -> Unit,
 
 ) {
+
+    // Column with a vertical scroll
+
+
     Column {
         Text(
             text = "Simple List",
@@ -64,10 +69,18 @@ fun MainScreenContent(
                 .padding(24.dp)
         )
         Text(
-            text = "Side effects",
+            text = "Launched Effect",
             modifier = Modifier
                 .clickable {
                     onSideEffectsClicked()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "Disposable Effect",
+            modifier = Modifier
+                .clickable {
+                    onDisposableEffectClicked()
                 }
                 .padding(24.dp)
         )
@@ -97,3 +110,5 @@ fun MainScreenContent(
         )
     }
 }
+
+

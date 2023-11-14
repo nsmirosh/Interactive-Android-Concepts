@@ -44,8 +44,11 @@ object TodoDetails: MyAppDestinations {
 object Animation: MyAppDestinations {
     override val route = "animation"
 }
-object SideEffects: MyAppDestinations {
-    override val route = "side_effects"
+object LaunchedEffect: MyAppDestinations {
+    override val route = "launched_effect"
+}
+object DisposableEffect: MyAppDestinations {
+    override val route = "disposable_effect"
 }
 object Recomposition: MyAppDestinations {
     override val route = "recomposition"
@@ -54,5 +57,5 @@ object Parallax: MyAppDestinations {
     override val route = "parallax"
 }
 object Coroutines: MyAppDestinations {
-    override val route = "coroutines"
+    override val route = "remember_coroutine_scope"
 }

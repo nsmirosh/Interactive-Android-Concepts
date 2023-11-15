@@ -12,6 +12,19 @@ Compose.
 
 https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/a818c0d9-0d31-47be-afd6-778ad2272aaa
 
+## Coroutines
+### Demonstration of the correct and wrong usage of `rememberCoroutineScope()` 
+
+[Explanation post on LinkedIn](https://www.linkedin.com/posts/nikolay-miroshnychenko-5838a25a_jetpackcompose-androiddevelopment-android-activity-7115671534635028480-3ISO?utm_source=share&utm_medium=member_desktop)
+
+https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/5d0a9793-a5e3-40be-9ed7-70e1682c496f
+
+### Demonstration of the usage `async{}` vs regular `launch{}` and how scopes control their execution
+
+[Explanation post on LinkedIn](https://www.linkedin.com/posts/nikolay-miroshnychenko-5838a25a_jetpackcompose-androiddevelopment-android-activity-7115671534635028480-3ISO?utm_source=share&utm_medium=member_desktop)
+
+https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/01b10316-f5e5-4b9c-bc40-959d94ef5b9d
+
 ## Progress Animation 
 ### Usage of `Canvas` in order to build an animation 
 
@@ -21,10 +34,5 @@ The idea and the design belong completely to UX flame - https://www.youtube.com/
 https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/44ec954c-cb32-4026-bd01-7b5e1521b7ae
 
 
-## Remember Coroutine Scope 
-### Demonstration of the correct and wrong usage of `rememberCoroutineScope()` 
 
-[Explanation post on LinkedIn](https://www.linkedin.com/posts/nikolay-miroshnychenko-5838a25a_jetpackcompose-androiddevelopment-android-activity-7115671534635028480-3ISO?utm_source=share&utm_medium=member_desktop)
-
-https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/5d0a9793-a5e3-40be-9ed7-70e1682c496f
 

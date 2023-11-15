@@ -20,12 +20,16 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 
 
 @Composable
@@ -42,6 +46,7 @@ fun AsyncComparisonScreen(
     key(restart) {
         Column {
             Button(
+                modifier = Modifier.padding(horizontal = 16.dp),
                 onClick = {
                     viewModel.launchAsyncs()
                 }
@@ -49,6 +54,7 @@ fun AsyncComparisonScreen(
                 Text("Launch asyncs")
             }
             Button(
+                modifier = Modifier.padding(horizontal = 16.dp),
                 onClick = {
                     viewModel.launchCoroutines()
                 }
@@ -58,14 +64,14 @@ fun AsyncComparisonScreen(
 
             ProgressBarWithCancel(
                 progress = deferred1Updates,
-                label = "Deferred 1",
+                label = "Async{} #1",
                 onCancelClick = {
                     viewModel.cancelAsync1()
                 }
             )
             ProgressBarWithCancel(
                 progress = deferred2Updates,
-                label = "Deferred 2",
+                label = "Async{} #2",
                 onCancelClick = {
                     viewModel.cancelAsync2()
                 }
@@ -84,10 +90,14 @@ fun AsyncComparisonScreen(
                     viewModel.cancelCoroutine2()
                 }
             )
-            Button(onClick = {
-                viewModel.clear()
-                restart = !restart
-            }) {
+            Button(
+                modifier = Modifier
+                    .align(CenterHorizontally)
+                    .padding(top = 16.dp),
+                onClick = {
+                    viewModel.clear()
+                    restart = !restart
+                }) {
                 Text("Restart")
             }
         }
@@ -106,32 +116,39 @@ fun ProgressBarWithCancel(
     var cancelled by remember {
         mutableStateOf(false)
     }
-    Spacer(modifier = Modifier.height(16.dp))
-    Text(label)
-    Row(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        ProgressBar(
-            modifier = modifier
-                .weight(2f / 3f)
-                .padding(horizontal = 16.dp),
-            progress = progress
-        )
-
-        Button(
-            colors = if (cancelled) ButtonDefaults.buttonColors(
-                backgroundColor = Color.Red,
-                contentColor = Color.White
-            )
-            else ButtonDefaults.buttonColors(),
+    Column {
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
             modifier = Modifier
-                .weight(1f / 3f)
                 .padding(horizontal = 16.dp),
-            onClick = {
-                cancelled = true
-                onCancelClick()
-            }) {
-            Text(if (cancelled) "Cancelled" else "Cancel")
+            text = label,
+            fontSize = 20.sp
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        ) {
+            ProgressBar(
+                modifier = modifier
+                    .weight(2f / 3f),
+                progress = progress
+            )
+
+            Button(
+                colors = if (cancelled) ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Red,
+                    contentColor = Color.White
+                )
+                else ButtonDefaults.buttonColors(),
+                modifier = Modifier
+                    .weight(1f / 3f)
+                    .padding(horizontal = 16.dp),
+                onClick = {
+                    cancelled = true
+                    onCancelClick()
+                }) {
+                Text(if (cancelled) "Cancelled" else "Cancel")
+            }
         }
     }
 }
@@ -159,4 +176,18 @@ fun ProgressBar(
             .height(32.dp)
             .clip(RoundedCornerShape(16.dp))
     )
+}
+
+
+@Preview
+@Composable
+fun ProgressBarWithCancelPreview() {
+    MyApplicationTheme {
+        ProgressBarWithCancel(
+            modifier = Modifier.padding(16.dp),
+            progress = 0.5f,
+            label = "Deferred 1",
+            onCancelClick = {}
+        )
+    }
 }

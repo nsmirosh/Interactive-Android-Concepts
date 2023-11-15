@@ -1,5 +1,6 @@
 package nick.mirosh.androidsamples.ui.coroutines.async
 
+import android.graphics.Color.parseColor
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -13,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,7 +22,7 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -43,62 +45,83 @@ fun AsyncComparisonScreen(
     var restart by remember {
         mutableStateOf(false)
     }
-    key(restart) {
-        Column {
-            Button(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                onClick = {
-                    viewModel.launchAsyncs()
+    MaterialTheme {
+        key(restart) {
+            Column {
+                var asyncsLaunched by remember {
+                    mutableStateOf(false)
                 }
-            ) {
-                Text("Launch asyncs")
-            }
-            Button(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                onClick = {
-                    viewModel.launchCoroutines()
-                }
-            ) {
-                Text("Launch coroutines")
-            }
 
-            ProgressBarWithCancel(
-                progress = deferred1Updates,
-                label = "Async{} #1",
-                onCancelClick = {
-                    viewModel.cancelAsync1()
+                var coroutinesLaunched by remember {
+                    mutableStateOf(false)
                 }
-            )
-            ProgressBarWithCancel(
-                progress = deferred2Updates,
-                label = "Async{} #2",
-                onCancelClick = {
-                    viewModel.cancelAsync2()
+                Button(
+                    colors = if (asyncsLaunched) ButtonDefaults.buttonColors(
+                        backgroundColor = Color(parseColor("#00ab41")),
+                        contentColor = Color.White
+                    )
+                    else ButtonDefaults.buttonColors(),
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    onClick = {
+                        viewModel.launchAsyncs()
+                        asyncsLaunched = true
+                    }
+                ) {
+                    Text(if (asyncsLaunched) "Asyncs Launched!" else "Launch asyncs")
                 }
-            )
-            ProgressBarWithCancel(
-                progress = job1FlowUpdates,
-                label = "Coroutine 1",
-                onCancelClick = {
-                    viewModel.cancelCoroutine1()
+                Button(
+                    colors = if (coroutinesLaunched) ButtonDefaults.buttonColors(
+                        backgroundColor = Color(parseColor("#00ab41")),
+                        contentColor = Color.White
+                    )
+                    else ButtonDefaults.buttonColors(),
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    onClick = {
+                        viewModel.launchCoroutines()
+                        coroutinesLaunched = true
+                    }
+                ) {
+                    Text(if (coroutinesLaunched) "Coroutines Launched!" else "Launch Coroutines")
                 }
-            )
-            ProgressBarWithCancel(
-                progress = job2FlowUpdates,
-                label = "Coroutine 2",
-                onCancelClick = {
-                    viewModel.cancelCoroutine2()
+
+                ProgressBarWithCancel(
+                    progress = deferred1Updates,
+                    label = "Async{} #1",
+                    onCancelClick = {
+                        viewModel.cancelAsync1()
+                    }
+                )
+                ProgressBarWithCancel(
+                    progress = deferred2Updates,
+                    label = "Async{} #2",
+                    onCancelClick = {
+                        viewModel.cancelAsync2()
+                    }
+                )
+                ProgressBarWithCancel(
+                    progress = job1FlowUpdates,
+                    label = "Coroutine 1",
+                    onCancelClick = {
+                        viewModel.cancelCoroutine1()
+                    }
+                )
+                ProgressBarWithCancel(
+                    progress = job2FlowUpdates,
+                    label = "Coroutine 2",
+                    onCancelClick = {
+                        viewModel.cancelCoroutine2()
+                    }
+                )
+                Button(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 16.dp),
+                    onClick = {
+                        viewModel.clear()
+                        restart = !restart
+                    }) {
+                    Text("Restart")
                 }
-            )
-            Button(
-                modifier = Modifier
-                    .align(CenterHorizontally)
-                    .padding(top = 16.dp),
-                onClick = {
-                    viewModel.clear()
-                    restart = !restart
-                }) {
-                Text("Restart")
             }
         }
     }
@@ -126,7 +149,7 @@ fun ProgressBarWithCancel(
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically
         ) {
             ProgressBar(
                 modifier = modifier
@@ -191,3 +214,4 @@ fun ProgressBarWithCancelPreview() {
         )
     }
 }
+

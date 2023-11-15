@@ -51,7 +51,7 @@ class AsyncComparisonViewModel : ViewModel() {
 }
 
 sealed class AsyncComparisonUIState {
-//    data object Initial : AsyncComparisonUIState()
+    data object Initial : AsyncComparisonUIState()
     data class DeferredUpdate(val progress: Float, val no: Int) : AsyncComparisonUIState()
     data class CoroutineUpdate(val progress: Float, val no: Int) : AsyncComparisonUIState()
 }

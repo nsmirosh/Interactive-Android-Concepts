@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import nick.mirosh.androidsamples.ui.coroutines.async.AsyncComparisonScreen
 import nick.mirosh.androidsamples.ui.coroutines.remember_coroutine_scope.Coroutines
 
 @Composable
@@ -29,18 +30,26 @@ fun CoroutineLobbyScreen() {
             LobbyContent(
                 onRememberCoroutineScopeClicked = {
                     currentState = CoroutineLobbyScreenEvent.NavigateToRememberCoroutineScope
+                },
+
+                onAsyncComparisonClicked = {
+                    currentState = CoroutineLobbyScreenEvent.NavigateToAsync
                 }
             )
 
         CoroutineLobbyScreenEvent.NavigateToRememberCoroutineScope ->
             Coroutines()
 
+        CoroutineLobbyScreenEvent.NavigateToAsync -> {
+            AsyncComparisonScreen()
+        }
     }
 }
 
 @Composable
 fun LobbyContent(
     onRememberCoroutineScopeClicked: (() -> Unit)? = null,
+    onAsyncComparisonClicked: (() -> Unit)? = null,
 ) {
 
     val scrollState = rememberScrollState()
@@ -54,6 +63,14 @@ fun LobbyContent(
                 }
                 .padding(24.dp)
         )
+        Text(
+            text = "Async comparison",
+            modifier = Modifier
+                .clickable {
+                    onAsyncComparisonClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
     }
 }
 
@@ -61,5 +78,6 @@ fun LobbyContent(
 sealed class CoroutineLobbyScreenEvent {
     object NavigateToLobby : CoroutineLobbyScreenEvent()
     object NavigateToRememberCoroutineScope : CoroutineLobbyScreenEvent()
+    object NavigateToAsync : CoroutineLobbyScreenEvent()
 
 }

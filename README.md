@@ -1,6 +1,7 @@
 # MyAndroidSamples
 
-This is a collection of various code samples in Jetpack Compose that demonstrates the correct and wrong usage of certain concepts.
+This is a collection of various code samples of Jetpack Compose and Kotin coroutines. 
+The app is intended to demonstrate the correct and wrong usage of certain concepts.
 
 ## Side Effects
 ### `LaunchedEffect` and `rememberUpdatedState()` usage

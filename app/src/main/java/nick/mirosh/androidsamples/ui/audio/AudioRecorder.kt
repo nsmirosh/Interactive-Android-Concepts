@@ -12,10 +12,9 @@ import javax.inject.Inject
 class AudioRecorder @Inject constructor(
     private val mediaRecorder: MediaRecorder
 ) {
-    private var fileName: String
+    private var fileName: String = Environment.getExternalStorageDirectory().absolutePath
 
     init {
-        fileName = Environment.getExternalStorageDirectory().absolutePath
         fileName += "/recorded_audio.3gp"
     }
 

@@ -25,6 +25,7 @@ fun MainScreenContent(
     onParallaxScreenClicked: (() -> Unit)? = null,
     onCoroutinesClicked: (() -> Unit)? = null,
     onDisposableEffectClicked: (() -> Unit)? = null,
+    onAudioRecorderClicked: (() -> Unit)? = null,
 
     ) {
 
@@ -108,6 +109,14 @@ fun MainScreenContent(
             modifier = Modifier
                 .clickable {
                     onCoroutinesClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "Audio Recorder",
+            modifier = Modifier
+                .clickable {
+                    onAudioRecorderClicked?.invoke()
                 }
                 .padding(24.dp)
         )

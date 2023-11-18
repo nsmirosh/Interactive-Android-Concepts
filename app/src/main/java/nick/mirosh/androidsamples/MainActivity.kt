@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.androidcomposeexample.ui.sideeffects.launchedeffect.LaunchedEffectScreen
 import dagger.hilt.android.AndroidEntryPoint
 import nick.mirosh.androidsamples.ui.Animation
+import nick.mirosh.androidsamples.ui.AudioRecorder
 import nick.mirosh.androidsamples.ui.BottomNavigation
 import nick.mirosh.androidsamples.ui.Coroutines
 import nick.mirosh.androidsamples.ui.DisposableEffect
@@ -29,6 +30,7 @@ import nick.mirosh.androidsamples.ui.SimpleList
 import nick.mirosh.androidsamples.ui.TodoDetails
 import nick.mirosh.androidsamples.ui.TodoList
 import nick.mirosh.androidsamples.ui.animation.SmileyLoadingAnimation
+import nick.mirosh.androidsamples.ui.audio.FetchAudioScreen
 import nick.mirosh.androidsamples.ui.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.coroutines.lobby.CoroutineLobbyScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
@@ -106,6 +108,11 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
                 navController.navigateSingleTopTo(
                     DisposableEffect.route
                 )
+            },
+            onAudioRecorderClicked = {
+                navController.navigateSingleTopTo(
+                    AudioRecorder.route
+                )
             }
 
         )
@@ -160,6 +167,9 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     }
     composable(route = Coroutines.route) {
         CoroutineLobbyScreen()
+    }
+    composable(route = AudioRecorder.route) {
+        FetchAudioScreen()
     }
 }
 

@@ -59,3 +59,6 @@ object Parallax: MyAppDestinations {
 object Coroutines: MyAppDestinations {
     override val route = "remember_coroutine_scope"
 }
+object AudioRecorder: MyAppDestinations {
+    override val route = "audio_recorder"
+}

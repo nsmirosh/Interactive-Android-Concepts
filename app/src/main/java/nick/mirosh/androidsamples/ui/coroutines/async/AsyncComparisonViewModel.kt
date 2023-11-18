@@ -7,11 +7,12 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlin.system.measureTimeMillis
+import kotlinx.coroutines.supervisorScope
 
 class AsyncComparisonViewModel : ViewModel() {
 
@@ -34,20 +35,54 @@ class AsyncComparisonViewModel : ViewModel() {
 
     fun launchAsyncs() {
         viewModelScope.launch {
-            val timeSpent = measureTimeMillis {
+            try {
+                deferred1 = async {
+                    runUpdatesIn(_deferred1Flow)
+                }
+            } catch (e: Exception) {
+                Log.e("AsyncComparison", "Exception in one of the async jobs: ${e.message}")
+            }
+            deferred2 = async {
+                runUpdatesIn(_deferred2Flow)
+            }
+            awaitAll(deferred1!!, deferred2!!)
+        }
+    }
+
+    fun launchAsyncsWithSupervisor() {
+        viewModelScope.launch {
+            supervisorScope {
                 deferred1 = async {
                     runUpdatesIn(_deferred1Flow)
                 }
                 deferred2 = async {
                     runUpdatesIn(_deferred2Flow)
-
                 }
-                awaitAll(deferred1!!, deferred2!!)
+                val result1 = deferred1?.await()
+                val result2 = deferred2?.await()
+                Log.d("AsyncComparison", "launchAsyncsWithSupervisor: deffered1 result: $result1")
+                Log.d("AsyncComparison", "launchAsyncsWithSupervisor: deffered2 result: $result2")
+//                awaitAll(deferred1!!, deferred2!!)
             }
-            Log.d("AsyncComparison", "asyncs finished in $timeSpent")
         }
     }
 
+    private suspend fun runAsyncs() {
+        //TODO watch https://www.youtube.com/watch?v=w0kfnydnFWI&ab_channel=JetBrains
+        coroutineScope {
+            try {
+                deferred1 = async {
+                    runUpdatesIn(_deferred1Flow)
+                }
+                deferred2 = async {
+                    runUpdatesIn(_deferred2Flow)
+                }
+                awaitAll(deferred1!!, deferred2!!)
+            } catch (e: Exception) {
+                Log.e("AsyncComparison", "Exception in one of the async jobs: ${e.message}")
+            }
+        }
+    }
 
     fun cancelAsync1() {
         deferred1?.cancel()
@@ -77,11 +112,13 @@ class AsyncComparisonViewModel : ViewModel() {
     }
 
     fun launchCoroutines() {
-        job1 = viewModelScope.launch {
-            runUpdatesIn(_job1flow)
-        }
-        job2 = viewModelScope.launch {
-            runUpdatesIn(_job2flow)
+        viewModelScope.launch {
+            job1 = viewModelScope.launch {
+                runUpdatesIn(_job1flow)
+            }
+            job2 = viewModelScope.launch {
+                runUpdatesIn(_job2flow)
+            }
         }
     }
 
@@ -91,6 +128,26 @@ class AsyncComparisonViewModel : ViewModel() {
             delay(500)
             flow.value = counter / 100f
             counter += 10
+        }
+    }
+
+    fun runMyChallenge() {
+        viewModelScope.launch {
+            launch {
+                delay(200L)
+                println("Task 1")
+            }
+
+            coroutineScope {
+                launch {
+                    delay(500L)
+                    println("Task 2")
+                }
+                delay(100L)
+                println("Task 3")
+            }
+
+            println("Task 4")
         }
     }
 }

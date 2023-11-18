@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Checkbox
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -55,33 +56,40 @@ fun AsyncComparisonScreen(
                 var coroutinesLaunched by remember {
                     mutableStateOf(false)
                 }
-                Button(
-                    colors = if (asyncsLaunched) ButtonDefaults.buttonColors(
-                        backgroundColor = Color(parseColor("#00ab41")),
-                        contentColor = Color.White
-                    )
-                    else ButtonDefaults.buttonColors(),
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    onClick = {
-                        viewModel.launchAsyncs()
-                        asyncsLaunched = true
-                    }
-                ) {
-                    Text(if (asyncsLaunched) "Asyncs Launched!" else "Launch asyncs")
+
+                var useSupervisorScope by remember {
+                    mutableStateOf(false)
                 }
-                Button(
-                    colors = if (coroutinesLaunched) ButtonDefaults.buttonColors(
-                        backgroundColor = Color(parseColor("#00ab41")),
-                        contentColor = Color.White
-                    )
-                    else ButtonDefaults.buttonColors(),
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    onClick = {
-                        viewModel.launchCoroutines()
-                        coroutinesLaunched = true
-                    }
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(if (coroutinesLaunched) "Coroutines Launched!" else "Launch Coroutines")
+                    Button(
+                        colors = if (asyncsLaunched) ButtonDefaults.buttonColors(
+                            backgroundColor = Color(parseColor("#00ab41")),
+                            contentColor = Color.White
+                        )
+                        else ButtonDefaults.buttonColors(),
+                        onClick = {
+                            if (useSupervisorScope)
+                                viewModel.launchAsyncsWithSupervisor()
+//                            else viewModel.launchAsyncs()
+                            else viewModel.runMyChallenge()
+                            asyncsLaunched = true
+                        }
+                    ) {
+                        Text(if (asyncsLaunched) "Asyncs Launched!" else "Launch asyncs")
+                    }
+                    Checkbox(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        checked = useSupervisorScope, onCheckedChange = {
+                            useSupervisorScope = it
+                        })
+                    Text(
+                        text = "Use supervisorScope"
+                    )
                 }
 
                 ProgressBarWithCancel(
@@ -98,6 +106,38 @@ fun AsyncComparisonScreen(
                         viewModel.cancelAsync2()
                     }
                 )
+//                AsyncContent(
+//                    progressAsync1 = deferred1Updates,
+//                    progressAsync2 = deferred2Updates,
+//                    launchAsyncs = {
+//                        viewModel.launchAsyncs()
+//                    },
+//                    launchAsyncsWithSupervisor = {
+//                        viewModel.launchAsyncsWithSupervisor()
+//                    },
+//                    cancelAsync1 = {
+//                        viewModel.cancelAsync1()
+//                    },
+//                    cancelAsync2 = {
+//                        viewModel.cancelAsync2()
+//                    }
+//                )
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Button(
+                    colors = if (coroutinesLaunched) ButtonDefaults.buttonColors(
+                        backgroundColor = Color(parseColor("#00ab41")),
+                        contentColor = Color.White
+                    )
+                    else ButtonDefaults.buttonColors(),
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    onClick = {
+                        viewModel.launchCoroutines()
+                        coroutinesLaunched = true
+                    }
+                ) {
+                    Text(if (coroutinesLaunched) "Coroutines Launched!" else "Launch Coroutines")
+                }
                 ProgressBarWithCancel(
                     progress = job1FlowUpdates,
                     label = "Coroutine 1",
@@ -124,6 +164,72 @@ fun AsyncComparisonScreen(
                 }
             }
         }
+    }
+}
+
+
+@Composable
+fun AsyncContent(
+    progressAsync1: Float,
+    progressAsync2: Float,
+    launchAsyncs: () -> Unit,
+    launchAsyncsWithSupervisor: () -> Unit,
+    cancelAsync1: () -> Unit,
+    cancelAsync2: () -> Unit,
+) {
+    Column {
+        var asyncsLaunched by remember {
+            mutableStateOf(false)
+        }
+
+        var useSupervisorScope by remember {
+            mutableStateOf(false)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                colors = if (asyncsLaunched) ButtonDefaults.buttonColors(
+                    backgroundColor = Color(parseColor("#00ab41")),
+                    contentColor = Color.White
+                )
+                else ButtonDefaults.buttonColors(),
+                onClick = {
+                    if (useSupervisorScope)
+                        launchAsyncsWithSupervisor()
+                    else launchAsyncs()
+                    asyncsLaunched = true
+                }
+            ) {
+                Text(if (asyncsLaunched) "Asyncs Launched!" else "Launch asyncs")
+            }
+            Checkbox(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                checked = useSupervisorScope, onCheckedChange = {
+                    useSupervisorScope = it
+                })
+            Text(
+                text = "Use supervisorScope"
+            )
+        }
+
+        ProgressBarWithCancel(
+            progress = progressAsync1,
+            label = "Async{} #1",
+            onCancelClick = {
+                cancelAsync1()
+            }
+        )
+        ProgressBarWithCancel(
+            progress = progressAsync2,
+            label = "Async{} #2",
+            onCancelClick = {
+                cancelAsync2()
+            }
+        )
     }
 }
 

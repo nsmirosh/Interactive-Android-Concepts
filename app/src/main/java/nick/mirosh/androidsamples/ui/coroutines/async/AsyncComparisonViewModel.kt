@@ -7,10 +7,10 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import nick.mirosh.androidsamples.ui.coroutines.runUpdatesIn
 import kotlin.system.measureTimeMillis
 
 class AsyncComparisonViewModel : ViewModel() {
@@ -82,15 +82,6 @@ class AsyncComparisonViewModel : ViewModel() {
         }
         job2 = viewModelScope.launch {
             runUpdatesIn(_job2flow)
-        }
-    }
-
-    private suspend fun runUpdatesIn(flow: MutableStateFlow<Float>) {
-        var counter = 0
-        while (counter <= 100) {
-            delay(500)
-            flow.value = counter / 100f
-            counter += 10
         }
     }
 }

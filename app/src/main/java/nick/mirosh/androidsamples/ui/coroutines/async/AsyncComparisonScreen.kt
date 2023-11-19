@@ -91,6 +91,9 @@ fun AsyncComparisonScreen(
                         viewModel.cancelAsync1()
                     }
                 )
+                Column {
+
+                }
                 ProgressBarWithCancel(
                     progress = deferred2Updates,
                     label = "Async{} #2",

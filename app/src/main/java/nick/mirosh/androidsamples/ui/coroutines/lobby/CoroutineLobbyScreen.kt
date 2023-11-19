@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import nick.mirosh.androidsamples.ui.coroutines.async.AsyncComparisonScreen
+import nick.mirosh.androidsamples.ui.coroutines.coroutine_scope.CoroutineScopeScreen
 import nick.mirosh.androidsamples.ui.coroutines.remember_coroutine_scope.Coroutines
 
 @Composable
@@ -31,9 +32,11 @@ fun CoroutineLobbyScreen() {
                 onRememberCoroutineScopeClicked = {
                     currentState = CoroutineLobbyScreenEvent.NavigateToRememberCoroutineScope
                 },
-
                 onAsyncComparisonClicked = {
                     currentState = CoroutineLobbyScreenEvent.NavigateToAsync
+                },
+                onCoroutineScopeClicked = {
+                    currentState = CoroutineLobbyScreenEvent.CoroutineScope
                 }
             )
 
@@ -43,6 +46,9 @@ fun CoroutineLobbyScreen() {
         CoroutineLobbyScreenEvent.NavigateToAsync -> {
             AsyncComparisonScreen()
         }
+        CoroutineLobbyScreenEvent.CoroutineScope -> {
+            CoroutineScopeScreen()
+        }
     }
 }
 
@@ -50,6 +56,7 @@ fun CoroutineLobbyScreen() {
 fun LobbyContent(
     onRememberCoroutineScopeClicked: (() -> Unit)? = null,
     onAsyncComparisonClicked: (() -> Unit)? = null,
+    onCoroutineScopeClicked: (() -> Unit)? = null,
 ) {
 
     val scrollState = rememberScrollState()
@@ -71,6 +78,14 @@ fun LobbyContent(
                 }
                 .padding(24.dp)
         )
+        Text(
+            text = "Coroutine scope",
+            modifier = Modifier
+                .clickable {
+                    onCoroutineScopeClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
     }
 }
 
@@ -79,5 +94,6 @@ sealed class CoroutineLobbyScreenEvent {
     object NavigateToLobby : CoroutineLobbyScreenEvent()
     object NavigateToRememberCoroutineScope : CoroutineLobbyScreenEvent()
     object NavigateToAsync : CoroutineLobbyScreenEvent()
+    object CoroutineScope : CoroutineLobbyScreenEvent()
 
 }

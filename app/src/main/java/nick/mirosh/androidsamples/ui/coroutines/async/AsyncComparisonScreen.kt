@@ -204,6 +204,13 @@ fun ProgressBar(
     )
 }
 
+@Preview
+@Composable
+fun AsyncComparisonScreenPreview() {
+    MyApplicationTheme {
+        AsyncComparisonScreen()
+    }
+}
 
 @Preview
 @Composable

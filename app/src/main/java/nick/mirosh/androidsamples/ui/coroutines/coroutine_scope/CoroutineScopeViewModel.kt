@@ -12,13 +12,13 @@ import kotlinx.coroutines.launch
 
 class CoroutineScopeViewModel : ViewModel() {
 
-    private val _task1Flow = MutableStateFlow(Pair(1f, "Task 1 : 2.0s"))
+    private val _task1Flow = MutableStateFlow(Pair(1f, "Task 1 : 5.0s"))
     val task1Flow = _task1Flow.asStateFlow()
 
-    private val _task2Flow = MutableStateFlow(Pair(1f, "Task 2 : 5.0s"))
+    private val _task2Flow = MutableStateFlow(Pair(1f, "Task 2 : 7.0s"))
     val task2Flow = _task2Flow.asStateFlow()
 
-    private val _task3Flow = MutableStateFlow(Pair(1f, "Task 3 : 1.0s"))
+    private val _task3Flow = MutableStateFlow(Pair(1f, "Task 3 : 3.0s"))
     val task3Flow = _task3Flow.asStateFlow()
 
     private val _task4Flow = MutableStateFlow(Pair(1f, "Task 4: 1.0s"))
@@ -27,16 +27,16 @@ class CoroutineScopeViewModel : ViewModel() {
     fun onCoroutineScopeClicked() {
         viewModelScope.launch {
             launch {
-                sendTimeUpdatesInto(_task1Flow, 3000L, 1)
+                sendTimeUpdatesInto(_task1Flow, 5000L, 1)
                 println("Task 1")
             }
 
             coroutineScope {
                 launch {
-                    sendTimeUpdatesInto(_task2Flow, 4000L, 2)
+                    sendTimeUpdatesInto(_task2Flow, 7000L, 2)
                     println("Task 2")
                 }
-                sendTimeUpdatesInto(_task3Flow, 2000L, 3)
+                sendTimeUpdatesInto(_task3Flow, 3000L, 3)
                 println("Task 3")
             }
 

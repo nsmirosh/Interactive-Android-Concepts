@@ -35,9 +35,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 
 
-val firstLevelIndent = 16.dp
-val secondLevelIndent = 32.dp
-val thirdLevelIndent = 48.dp
+val firstLevelIndent = 20.dp
+val secondLevelIndent = 40.dp
+val thirdLevelIndent = 60.dp
 
 const val firstLevelColor = "#4cc9f0"
 const val secondLevelColor = "#f72585"
@@ -57,8 +57,11 @@ fun CoroutineScopeScreen(
             mutableStateOf(false)
         }
         Button(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 16.dp),
             colors = if (coroutineScopeLaunched) ButtonDefaults.buttonColors(
-                backgroundColor = Color.Green,
+                backgroundColor = Color(parseColor("#00ab41")),
                 contentColor = Color.White
             )
             else ButtonDefaults.buttonColors(),
@@ -144,6 +147,48 @@ fun CoroutineScopeScreen(
             color = Color(parseColor(firstLevelColor)),
             text = "}"
         )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (task3Updates.first == 0.0f) {
+                Text(
+                    modifier = Modifier.padding(start = firstLevelIndent),
+                    fontSize = 22.sp,
+                    fontWeight = Bold,
+                    text = "Task 3 finished!",
+                    color = Color(parseColor(secondLevelColor))
+                )
+            }
+            if (task1Updates.first == 0.0f) {
+                Text(
+                    modifier = Modifier.padding(start = firstLevelIndent),
+                    fontSize = 22.sp,
+                    fontWeight = Bold,
+                    text = "Task 1 finished!",
+                    color = Color(parseColor(thirdLevelColor))
+                )
+            }
+            if (task2Updates.first == 0.0f) {
+                Text(
+                    modifier = Modifier.padding(start = firstLevelIndent),
+                    fontSize = 22.sp,
+                    fontWeight = Bold,
+                    text = "Task 2 finished!",
+                    color = Color(parseColor(secondLevelColor))
+                )
+            }
+            if (task4Updates.first == 0.0f) {
+                Text(
+                    modifier = Modifier.padding(start = firstLevelIndent),
+                    fontSize = 22.sp,
+                    fontWeight = Bold,
+                    text = "Task 4 finished!",
+                    color = Color(parseColor(firstLevelColor))
+                )
+            }
+        }
     }
 }
 

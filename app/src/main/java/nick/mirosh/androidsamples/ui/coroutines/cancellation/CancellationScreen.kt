@@ -97,7 +97,7 @@ fun CancellationScreen(
             Text("Cancelling with cancel and parent running")
         }
         Button(onClick = {
-            cancellationViewModel. cancellingWithCancellationExceptionAndParentRunning()
+            cancellationViewModel.cancellingWithCancellationExceptionAndParentRunning()
         }) {
             Text("Cancelling with CancellationException and parent running")
         }
@@ -120,6 +120,30 @@ fun CancellationScreen(
             cancellationViewModel.separateJobViewModelScopes()
         }) {
             Text("separate viewModelScopes")
+        }
+
+        Text(
+            text = "Supervision -> unidirectional relationship",
+            modifier = Modifier
+                .padding(top = 16.dp, bottom = 16.dp)
+                .align(
+                    CenterHorizontally
+                )
+        )
+        Button(onClick = {
+            cancellationViewModel.supervisorJob()
+        }) {
+            Text("launch supervisorJob")
+        }
+        Button(onClick = {
+            cancellationViewModel.supervisorJob2()
+        }) {
+            Text("launch regular job")
+        }
+        Button(onClick = {
+            cancellationViewModel.asyncs()
+        }) {
+            Text("coding challenge")
         }
     }
 }

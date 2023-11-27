@@ -1,11 +1,13 @@
 package nick.mirosh.androidsamples.ui.coroutines.lobby
 
+import CooperativeCancellationScreen
+import ExceptionPropagationScreen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +42,12 @@ fun CoroutineLobbyScreen() {
                 },
                 onCancellationClicked = {
                     currentState = CoroutineLobbyScreenEvent.Cancellation
+                },
+                onExceptionPropagationClicked = {
+                    currentState = CoroutineLobbyScreenEvent.ExceptionPropagation
+                },
+                onCooperativeCancellationClicked =  {
+                    currentState = CoroutineLobbyScreenEvent.CooperativeCancellation
                 }
             )
 
@@ -57,6 +65,14 @@ fun CoroutineLobbyScreen() {
         CoroutineLobbyScreenEvent.Cancellation -> {
             CancellationScreen()
         }
+
+        CoroutineLobbyScreenEvent.ExceptionPropagation -> {
+            ExceptionPropagationScreen()
+        }
+
+        CoroutineLobbyScreenEvent.CooperativeCancellation -> {
+            CooperativeCancellationScreen()
+        }
     }
 }
 
@@ -66,6 +82,8 @@ fun LobbyContent(
     onAsyncComparisonClicked: (() -> Unit)? = null,
     onCoroutineScopeClicked: (() -> Unit)? = null,
     onCancellationClicked: (() -> Unit)? = null,
+    onExceptionPropagationClicked: (() -> Unit)? = null,
+    onCooperativeCancellationClicked: (() -> Unit)? = null,
 ) {
 
     val scrollState = rememberScrollState()
@@ -103,6 +121,22 @@ fun LobbyContent(
                 }
                 .padding(24.dp)
         )
+        Text(
+            text = "Exception propagation",
+            modifier = Modifier
+                .clickable {
+                    onExceptionPropagationClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "Cooperative cancellation",
+            modifier = Modifier
+                .clickable {
+                    onCooperativeCancellationClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
     }
 }
 
@@ -113,5 +147,7 @@ sealed class CoroutineLobbyScreenEvent {
     object NavigateToAsync : CoroutineLobbyScreenEvent()
     object CoroutineScope : CoroutineLobbyScreenEvent()
     object Cancellation : CoroutineLobbyScreenEvent()
+    object ExceptionPropagation : CoroutineLobbyScreenEvent()
+    object CooperativeCancellation : CoroutineLobbyScreenEvent()
 
 }

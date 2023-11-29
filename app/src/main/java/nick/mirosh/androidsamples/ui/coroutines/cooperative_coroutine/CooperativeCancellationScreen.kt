@@ -1,3 +1,4 @@
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -6,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -61,7 +63,10 @@ fun CooperativeCancellationScreen(
                     .verticalScroll(scrollState)
             ) {
                 HighlightedCodeText(
-                    isCooperative = stopTheWhileLoop,
+                    breakLoop = {
+                        viewModel.stopUncooperative()
+//                        stopTheWhileLoop = true
+                    },
                     checkIsActive = makeCooperativeByCheckingIsActive,
                     throwCancellationException = makeCooperativeByCheckingCancellationException
                 )
@@ -83,7 +88,6 @@ fun CooperativeCancellationScreen(
 
                 StartingStoppingControls(
                     onStopUnCooperative = {
-                        stopTheWhileLoop = true
                         viewModel.stopUncooperative()
                     },
                     onStart = {
@@ -189,14 +193,13 @@ fun StartingStoppingControls(
         }
     }
 
-
-    Button(
-        onClick = {
-            onStopUnCooperative()
-        }
-    ) {
-        Text("Stop while loop")
-    }
+//    Button(
+//        onClick = {
+//            onStopUnCooperative()
+//        }
+//    ) {
+//        Text("Stop while loop")
+//    }
 }
 
 
@@ -259,10 +262,12 @@ fun CoooperativeCoroutineControls(
 
 @Composable
 fun HighlightedCodeText(
-    isCooperative: Boolean = false,
+//    isCooperative: Boolean = false,
+    breakLoop: () -> Unit,
     checkIsActive: Boolean = false,
     throwCancellationException: Boolean = false
 ) {
+    var loopBroken by remember { mutableStateOf(false) }
     val annotatedString = buildAnnotatedString {
         // Keywords
         val keywordStyle =
@@ -284,9 +289,11 @@ fun HighlightedCodeText(
             append("        while(")
         }
 
-        withStyle(if (isCooperative) correctStyle else wrongStyle) {
-            append(if (isCooperative) "false" else "true")
+        pushStringAnnotation(tag = "clickable", annotation = "true")
+        withStyle(regularStyle) {
+            append(if (loopBroken) "false" else "true")
         }
+        pop()
 
         if (checkIsActive) {
             withStyle(keywordStyle) {
@@ -306,10 +313,17 @@ fun HighlightedCodeText(
         }
     }
 
-    Text(
-        text = annotatedString, lineHeight = 30.sp,
-        modifier = Modifier
-            .fillMaxWidth()
+    ClickableText(
+        text = annotatedString,
+        onClick = { offset ->
+            annotatedString.getStringAnnotations(tag = "clickable", start = offset, end = offset)
+                .firstOrNull()?.let {
+                    loopBroken = true
+                    breakLoop()
+                }
+        },
+        // Don't forget to apply your desired styles and modifiers
+        modifier = Modifier.fillMaxWidth()
     )
 }
 

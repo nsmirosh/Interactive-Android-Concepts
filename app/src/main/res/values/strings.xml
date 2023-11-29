@@ -8,4 +8,17 @@
     <string name="schedule">Schedule</string>
     <string name="launched_effect_initial_description">Schedule a message to be sent in 6 seconds</string>
     <string name="launched_effect_update_description">Send a new message instead of the old one after 3 seconds</string>
+
+
+    <string name="cooperative_coroutine_code">
+        lateinit var job: Job\n
+        fun startUncooperativeCoroutine() { \n
+         \u0020 \u0020 \u0020 \u0020  job = GlobalScope.launch { \n
+          \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020       while(true) { \n
+
+        </string>
+    <string name="cooperative_coroutine_code_closing_brackets">
+          \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 } \n
+         \u0020 \u0020 \u0020 \u0020 }
+        </string>
 </resources>

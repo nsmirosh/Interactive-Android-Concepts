@@ -6,9 +6,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.PrintWriter
 import java.io.StringWriter
 
-suspend fun runUpdatesIn(flow: MutableStateFlow<Float>, delayMs: Long = 500L) {
+suspend fun runUpdatesIn(
+    flow: MutableStateFlow<Float>,
+    delayMs: Long = 500L,
+) {
     var counter = 0
-    while (counter <= 100) {
+    while (counter <= 100 ) {
         delay(delayMs)
         flow.value = counter / 100f
         counter += 10

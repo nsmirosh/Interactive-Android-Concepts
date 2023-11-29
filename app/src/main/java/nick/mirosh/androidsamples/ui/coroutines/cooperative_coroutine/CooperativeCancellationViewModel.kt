@@ -25,14 +25,14 @@ class CooperativeCancellationViewModel : ViewModel() {
     private val _job1flow = MutableStateFlow(0f)
     val job1flow = _job1flow.asStateFlow()
 
-    private val _coroutineStatus = MutableStateFlow("")
+    private val _coroutineStatus = MutableStateFlow("Not started")
     val coroutineStatus = _coroutineStatus.asStateFlow()
 
     init {
-        main()
+        setupUncooperativeCoroutine()
     }
 
-    private fun main() {
+    private fun setupUncooperativeCoroutine() {
         runBlocking {
             job = GlobalScope.launch(
                 start = CoroutineStart.LAZY
@@ -41,9 +41,9 @@ class CooperativeCancellationViewModel : ViewModel() {
                 Log.d(TAG, "running uncooperative cooroutine")
                 var counter = 0
                 while (counter <= 100 && shouldRun) {
-                    Thread.sleep(500)
+                    Thread.sleep(1000)
                     _job1flow.value = counter / 100f
-                    counter += 10
+                    counter += 5
                 }
                 Log.d(TAG, "Finished the loop")
             }
@@ -119,5 +119,10 @@ class CooperativeCancellationViewModel : ViewModel() {
 
     fun stopUncooperative() {
         shouldRun = false
+    }
+
+    fun clear() {
+        _job1flow.value = 0f
+        setupUncooperativeCoroutine()
     }
 }

@@ -1,18 +1,21 @@
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Checkbox
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -29,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import nick.mirosh.androidsamples.ui.coroutines.async.ProgressBar
+import nick.mirosh.androidsamples.ui.coroutines.ProgressBar
 import nick.mirosh.androidsamples.ui.coroutines.cooperative_coroutine.CooperativeCancellationViewModel
 
 
@@ -40,114 +43,159 @@ fun CooperativeCancellationScreen(
     val scrollState = rememberScrollState()
     val progress by viewModel.job1flow.collectAsStateWithLifecycle()
     val coroutineStatus by viewModel.coroutineStatus.collectAsStateWithLifecycle()
-    var stopTheWhileLoop by remember { mutableStateOf(false) }
+    var restart by remember {
+        mutableStateOf(false)
+    }
 
-    var makeCooperativeByCheckingIsActive by remember { mutableStateOf(false) }
-    var makeCooperativeByCheckingCancellationException by remember { mutableStateOf(false) }
+    MaterialTheme {
+        key(restart) {
 
-    Column(
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(scrollState)
-    ) {
-        HighlightedCodeText(
-            isCooperative = stopTheWhileLoop,
-            checkIsActive = makeCooperativeByCheckingIsActive,
-            throwCancellationException = makeCooperativeByCheckingCancellationException
-        )
-        ProgressBar(progress = progress)
-        Text(
+            var stopTheWhileLoop by remember { mutableStateOf(false) }
+            var makeCooperativeByCheckingIsActive by remember { mutableStateOf(false) }
+            var makeCooperativeByCheckingCancellationException by remember { mutableStateOf(false) }
 
-            modifier = Modifier
-                .align(CenterHorizontally)
-                .padding(top = 8.dp),
-            text = "Coroutine: $coroutineStatus",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = "        }\n}",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .verticalScroll(scrollState)
+            ) {
+                HighlightedCodeText(
+                    isCooperative = stopTheWhileLoop,
+                    checkIsActive = makeCooperativeByCheckingIsActive,
+                    throwCancellationException = makeCooperativeByCheckingCancellationException
+                )
+                ProgressBar(progress = progress, modifier = Modifier.fillMaxWidth())
+                Text(
+                    modifier = Modifier
+                        .align(CenterHorizontally)
+                        .padding(top = 8.dp),
+                    text = coroutineStatus,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = getColorBasedOnCoroutineStatus(coroutineStatus)
+                )
+                Text(
+                    text = "        }\n}",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
-        CoooperativeCoroutineControls(
-            checkingIsActive = makeCooperativeByCheckingIsActive,
-            onMakeCooperativeByCheckingIsActive = {
-                viewModel.setUpJobWithIsActiveCheck()
-                makeCooperativeByCheckingIsActive = true
-                makeCooperativeByCheckingCancellationException = false
-            },
-            throwingCancellationException = makeCooperativeByCheckingCancellationException,
-            onMakeCooperativeByThrowingCancellationException = {
-                viewModel.setUpJobWithCancellationException()
-                makeCooperativeByCheckingIsActive = false
-                makeCooperativeByCheckingCancellationException = true
+                StartingStoppingControls(
+                    onStopUnCooperative = {
+                        stopTheWhileLoop = true
+                        viewModel.stopUncooperative()
+                    },
+                    onStart = {
+                        viewModel.start()
+                    },
+                    onCancel = {
+                        viewModel.cancel()
+                    }
+                )
+                CoooperativeCoroutineControls(
+                    checkingIsActive = makeCooperativeByCheckingIsActive,
+                    onMakeCooperativeByCheckingIsActive = {
+                        viewModel.setUpJobWithIsActiveCheck()
+                        makeCooperativeByCheckingIsActive = true
+                        makeCooperativeByCheckingCancellationException = false
+                    },
+                    throwingCancellationException = makeCooperativeByCheckingCancellationException,
+                    onMakeCooperativeByThrowingCancellationException = {
+                        viewModel.setUpJobWithCancellationException()
+                        makeCooperativeByCheckingIsActive = false
+                        makeCooperativeByCheckingCancellationException = true
+                    }
+                )
+
+                Button(
+                    modifier = Modifier
+                        .align(CenterHorizontally)
+                        .padding(top = 16.dp),
+                    onClick = {
+                        viewModel.clear()
+                        restart = !restart
+                    }) {
+                    Text("Restart")
+                }
             }
-        )
-        StartingStoppingControls(
-            onStopUnCooperative = {
-                stopTheWhileLoop = true
-                viewModel.stopUncooperative()
-            },
-            onStartCooperative = {
-                viewModel.start()
-            },
-            onCancel = {
-                viewModel.cancel()
-            }
-        )
+        }
     }
 }
+
+
+fun getColorBasedOnCoroutineStatus(status: String) =
+    when (status) {
+        "Active" -> Color.Green
+        "Completed" -> Color.Blue
+        "Cancelled" -> Color.Red
+        else -> Color.Black
+    }
 
 
 @Composable
 fun StartingStoppingControls(
     onStopUnCooperative: () -> Unit,
-    onStartCooperative: () -> Unit,
+    onStart: () -> Unit,
     onCancel: () -> Unit
 ) {
+    var cancelled by remember {
+        mutableStateOf(false)
+    }
+    var started by remember {
+        mutableStateOf(false)
+    }
+    Row(
+        verticalAlignment = CenterVertically
+    ) {
+        Text(
+            fontSize = 20.sp,
+            text = "job.",
+            fontWeight = FontWeight.Bold
+        )
+
+        Button(
+            colors = if (started) ButtonDefaults.buttonColors(
+                backgroundColor = Color.Green,
+                contentColor = Color.White
+            )
+            else ButtonDefaults.buttonColors(),
+            onClick = {
+                started = true
+                onStart()
+            }) {
+            Text(if (started) "Started" else ".start()")
+        }
+    }
+    Row(
+        verticalAlignment = CenterVertically
+    ) {
+        Text(
+            fontSize = 20.sp,
+            text = "job.",
+            fontWeight = FontWeight.Bold
+        )
+        Button(
+            colors = if (cancelled) ButtonDefaults.buttonColors(
+                backgroundColor = Color.Red,
+                contentColor = Color.White
+            )
+            else ButtonDefaults.buttonColors(),
+            onClick = {
+                cancelled = true
+                onCancel()
+            }) {
+            Text(if (cancelled) "Cancelled" else ".cancel()")
+        }
+    }
+
 
     Button(
         onClick = {
             onStopUnCooperative()
         }
     ) {
-        Text("Stop this uncooperative coroutine")
-    }
-    Row(
-        verticalAlignment = CenterVertically
-    ) {
-        Text(
-            fontSize = 20.sp,
-            text = "job.",
-            fontWeight = FontWeight.Bold
-        )
-        Button(
-            onClick = {
-                onCancel()
-            }
-        ) {
-            Text("cancel()")
-        }
-    }
-    Row(
-        verticalAlignment = CenterVertically
-    ) {
-        Text(
-            fontSize = 20.sp,
-            text = "job.",
-            fontWeight = FontWeight.Bold
-        )
-        Button(
-            onClick = {
-                onStartCooperative()
-            }
-        ) {
-            Text("start()")
-        }
+        Text("Stop while loop")
     }
 }
 
@@ -158,7 +206,7 @@ fun CoooperativeCoroutineControls(
     throwingCancellationException: Boolean = false,
     onMakeCooperativeByCheckingIsActive: () -> Unit,
     onMakeCooperativeByThrowingCancellationException: () -> Unit,
-    ) {
+) {
 
     var makeCoroutineCooperative by remember {
         mutableStateOf(false)
@@ -258,7 +306,11 @@ fun HighlightedCodeText(
         }
     }
 
-    Text(text = annotatedString, lineHeight = 30.sp)
+    Text(
+        text = annotatedString, lineHeight = 30.sp,
+        modifier = Modifier
+            .fillMaxWidth()
+    )
 }
 
 @Preview(name = "New_Pixel_2_API_UpsideDownCake")

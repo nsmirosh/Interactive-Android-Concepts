@@ -4,8 +4,17 @@ This is a collection of various code samples and demonstrations of Jetpack Compo
 The app is intended to demonstrate the correct and wrong usage of certain concepts.
 
 
-## Coroutines
-### Demonstration of the correct and wrong usage of `rememberCoroutineScope()` 
+## Coroutines examples
+
+### Coroutine cooperation. How can `isActive` and `CancellationException` be used to quit a coroutine.
+
+[Explanation post](https://www.nickmirosh.com/post/do-you-know-what-coroutines-are-cooperative-means)
+
+[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/cooperative_coroutine/CooperativeCancellationScreen.kt)
+
+https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/c242ef98-5d7a-4903-8640-50f06afc4e33
+
+### How `rememberCoroutineScope()` can be used to cancel coroutine execution in Composition
 
 [Explanation post on LinkedIn](https://www.linkedin.com/posts/nikolay-miroshnychenko-5838a25a_jetpackcompose-androiddevelopment-android-activity-7115671534635028480-3ISO?utm_source=share&utm_medium=member_desktop)
 

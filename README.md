@@ -13,7 +13,7 @@ https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/5d0a9793-a5e3-40be-9
 
 ### Demonstration of the usage `async{}` vs regular `launch{}` and how scopes control their execution
 
-[Explanation post on LinkedIn](https://www.linkedin.com/posts/nikolay-miroshnychenko-5838a25a_androiddevelopment-coroutines-kotlin-activity-7130762679769579520-uH8A?utm_source=share&utm_medium=member_desktop)
+[Explanation post](https://www.nickmirosh.com/post/do-you-know-how-scopes-work-in-coroutines)
 
 https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/01b10316-f5e5-4b9c-bc40-959d94ef5b9d
 

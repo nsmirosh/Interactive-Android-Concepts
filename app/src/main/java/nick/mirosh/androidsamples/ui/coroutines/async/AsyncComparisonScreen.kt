@@ -1,6 +1,5 @@
 package nick.mirosh.androidsamples.ui.coroutines.async
 
-import android.graphics.Color.parseColor
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nick.mirosh.androidsamples.ui.coroutines.ProgressBar
+import nick.mirosh.androidsamples.ui.coroutines.myGreen
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 
 
@@ -52,7 +52,7 @@ fun AsyncComparisonScreen(
                 }
                 Button(
                     colors = if (asyncsLaunched) ButtonDefaults.buttonColors(
-                        backgroundColor = Color(parseColor("#00ab41")),
+                        backgroundColor = myGreen(),
                         contentColor = Color.White
                     )
                     else ButtonDefaults.buttonColors(),
@@ -66,7 +66,7 @@ fun AsyncComparisonScreen(
                 }
                 Button(
                     colors = if (coroutinesLaunched) ButtonDefaults.buttonColors(
-                        backgroundColor = Color(parseColor("#00ab41")),
+                        backgroundColor = myGreen(),
                         contentColor = Color.White
                     )
                     else ButtonDefaults.buttonColors(),
@@ -173,7 +173,6 @@ fun ProgressBarWithCancel(
         }
     }
 }
-
 
 
 @Preview

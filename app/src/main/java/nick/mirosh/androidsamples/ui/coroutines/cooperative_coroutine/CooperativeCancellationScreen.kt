@@ -26,7 +26,9 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nick.mirosh.androidsamples.ui.coroutines.ProgressBar
 import nick.mirosh.androidsamples.ui.coroutines.cooperative_coroutine.CooperativeCancellationViewModel
+import nick.mirosh.androidsamples.ui.coroutines.myGreen
 
 
 @Composable
@@ -51,8 +54,6 @@ fun CooperativeCancellationScreen(
 
     MaterialTheme {
         key(restart) {
-
-            var stopTheWhileLoop by remember { mutableStateOf(false) }
             var makeCooperativeByCheckingIsActive by remember { mutableStateOf(false) }
             var makeCooperativeByCheckingCancellationException by remember { mutableStateOf(false) }
 
@@ -65,18 +66,22 @@ fun CooperativeCancellationScreen(
                 HighlightedCodeText(
                     breakLoop = {
                         viewModel.stopUncooperative()
-//                        stopTheWhileLoop = true
                     },
                     checkIsActive = makeCooperativeByCheckingIsActive,
                     throwCancellationException = makeCooperativeByCheckingCancellationException
                 )
-                ProgressBar(progress = progress, modifier = Modifier.fillMaxWidth())
+                ProgressBar(
+                    progress = progress, modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                )
                 Text(
                     modifier = Modifier
                         .align(CenterHorizontally)
                         .padding(top = 8.dp),
                     text = coroutineStatus,
                     fontSize = 20.sp,
+                    fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     color = getColorBasedOnCoroutineStatus(coroutineStatus)
                 )
@@ -87,9 +92,6 @@ fun CooperativeCancellationScreen(
                 )
 
                 StartingStoppingControls(
-                    onStopUnCooperative = {
-                        viewModel.stopUncooperative()
-                    },
                     onStart = {
                         viewModel.start()
                     },
@@ -130,7 +132,7 @@ fun CooperativeCancellationScreen(
 
 fun getColorBasedOnCoroutineStatus(status: String) =
     when (status) {
-        "Active" -> Color.Green
+        "Active" -> myGreen()
         "Completed" -> Color.Blue
         "Cancelled" -> Color.Red
         else -> Color.Black
@@ -139,7 +141,6 @@ fun getColorBasedOnCoroutineStatus(status: String) =
 
 @Composable
 fun StartingStoppingControls(
-    onStopUnCooperative: () -> Unit,
     onStart: () -> Unit,
     onCancel: () -> Unit
 ) {
@@ -160,7 +161,7 @@ fun StartingStoppingControls(
 
         Button(
             colors = if (started) ButtonDefaults.buttonColors(
-                backgroundColor = Color.Green,
+                backgroundColor = myGreen(),
                 contentColor = Color.White
             )
             else ButtonDefaults.buttonColors(),
@@ -192,14 +193,6 @@ fun StartingStoppingControls(
             Text(if (cancelled) "Cancelled" else ".cancel()")
         }
     }
-
-//    Button(
-//        onClick = {
-//            onStopUnCooperative()
-//        }
-//    ) {
-//        Text("Stop while loop")
-//    }
 }
 
 
@@ -262,20 +255,18 @@ fun CoooperativeCoroutineControls(
 
 @Composable
 fun HighlightedCodeText(
-//    isCooperative: Boolean = false,
     breakLoop: () -> Unit,
     checkIsActive: Boolean = false,
     throwCancellationException: Boolean = false
 ) {
     var loopBroken by remember { mutableStateOf(false) }
     val annotatedString = buildAnnotatedString {
-        // Keywords
         val keywordStyle =
             SpanStyle(color = Color.Blue, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         val regularStyle =
             SpanStyle(color = Color.Black, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         val correctStyle =
-            SpanStyle(color = Color.Green, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            SpanStyle(color = myGreen(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
         val wrongStyle =
             SpanStyle(color = Color.Red, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         withStyle(keywordStyle) {
@@ -290,8 +281,15 @@ fun HighlightedCodeText(
         }
 
         pushStringAnnotation(tag = "clickable", annotation = "true")
-        withStyle(regularStyle) {
-            append(if (loopBroken) "false" else "true")
+        if (loopBroken) {
+            withStyle(wrongStyle) {
+                append("false")
+            }
+        }
+        else {
+            withStyle(correctStyle) {
+                append("true")
+            }
         }
         pop()
 
@@ -315,6 +313,7 @@ fun HighlightedCodeText(
 
     ClickableText(
         text = annotatedString,
+        style = TextStyle(lineHeight = 28.sp),
         onClick = { offset ->
             annotatedString.getStringAnnotations(tag = "clickable", start = offset, end = offset)
                 .firstOrNull()?.let {
@@ -322,7 +321,6 @@ fun HighlightedCodeText(
                     breakLoop()
                 }
         },
-        // Don't forget to apply your desired styles and modifiers
         modifier = Modifier.fillMaxWidth()
     )
 }

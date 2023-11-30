@@ -41,7 +41,7 @@ class CooperativeCancellationViewModel : ViewModel() {
                 Log.d(TAG, "running uncooperative cooroutine")
                 var counter = 0
                 while (counter <= 100 && shouldRun) {
-                    Thread.sleep(1000)
+                    Thread.sleep(700)
                     _job1flow.value = counter / 100f
                     counter += 5
                 }

@@ -30,7 +30,9 @@ https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/01b10316-f5e5-4b9c-b
 
 ### Demonstration of how `coroutineScope` influences the execution of coroutines
 
-[Explanation post on LinkedIn](https://www.linkedin.com/posts/nikolay-miroshnychenko-5838a25a_androiddevelopment-coroutines-kotlin-activity-7132272768728870912-BAcY?utm_source=share&utm_medium=member_desktop)
+[Explanation post](https://www.nickmirosh.com/post/do-you-know-how-coroutinescope-works-in-coroutines)
+
+[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/coroutine_scope/CoroutineScopeScreen.kt)
 
 https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/a54319e4-3961-4985-8437-483f7b775e48
 

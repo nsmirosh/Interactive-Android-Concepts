@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -80,14 +79,14 @@ fun CooperativeCancellationScreen(
                         .align(CenterHorizontally)
                         .padding(top = 8.dp),
                     text = coroutineStatus,
-                    fontSize = 20.sp,
+                    fontSize = 24.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     color = getColorBasedOnCoroutineStatus(coroutineStatus)
                 )
                 Text(
                     text = "        }\n}",
-                    fontSize = 20.sp,
+                    fontSize = 26.sp,
                     fontWeight = FontWeight.Bold
                 )
 
@@ -122,7 +121,10 @@ fun CooperativeCancellationScreen(
                         viewModel.clear()
                         restart = !restart
                     }) {
-                    Text("Restart")
+                    Text(
+                        fontSize = 20.sp,
+                        text = "Restart"
+                    )
                 }
             }
         }
@@ -151,10 +153,11 @@ fun StartingStoppingControls(
         mutableStateOf(false)
     }
     Row(
+        modifier = Modifier.padding(top = 16.dp),
         verticalAlignment = CenterVertically
     ) {
         Text(
-            fontSize = 20.sp,
+            fontSize = 26.sp,
             text = "job.",
             fontWeight = FontWeight.Bold
         )
@@ -169,14 +172,19 @@ fun StartingStoppingControls(
                 started = true
                 onStart()
             }) {
-            Text(if (started) "Started" else ".start()")
+            Text(
+                fontSize = 24.sp,
+                text = if (started) "Started" else ".start()"
+            )
         }
     }
     Row(
+
+        modifier = Modifier.padding(top = 8.dp),
         verticalAlignment = CenterVertically
     ) {
         Text(
-            fontSize = 20.sp,
+            fontSize = 26.sp,
             text = "job.",
             fontWeight = FontWeight.Bold
         )
@@ -190,7 +198,11 @@ fun StartingStoppingControls(
                 cancelled = true
                 onCancel()
             }) {
-            Text(if (cancelled) "Cancelled" else ".cancel()")
+            Text(
+
+                fontSize = 24.sp,
+                text = if (cancelled) "Cancelled" else ".cancel()"
+            )
         }
     }
 }
@@ -216,7 +228,7 @@ fun CoooperativeCoroutineControls(
         })
         Text(
             text = "Make this coroutine cooperative",
-            fontSize = 16.sp,
+            fontSize = 20.sp,
         )
     }
 
@@ -231,8 +243,8 @@ fun CoooperativeCoroutineControls(
                 }
             )
             Text(
-                text = "by checking if coroutine isActive",
-                fontSize = 16.sp,
+                text = "check if coroutine isActive",
+                fontSize = 20.sp,
             )
         }
 
@@ -246,8 +258,8 @@ fun CoooperativeCoroutineControls(
                 }
             )
             Text(
-                text = "by throwing a CancellationException",
-                fontSize = 16.sp,
+                text = "throw a CancellationException",
+                fontSize = 20.sp,
             )
         }
     }
@@ -262,13 +274,13 @@ fun HighlightedCodeText(
     var loopBroken by remember { mutableStateOf(false) }
     val annotatedString = buildAnnotatedString {
         val keywordStyle =
-            SpanStyle(color = Color.Blue, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            SpanStyle(color = Color.Blue, fontSize = 26.sp, fontWeight = FontWeight.Bold)
         val regularStyle =
-            SpanStyle(color = Color.Black, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            SpanStyle(color = Color.Black, fontSize = 26.sp, fontWeight = FontWeight.Bold)
         val correctStyle =
-            SpanStyle(color = myGreen(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            SpanStyle(color = myGreen(), fontSize = 26.sp, fontWeight = FontWeight.Bold)
         val wrongStyle =
-            SpanStyle(color = Color.Red, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            SpanStyle(color = Color.Red, fontSize = 26.sp, fontWeight = FontWeight.Bold)
         withStyle(keywordStyle) {
             append("val ")
         }
@@ -313,7 +325,7 @@ fun HighlightedCodeText(
 
     ClickableText(
         text = annotatedString,
-        style = TextStyle(lineHeight = 28.sp),
+        style = TextStyle(lineHeight = 32.sp),
         onClick = { offset ->
             annotatedString.getStringAnnotations(tag = "clickable", start = offset, end = offset)
                 .firstOrNull()?.let {

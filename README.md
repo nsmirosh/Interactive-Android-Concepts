@@ -2,9 +2,15 @@
 
 # Android Concepts Examples
 
-This is my collection of  code samples and demonstrations focusing on Android development, specifically Jetpack Compose and Kotlin coroutines. This repository is designed to illustrate both correct and incorrect usage of various Android development concepts.
+This is my collection of code samples and demonstrations focusing on Android development, specifically Jetpack Compose and Kotlin coroutines. 
+
+The aim of this repository is to visually illustrate the usage of complex Android concepts. All of the video illustrations have corresponding code representation.
+
+Feel free to play around with these examples to get a better understanding of each of the concepts. 
+
 
 ## Contents
+
 1. [Coroutines Examples](#coroutines-examples)
     - Coroutine cooperation. Building a cooperative coroutine. [Link](#coroutine-cooperation)
     - The difference between `async {}` and `viewModelScope.launch{}`. How it influences coroutine execution and cancellation. [Link](#async-vs-launch)
@@ -13,6 +19,9 @@ This is my collection of  code samples and demonstrations focusing on Android de
     - Demonstration of the usage of `rememberUpdatedState()` for updating a schedule lambda [Link](#launchedeffect-and-rememberupdatedstate)
     - How `rememberCoroutineScope` can be used to cancel the execution of a coroutine [Link](#remember-coroutine-scope)
 3. [Progress Animation](#progress-animation)
+
+
+
 
 ## Coroutines Examples
 

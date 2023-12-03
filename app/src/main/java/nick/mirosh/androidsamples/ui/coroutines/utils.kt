@@ -6,7 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -97,9 +97,9 @@ fun CancellableProgressBar(
         )
         LinearProgressIndicator(
             progress = progressAnimation,
-            modifier = modifier
-                .padding(horizontal = 16.dp)
+            modifier = Modifier
                 .height(32.dp)
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
                 .align(Alignment.Center) // Center the progress indicator
         )
@@ -133,7 +133,6 @@ fun CancelAnimation(
 fun ProgressBarPreview() {
     Box(
         modifier = Modifier
-            .fillMaxSize()
             .background(Color.White)
             .padding(16.dp)
     ) {
@@ -142,3 +141,8 @@ fun ProgressBarPreview() {
         )
     }
 }
+
+// Custom Modifier
+fun Modifier.firstLevelIndent() = this.then(padding(start = 20.dp))
+fun Modifier.secondLevelIndent() = this.then(padding(start = 40.dp))
+fun Modifier.thirdLevelIndent() = this.then(padding(start = 60.dp))

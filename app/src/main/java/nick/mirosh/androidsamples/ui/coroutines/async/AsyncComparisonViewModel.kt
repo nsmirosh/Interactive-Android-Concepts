@@ -9,9 +9,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import nick.mirosh.androidsamples.ui.coroutines.runUpdatesIn
-import kotlin.system.measureTimeMillis
 
 class AsyncComparisonViewModel : ViewModel() {
 
@@ -34,17 +34,13 @@ class AsyncComparisonViewModel : ViewModel() {
 
     fun launchAsyncs() {
         viewModelScope.launch {
-            val timeSpent = measureTimeMillis {
-                deferred1 = async {
-                    runUpdatesIn(_deferred1Flow)
-                }
-                deferred2 = async {
-                    runUpdatesIn(_deferred2Flow)
-
-                }
-                awaitAll(deferred1!!, deferred2!!)
+            deferred1 = async {
+                runUpdatesIn(_deferred1Flow)
             }
-            Log.d("AsyncComparison", "asyncs finished in $timeSpent")
+            deferred2 = async {
+                runUpdatesIn(_deferred2Flow)
+            }
+            awaitAll(deferred1!!, deferred2!!)
         }
     }
 
@@ -58,10 +54,12 @@ class AsyncComparisonViewModel : ViewModel() {
     }
 
     fun cancelCoroutine1() {
+        Log.d("AsyncComparison", "cancelling coroutine 1")
         job1?.cancel()
     }
 
     fun cancelCoroutine2() {
+        Log.d("AsyncComparison", "cancelling coroutine 2")
         job2?.cancel()
     }
 
@@ -77,11 +75,15 @@ class AsyncComparisonViewModel : ViewModel() {
     }
 
     fun launchCoroutines() {
-        job1 = viewModelScope.launch {
-            runUpdatesIn(_job1flow)
-        }
-        job2 = viewModelScope.launch {
-            runUpdatesIn(_job2flow)
+        viewModelScope.launch {
+            job1 = launch {
+                runUpdatesIn(_job1flow)
+            }
+
+            job2 = launch {
+                runUpdatesIn(_job2flow)
+            }
+            joinAll(job1!!, job2!!)
         }
     }
 }

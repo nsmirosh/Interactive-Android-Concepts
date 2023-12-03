@@ -20,7 +20,7 @@ class ExceptionPropagationViewModel : ViewModel() {
         val handler = CoroutineExceptionHandler { _, exception ->
             Log.d(
                 TAG,
-                "catching final exception in GRAND parent coroutine with message: ${exception.message}"
+                "catching final exception in GRAND GRAND parent coroutine with message: ${exception.message}"
             )
         }
         viewModelScope
@@ -30,40 +30,48 @@ class ExceptionPropagationViewModel : ViewModel() {
                 launch {
                     try {
                         val job = launch {
-                            delay(500)
-                            Log.d(TAG, "throwing exception in child coroutine")
-                            throw UnsupportedOperationException("Exception in child coroutine")
+                            try {
+                                val job = launch {
+                                    delay(500)
+                                    Log.d(TAG, "throwing exception in child coroutine")
+                                    throw UnsupportedOperationException("Exception in child coroutine")
+                                }
+//                                Log.d(TAG, "Waiting for the child coroutine to finish")
+                                job.join()
+                            } catch (e: Exception) {
+                                Log.d(
+                                    TAG,
+                                    "catching exception in parent coroutine with message: ${e.message}"
+                                )
+                            }
                         }
-                        job.join()
-                        delay(1000)
-                        Log.d(TAG, "This shouldn't be printed")
+//                        job.join()
                     } catch (e: Exception) {
                         Log.d(
-                            TAG, "catching exception in parent coroutine with message: ${e.message}"
+                            TAG,
+                            "catching exception in GRAND parent coroutine with message: ${e.message}"
                         )
                     }
                 }
             }
+    }
 
 
-
-
-        fun main() {
-            runBlocking {
-                val job = GlobalScope.launch {
-                    var counter = 0
-                    while (true) {
-                        println("Counter: $counter")
-                        counter++
-                        Thread.sleep(100)
-                    }
+    fun main() {
+        runBlocking {
+            val job = GlobalScope.launch {
+                var counter = 0
+                while (true) {
+                    println("Counter: $counter")
+                    counter++
+                    Thread.sleep(100)
                 }
-                delay(1000)
-                println("Requesting cancellation")
-                job.cancel()
-                job.join()
-                println("Cancellation requested")
             }
+            delay(1000)
+            println("Requesting cancellation")
+            job.cancel()
+            job.join()
+            println("Cancellation requested")
         }
     }
 }

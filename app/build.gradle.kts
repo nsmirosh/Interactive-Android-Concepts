@@ -84,6 +84,9 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.0-alpha10")
     implementation("androidx.compose.material:material:1.5.4")
 
+   //lottie
+
+    implementation ("com.airbnb.android:lottie-compose:6.2.0")
 
     //depdendency for coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")

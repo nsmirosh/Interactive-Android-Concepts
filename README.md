@@ -14,7 +14,7 @@ This is my collection of  code samples and demonstrations focusing on Android de
 Learn how `isActive` and `CancellationException` can be utilized for efficient coroutine management.
 - **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-what-coroutines-are-cooperative-means)**
 - **[Code Sample](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/cooperative_coroutine/CooperativeCancellationScreen.kt)**
-- <details><summary>Video Demo (click to expand)</summary>![Coroutine Cooperation Video](https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/c242ef98-5d7a-4903-8640-50f06afc4e33)</details>
+- <details><summary>Video Demo (click to expand)</summary> https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/c242ef98-5d7a-4903-8640-50f06afc4e33 </details>
 
 ### RememberCoroutineScope in Compose
 Discover the use of `rememberCoroutineScope()` for canceling coroutine execution within Compose.

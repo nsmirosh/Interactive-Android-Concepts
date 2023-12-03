@@ -15,19 +15,15 @@
  */
 
 package nick.mirosh.androidsamples.ui
-
+//Main screen destinations
 interface MyAppDestinations {
     val route: String
 }
 object MainScreen: MyAppDestinations {
     override val route = "main_screen"
 }
-
 object SimpleList : MyAppDestinations {
     override val route = "simple_list"
-}
-object SimpleListWithDeletion : MyAppDestinations {
-    override val route = "simple_list_with_deletion"
 }
 object ProgressBar: MyAppDestinations {
     override val route = "progress_bar"
@@ -59,3 +55,30 @@ object Parallax: MyAppDestinations {
 object Coroutines: MyAppDestinations {
     override val route = "remember_coroutine_scope"
 }
+
+
+//Coroutines destionations
+interface CoroutinesDestinations {
+    val route: String
+}
+
+object CoroutineLobbyScreenDestination: CoroutinesDestinations {
+    override val route = "coroutine_lobby_screen"
+}
+object ExceptionPropagationDestination: CoroutinesDestinations {
+    override val route = "exception_propagation"
+}
+object CoroutineScopeDestination: CoroutinesDestinations {
+    override val route = "coroutine_scope"
+}
+object CooperativeCancellationDestination: CoroutinesDestinations {
+    override val route = "cooperative_cancellation"
+}
+object AsyncComparisonDestination: CoroutinesDestinations {
+    override val route = "async"
+}
+object RememberCoroutineScopeDestination: CoroutinesDestinations {
+    override val route = "remember_coroutine_scope"
+}
+
+

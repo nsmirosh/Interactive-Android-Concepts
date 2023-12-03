@@ -73,7 +73,7 @@ fun SuccessIcon(
 }
 
 @Composable
-fun Coroutines() {
+fun RememberCoroutineScopeScreen() {
     var onCancelPressed by remember {
         mutableStateOf(false)
     }

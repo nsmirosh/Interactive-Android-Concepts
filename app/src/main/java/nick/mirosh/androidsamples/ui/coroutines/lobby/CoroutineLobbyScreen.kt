@@ -4,74 +4,45 @@ import CooperativeCancellationScreen
 import ExceptionPropagationScreen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import nick.mirosh.androidsamples.navigateSingleTopTo
+import nick.mirosh.androidsamples.ui.AsyncComparisonDestination
+import nick.mirosh.androidsamples.ui.CooperativeCancellationDestination
+import nick.mirosh.androidsamples.ui.CoroutineLobbyScreenDestination
+import nick.mirosh.androidsamples.ui.CoroutineScopeDestination
+import nick.mirosh.androidsamples.ui.ExceptionPropagationDestination
+import nick.mirosh.androidsamples.ui.RememberCoroutineScopeDestination
 import nick.mirosh.androidsamples.ui.coroutines.async.AsyncComparisonScreen
-import nick.mirosh.androidsamples.ui.coroutines.cancellation.CancellationScreen
 import nick.mirosh.androidsamples.ui.coroutines.coroutine_scope.CoroutineScopeScreen
-import nick.mirosh.androidsamples.ui.coroutines.remember_coroutine_scope.Coroutines
+import nick.mirosh.androidsamples.ui.coroutines.remember_coroutine_scope.RememberCoroutineScopeScreen
 
 @Composable
 fun CoroutineLobbyScreen() {
-
-    var currentState by remember {
-        mutableStateOf<CoroutineLobbyScreenEvent>(
-            CoroutineLobbyScreenEvent.NavigateToLobby
-        )
-    }
-    when (currentState) {
-        CoroutineLobbyScreenEvent.NavigateToLobby ->
-            LobbyContent(
-                onRememberCoroutineScopeClicked = {
-                    currentState = CoroutineLobbyScreenEvent.NavigateToRememberCoroutineScope
-                },
-                onAsyncComparisonClicked = {
-                    currentState = CoroutineLobbyScreenEvent.NavigateToAsync
-                },
-                onCoroutineScopeClicked = {
-                    currentState = CoroutineLobbyScreenEvent.CoroutineScope
-                },
-                onCancellationClicked = {
-                    currentState = CoroutineLobbyScreenEvent.Cancellation
-                },
-                onExceptionPropagationClicked = {
-                    currentState = CoroutineLobbyScreenEvent.ExceptionPropagation
-                },
-                onCooperativeCancellationClicked =  {
-                    currentState = CoroutineLobbyScreenEvent.CooperativeCancellation
-                }
-            )
-
-        CoroutineLobbyScreenEvent.NavigateToRememberCoroutineScope ->
-            Coroutines()
-
-        CoroutineLobbyScreenEvent.NavigateToAsync -> {
-            AsyncComparisonScreen()
-        }
-
-        CoroutineLobbyScreenEvent.CoroutineScope -> {
-            CoroutineScopeScreen()
-        }
-
-        CoroutineLobbyScreenEvent.Cancellation -> {
-            CancellationScreen()
-        }
-
-        CoroutineLobbyScreenEvent.ExceptionPropagation -> {
-            ExceptionPropagationScreen()
-        }
-
-        CoroutineLobbyScreenEvent.CooperativeCancellation -> {
-            CooperativeCancellationScreen()
+    val navController = rememberNavController()
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        NavHost(
+            navController = navController,
+            startDestination = CoroutineLobbyScreenDestination.route,
+            modifier = Modifier
+        ) {
+            setUpNavigation(navController)
         }
     }
 }
@@ -81,7 +52,6 @@ fun LobbyContent(
     onRememberCoroutineScopeClicked: (() -> Unit)? = null,
     onAsyncComparisonClicked: (() -> Unit)? = null,
     onCoroutineScopeClicked: (() -> Unit)? = null,
-    onCancellationClicked: (() -> Unit)? = null,
     onExceptionPropagationClicked: (() -> Unit)? = null,
     onCooperativeCancellationClicked: (() -> Unit)? = null,
 ) {
@@ -114,14 +84,6 @@ fun LobbyContent(
                 .padding(24.dp)
         )
         Text(
-            text = "Cancellation",
-            modifier = Modifier
-                .clickable {
-                    onCancellationClicked?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
             text = "Exception propagation",
             modifier = Modifier
                 .clickable {
@@ -140,14 +102,50 @@ fun LobbyContent(
     }
 }
 
+fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
+    composable(route = CoroutineLobbyScreenDestination.route) {
+        LobbyContent(
+            onAsyncComparisonClicked = {
+                navController.navigateSingleTopTo(
+                    AsyncComparisonDestination.route
+                )
+            },
+            onCoroutineScopeClicked = {
+                navController.navigateSingleTopTo(
+                    CoroutineScopeDestination.route
+                )
+            },
+            onExceptionPropagationClicked = {
+                navController.navigateSingleTopTo(
+                    ExceptionPropagationDestination.route
+                )
+            },
+            onCooperativeCancellationClicked = {
+                navController.navigateSingleTopTo(
+                    CooperativeCancellationDestination.route
+                )
+            },
+            onRememberCoroutineScopeClicked = {
+                navController.navigateSingleTopTo(
+                    RememberCoroutineScopeDestination.route
+                )
+            }
+        )
+    }
 
-sealed class CoroutineLobbyScreenEvent {
-    object NavigateToLobby : CoroutineLobbyScreenEvent()
-    object NavigateToRememberCoroutineScope : CoroutineLobbyScreenEvent()
-    object NavigateToAsync : CoroutineLobbyScreenEvent()
-    object CoroutineScope : CoroutineLobbyScreenEvent()
-    object Cancellation : CoroutineLobbyScreenEvent()
-    object ExceptionPropagation : CoroutineLobbyScreenEvent()
-    object CooperativeCancellation : CoroutineLobbyScreenEvent()
-
+    composable(route = AsyncComparisonDestination.route) {
+        AsyncComparisonScreen()
+    }
+    composable(route = ExceptionPropagationDestination.route) {
+        ExceptionPropagationScreen()
+    }
+    composable(route = CooperativeCancellationDestination.route) {
+        CooperativeCancellationScreen()
+    }
+    composable(route = CoroutineScopeDestination.route) {
+        CoroutineScopeScreen()
+    }
+    composable(route = RememberCoroutineScopeDestination.route) {
+        RememberCoroutineScopeScreen()
+    }
 }

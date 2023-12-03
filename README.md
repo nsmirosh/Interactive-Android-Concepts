@@ -41,7 +41,7 @@ https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/a54319e4-39
 
 ### `LaunchedEffect` and `rememberUpdatedState()`
 Demonstrates the usage of `LaunchedEffect` and `rememberUpdatedState` in Jetpack Compose.
-- **[LinkedIn Explanation Post](https://www.linkedin.com/posts/nikolay-miroshnychenko-5838a25a_jetpackcompose-androiddevelopment-programming-activity-7118646129650528256-DtO1?utm_source=share&utm_medium=member_desktop)**
+- **[Explanation Post](https://www.nickmirosh.com/post/are-you-aware-of-the-pitfalls-of-launchedeffect-in-jetpack-compose)**
 - **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/side_effects/LaunchedEffectScreen.kt)**
 
 https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/a818c0d9-0d31-47be-afd6-778ad2272aaa

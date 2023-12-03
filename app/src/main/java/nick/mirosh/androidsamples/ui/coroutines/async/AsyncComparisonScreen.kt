@@ -81,7 +81,7 @@ fun AsyncComparisonScreen(
 
                 ProgressBarWithCancel(
                     progress = deferred1Updates,
-                    label = "Async{} #1",
+                    label = "Async #1",
                     onCancelClick = {
                         viewModel.cancelAsync1()
                     }
@@ -91,21 +91,21 @@ fun AsyncComparisonScreen(
                 }
                 ProgressBarWithCancel(
                     progress = deferred2Updates,
-                    label = "Async{} #2",
+                    label = "Async #2",
                     onCancelClick = {
                         viewModel.cancelAsync2()
                     }
                 )
                 ProgressBarWithCancel(
                     progress = job1FlowUpdates,
-                    label = "Coroutine 1",
+                    label = "Launch #1",
                     onCancelClick = {
                         viewModel.cancelCoroutine1()
                     }
                 )
                 ProgressBarWithCancel(
                     progress = job2FlowUpdates,
-                    label = "Coroutine 2",
+                    label = "Launch #2",
                     onCancelClick = {
                         viewModel.cancelCoroutine2()
                     }

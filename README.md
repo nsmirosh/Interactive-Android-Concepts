@@ -7,7 +7,7 @@ This is my collection of  code samples and demonstrations focusing on Android de
 1. [Coroutines Examples](#coroutines-examples)
     - [Coroutine Cooperation](#coroutine-cooperation)
     - [`async{}` vs `launch{}](#async-vs-launch)
-    - [CoroutineScope Influence](#coroutine-scope)
+    - [`coroutineScope {}` influence](#coroutine-scope)
 2. [Jetpack Compose Examples](#jetpack-compose-examples)
     - [`LaunchedEffect` and `rememberUpdatedState()`](#launched-effect-remember-updated-state)
     - [Usage of `rememberCoroutineScope()`](#remember-coroutine-scope)
@@ -29,7 +29,7 @@ Explore the differences between `async{}` and `launch{}` and how scopes affect t
 
 https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/01b10316-f5e5-4b9c-bc40-959d94ef5b9d
 
-### CoroutineScope Influence
+### `coroutineScope {}` influence
 Understand how `coroutineScope` influences coroutine execution.
 - **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-how-coroutinescope-works-in-coroutines)**
 - **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/coroutine_scope/CoroutineScopeScreen.kt)**

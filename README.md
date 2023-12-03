@@ -23,14 +23,14 @@ Learn how `isActive` and `CancellationException` can be utilized for efficient c
 https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/c242ef98-5d7a-4903-8640-50f06afc4e33
 
 ### `async{}` vs `launch{}`
-Explore the differences between `async{}` and `launch{}` and how scopes affect their execution.
+Explore the differences between `async{}` and `launch{}` and how scopes affect their execution and cancellation.
 - **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-how-scopes-work-in-coroutines)**
 - **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/async/AsyncComparisonScreen.kt)**
 
 https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/01b10316-f5e5-4b9c-bc40-959d94ef5b9d
 
 ### `coroutineScope {}` influence
-Understand how `coroutineScope` influences coroutine execution.
+Understand how `coroutineScope` influences coroutine order of execution.
 - **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-how-coroutinescope-works-in-coroutines)**
 - **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/coroutine_scope/CoroutineScopeScreen.kt)**
 

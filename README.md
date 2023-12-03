@@ -1,7 +1,7 @@
 
 # Android Concepts Examples
 
-Welcome to this comprehensive collection of code samples and demonstrations focusing on Android development, specifically Jetpack Compose and Kotlin coroutines. This repository is designed to illustrate both correct and incorrect usage of various Android development concepts.
+This is my collection of  code samples and demonstrations focusing on Android development, specifically Jetpack Compose and Kotlin coroutines. This repository is designed to illustrate both correct and incorrect usage of various Android development concepts.
 
 ## Contents
 1. [Coroutines Examples](#coroutines-examples)
@@ -14,35 +14,38 @@ Welcome to this comprehensive collection of code samples and demonstrations focu
 Learn how `isActive` and `CancellationException` can be utilized for efficient coroutine management.
 - **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-what-coroutines-are-cooperative-means)**
 - **[Code Sample](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/cooperative_coroutine/CooperativeCancellationScreen.kt)**
-- ![Coroutine Cooperation Screenshot](https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/c242ef98-5d7a-4903-8640-50f06afc4e33)
+- <details><summary>Video Demo (click to expand)</summary>![Coroutine Cooperation Video](https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/c242ef98-5d7a-4903-8640-50f06afc4e33)</details>
 
 ### RememberCoroutineScope in Compose
 Discover the use of `rememberCoroutineScope()` for canceling coroutine execution within Compose.
 - **[Explanation Post](https://www.nickmirosh.com/post/are-you-using-coroutines-inside-your-composables-make-sure-to-use-remembercoroutinescope)**
-- **[Code Sample](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/remember_coroutine_scope/RememberCoroutineScope.kt)**
-- ![RememberCoroutineScope Screenshot](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/5d0a9793-a5e3-40be-9ed7-70e1682c496f)
+- **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/remember_coroutine_scope/RememberCoroutineScope.kt)**
+- <details><summary>Video Demo (click to expand)</summary>![Remember Coroutine Scope Video](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/5d0a9793-a5e3-40be-9ed7-70e1682c496f)</details>
 
 ### `async{}` vs `launch{}`
 Explore the differences between `async{}` and `launch{}` and how scopes affect their execution.
 - **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-how-scopes-work-in-coroutines)**
-- ![Async vs Launch Screenshot](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/01b10316-f5e5-4b9c-bc40-959d94ef5b9d)
+- **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/async/AsyncComparisonScreen.kt)
+- <details><summary>Video Demo (click to expand)</summary>![Async vs Launch Video](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/01b10316-f5e5-4b9c-bc40-959d94ef5b9d)</details>
 
 ### CoroutineScope Influence
 Understand how `coroutineScope` influences coroutine execution.
 - **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-how-coroutinescope-works-in-coroutines)**
-- **[Code Sample](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/coroutine_scope/CoroutineScopeScreen.kt)**
-- ![CoroutineScope Screenshot](https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/a54319e4-3961-4985-8437-483f7b775e48)
+- **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/coroutine_scope/CoroutineScopeScreen.kt)**
+- <details><summary>Video Demo (click to expand)</summary>![Coroutine Scope Influence Video](https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/a54319e4-3961-4985-8437-483f7b775e48)</details>
+
 
 ## Jetpack Compose Side Effects
 
 ### `LaunchedEffect` and `rememberUpdatedState()`
 Demonstrates the usage of `LaunchedEffect` and `rememberUpdatedState` in Jetpack Compose.
 - **[LinkedIn Explanation Post](https://www.linkedin.com/posts/nikolay-miroshnychenko-5838a25a_jetpackcompose-androiddevelopment-programming-activity-7118646129650528256-DtO1?utm_source=share&utm_medium=member_desktop)**
-- ![LaunchedEffect Screenshot](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/a818c0d9-0d31-47be-afd6-778ad2272aaa)
+- **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/side_effects/LaunchedEffectScreen.kt)
+- <details><summary>Video Demo (click to expand)</summary>![LaunchedEffect and rememberUpdatedState Video](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/a818c0d9-0d31-47be-afd6-778ad2272aaa)</details>
 
 ## Progress Animation 
 
 ### Canvas-Based Animation
 A creative progress animation developed using `Canvas`, inspired by UX flame.
 - **[Inspiration Source](https://www.youtube.com/watch?v=LbktxnviLKI&ab_channel=UXFLAME)**
-- ![Progress Animation Screenshot](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/44ec954c-cb32-4026-bd01-7b5e1521b7ae)
+- <details><summary>Video Demo (click to expand)</summary>![Canvas-based Animation Video](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/44ec954c-cb32-4026-bd01-7b5e1521b7ae)</details>

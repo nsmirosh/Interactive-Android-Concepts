@@ -6,8 +6,8 @@ This is my collection of  code samples and demonstrations focusing on Android de
 ## Contents
 1. [Coroutines Examples](#coroutines-examples)
     - [Coroutine Cooperation](#coroutine-cooperation)
-    - [`async{}` vs `launch{}](#async-vs-launch)
-    - [`coroutineScope {}` influence](#coroutinescope--influence)
+    - [`async{}` vs `launch{}`](#async-vs-launch)
+    - [`coroutineScope {}` influence](#coroutinescdfsdfinfluence)
 2. [Jetpack Compose Examples](#jetpack-compose-examples)
     - [`LaunchedEffect` and `rememberUpdatedState()`](#launched-effect-remember-updated-state)
     - [Usage of `rememberCoroutineScope()`](#remember-coroutine-scope)

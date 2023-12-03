@@ -9,7 +9,7 @@ This is my collection of  code samples and demonstrations focusing on Android de
     - [`async{}` vs `launch{}`](#async-vs-launch)
     - [`coroutineScope {}` influence](#coroutinescope--influence)
 2. [Jetpack Compose Examples](#jetpack-compose-examples)
-    - [`LaunchedEffect` and `rememberUpdatedState()`](#launched-effect-remember-updated-state)
+    - [`LaunchedEffect` and `rememberUpdatedState()`](#launchedeffect-and-rememberupdatedstate)
     - [Usage of `rememberCoroutineScope()`](#remember-coroutine-scope)
 3. [Progress Animation](#progress-animation)
 

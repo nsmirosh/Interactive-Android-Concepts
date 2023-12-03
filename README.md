@@ -9,8 +9,8 @@ This is my collection of  code samples and demonstrations focusing on Android de
     - The difference between `async {}` and `viewModelScope.launch{}`. How it influences coroutine execution and cancellation. [Link](#async-vs-launch)
     - How `coroutineScope {}` influence the order of execution in coroutines [Link](#coroutinescope--influence)
 2. [Jetpack Compose Examples](#jetpack-compose-examples)
-    - [`LaunchedEffect` and `rememberUpdatedState()`](#launchedeffect-and-rememberupdatedstate)
-    - [Usage of `rememberCoroutineScope()`](#remember-coroutine-scope)
+    - Demonstration of the usage of `rememberUpdatedState()` for updating a schedule lambda [Link](#launchedeffect-and-rememberupdatedstate)
+    - How `rememberCoroutineScope` can be used to cancel the execution of a coroutine [Link](#remember-coroutine-scope)
 3. [Progress Animation](#progress-animation)
 
 ## Coroutines Examples

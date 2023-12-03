@@ -5,17 +5,20 @@ This is my collection of  code samples and demonstrations focusing on Android de
 
 ## Contents
 1. [Coroutines Examples](#coroutines-examples)
-2. [Jetpack Compose Side Effects](#jetpack-compose-side-effects)
-3. [Progress Animation](#progress-animation)
+    - [Coroutine Cooperation](#coroutine-cooperation)
+    - [RememberCoroutineScope](#remember-coroutine-scope)
+    - [`async{}` vs `launch{}](#async-vs-launch)
+    - [CoroutineScope Influence](#coroutine-scope)
+3. [Jetpack Compose Side Effects](#jetpack-compose-side-effects)
+4. [Progress Animation](#progress-animation)
 
 ## Coroutines Examples
 
 ### Coroutine Cooperation
 Learn how `isActive` and `CancellationException` can be utilized for efficient coroutine management.
 - **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-what-coroutines-are-cooperative-means)**
-- **[Code Sample](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/cooperative_coroutine/CooperativeCancellationScreen.kt)**
-- <details><summary>Video Demo (click to expand)</summary> 
-  
+- **[Code Sample](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/cooperative_coroutine/CooperativeCancellationScreen.kt)**  
+
 https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/c242ef98-5d7a-4903-8640-50f06afc4e33
 
 </details>
@@ -24,19 +27,22 @@ https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/c242ef98-5d
 Discover the use of `rememberCoroutineScope()` for canceling coroutine execution within Compose.
 - **[Explanation Post](https://www.nickmirosh.com/post/are-you-using-coroutines-inside-your-composables-make-sure-to-use-remembercoroutinescope)**
 - **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/remember_coroutine_scope/RememberCoroutineScope.kt)**
-- <details><summary>Video Demo (click to expand)</summary>![Remember Coroutine Scope Video](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/5d0a9793-a5e3-40be-9ed7-70e1682c496f)</details>
+
+https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/5d0a9793-a5e3-40be-9ed7-70e1682c496f
 
 ### `async{}` vs `launch{}`
 Explore the differences between `async{}` and `launch{}` and how scopes affect their execution.
 - **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-how-scopes-work-in-coroutines)**
 - **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/async/AsyncComparisonScreen.kt)
-- <details><summary>Video Demo (click to expand)</summary>![Async vs Launch Video](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/01b10316-f5e5-4b9c-bc40-959d94ef5b9d)</details>
+- 
+https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/01b10316-f5e5-4b9c-bc40-959d94ef5b9d
 
 ### CoroutineScope Influence
 Understand how `coroutineScope` influences coroutine execution.
 - **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-how-coroutinescope-works-in-coroutines)**
 - **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/coroutine_scope/CoroutineScopeScreen.kt)**
-- <details><summary>Video Demo (click to expand)</summary>![Coroutine Scope Influence Video](https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/a54319e4-3961-4985-8437-483f7b775e48)</details>
+
+https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/a54319e4-3961-4985-8437-483f7b775e48
 
 
 ## Jetpack Compose Side Effects
@@ -53,3 +59,8 @@ Demonstrates the usage of `LaunchedEffect` and `rememberUpdatedState` in Jetpack
 A creative progress animation developed using `Canvas`, inspired by UX flame.
 - **[Inspiration Source](https://www.youtube.com/watch?v=LbktxnviLKI&ab_channel=UXFLAME)**
 - <details><summary>Video Demo (click to expand)</summary>![Canvas-based Animation Video](https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/44ec954c-cb32-4026-bd01-7b5e1521b7ae)</details>
+
+##Videos
+
+https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/c242ef98-5d7a-4903-8640-50f06afc4e33
+

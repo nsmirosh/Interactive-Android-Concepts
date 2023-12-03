@@ -5,7 +5,7 @@ This is my collection of  code samples and demonstrations focusing on Android de
 
 ## Contents
 1. [Coroutines Examples](#coroutines-examples)
-    - [Coroutine Cooperation](#coroutine-cooperation)
+    - Coroutine cooperation. Building a cooperative coroutine. [Link](#coroutine-cooperation)
     - [`async{}` vs `launch{}`](#async-vs-launch)
     - [`coroutineScope {}` influence](#coroutinescope--influence)
 2. [Jetpack Compose Examples](#jetpack-compose-examples)
@@ -16,7 +16,7 @@ This is my collection of  code samples and demonstrations focusing on Android de
 ## Coroutines Examples
 
 ### Coroutine Cooperation
-Learn how `isActive` and `CancellationException` can be utilized for efficient coroutine management.
+Learn how `isActive` and `CancellationException` can be utilized for efficient coroutine cooperation.
 - **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-what-coroutines-are-cooperative-means)**
 - **[Code Sample](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/cooperative_coroutine/CooperativeCancellationScreen.kt)**  
 

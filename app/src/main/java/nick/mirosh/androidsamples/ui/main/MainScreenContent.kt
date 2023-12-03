@@ -30,7 +30,7 @@ fun MainScreenContent(
 
     val scrollState = rememberScrollState()
 
-    Column(modifier = Modifier.verticalScroll(scrollState)) {
+    Column(modifier = modifier.verticalScroll(scrollState)) {
         Text(
             text = "Coroutines",
             modifier = Modifier

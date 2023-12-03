@@ -74,11 +74,7 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
         MainScreenContent(
             onSimpleListClick = { navController.navigateSingleTopTo(SimpleList.route) },
             onProgressBarClick = { navController.navigateSingleTopTo(ProgressBar.route) },
-            onBottomNavClick = {
-                navController.navigateSingleTopTo(
-                    BottomNavigation.route
-                )
-            },
+            onBottomNavClick = { navController.navigateSingleTopTo(BottomNavigation.route) },
             onTodoClick = { navController.navigateSingleTopTo(TodoList.route) },
             onSideEffectsClicked = {
                 navController.navigateSingleTopTo(

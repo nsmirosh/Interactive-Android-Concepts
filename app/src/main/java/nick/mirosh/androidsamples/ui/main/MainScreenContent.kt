@@ -32,6 +32,22 @@ fun MainScreenContent(
 
     Column(modifier = Modifier.verticalScroll(scrollState)) {
         Text(
+            text = "Coroutines",
+            modifier = Modifier
+                .clickable {
+                    onCoroutinesClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "Launched Effect",
+            modifier = Modifier
+                .clickable {
+                    onSideEffectsClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
+        Text(
             text = "Simple List",
             modifier = Modifier
                 .clickable {
@@ -72,14 +88,6 @@ fun MainScreenContent(
                 .padding(24.dp)
         )
         Text(
-            text = "Launched Effect",
-            modifier = Modifier
-                .clickable {
-                    onSideEffectsClicked?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
             text = "Disposable Effect",
             modifier = Modifier
                 .clickable {
@@ -100,14 +108,6 @@ fun MainScreenContent(
             modifier = Modifier
                 .clickable {
                     onParallaxScreenClicked?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
-            text = "Coroutines",
-            modifier = Modifier
-                .clickable {
-                    onCoroutinesClicked?.invoke()
                 }
                 .padding(24.dp)
         )

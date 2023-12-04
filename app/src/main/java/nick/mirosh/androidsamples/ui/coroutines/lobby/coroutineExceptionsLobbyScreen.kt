@@ -1,7 +1,6 @@
 package nick.mirosh.androidsamples.ui.coroutines.lobby
 
 import CooperativeCancellationScreen
-import ExceptionPropagationScreen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,10 +23,11 @@ import nick.mirosh.androidsamples.ui.AsyncComparisonDestination
 import nick.mirosh.androidsamples.ui.CooperativeCancellationDestination
 import nick.mirosh.androidsamples.ui.CoroutineLobbyScreenDestination
 import nick.mirosh.androidsamples.ui.CoroutineScopeDestination
-import nick.mirosh.androidsamples.ui.ExceptionPropagationDestination
+import nick.mirosh.androidsamples.ui.ExceptionsLobbyDestination
 import nick.mirosh.androidsamples.ui.RememberCoroutineScopeDestination
 import nick.mirosh.androidsamples.ui.coroutines.async.AsyncComparisonScreen
 import nick.mirosh.androidsamples.ui.coroutines.coroutine_scope.CoroutineScopeScreen
+import nick.mirosh.androidsamples.ui.coroutines.exceptions.lobby.CoroutineExceptionsLobbyScreen
 import nick.mirosh.androidsamples.ui.coroutines.remember_coroutine_scope.RememberCoroutineScopeScreen
 
 @Composable
@@ -52,7 +52,7 @@ fun LobbyContent(
     onRememberCoroutineScopeClicked: (() -> Unit)? = null,
     onAsyncComparisonClicked: (() -> Unit)? = null,
     onCoroutineScopeClicked: (() -> Unit)? = null,
-    onExceptionPropagationClicked: (() -> Unit)? = null,
+    onExceptionsClicked: (() -> Unit)? = null,
     onCooperativeCancellationClicked: (() -> Unit)? = null,
 ) {
 
@@ -84,18 +84,18 @@ fun LobbyContent(
                 .padding(24.dp)
         )
         Text(
-            text = "Exception propagation",
-            modifier = Modifier
-                .clickable {
-                    onExceptionPropagationClicked?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
             text = "Cooperative cancellation",
             modifier = Modifier
                 .clickable {
                     onCooperativeCancellationClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "Exceptions",
+            modifier = Modifier
+                .clickable {
+                    onExceptionsClicked?.invoke()
                 }
                 .padding(24.dp)
         )
@@ -115,9 +115,9 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
                     CoroutineScopeDestination.route
                 )
             },
-            onExceptionPropagationClicked = {
+            onExceptionsClicked = {
                 navController.navigateSingleTopTo(
-                    ExceptionPropagationDestination.route
+                    ExceptionsLobbyDestination.route
                 )
             },
             onCooperativeCancellationClicked = {
@@ -136,8 +136,8 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     composable(route = AsyncComparisonDestination.route) {
         AsyncComparisonScreen()
     }
-    composable(route = ExceptionPropagationDestination.route) {
-        ExceptionPropagationScreen()
+    composable(route = ExceptionsLobbyDestination.route) {
+         CoroutineExceptionsLobbyScreen()
     }
     composable(route = CooperativeCancellationDestination.route) {
         CooperativeCancellationScreen()

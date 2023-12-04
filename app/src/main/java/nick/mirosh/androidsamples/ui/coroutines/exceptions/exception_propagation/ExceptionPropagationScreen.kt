@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nick.mirosh.androidsamples.ui.coroutines.CancellableProgressBar
-import nick.mirosh.androidsamples.ui.coroutines.exception_propagation.ExceptionPropagationViewModel
+import nick.mirosh.androidsamples.ui.coroutines.exceptions.exception_propagation.ExceptionPropagationViewModel
 import nick.mirosh.androidsamples.ui.coroutines.firstLevelIndent
 import nick.mirosh.androidsamples.ui.coroutines.secondLevelIndent
 
@@ -44,7 +44,7 @@ fun ExceptionPropagationScreen(
     ) {
 
         Button(onClick = {
-            viewModel.start()
+            viewModel.simpleChallenge()
         }) {
             Text("start propagation")
         }

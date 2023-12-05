@@ -1,6 +1,5 @@
 package nick.mirosh.androidsamples.ui.coroutines.exceptions.lobby
 
-import ExceptionPropagationScreen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +22,7 @@ import nick.mirosh.androidsamples.ui.CoroutineExceptionsLobbyDestination
 import nick.mirosh.androidsamples.ui.DifferentExceptionsChallengeDestination
 import nick.mirosh.androidsamples.ui.ExceptionPropagationDestination
 import nick.mirosh.androidsamples.ui.coroutines.async.AsyncComparisonScreen
+import nick.mirosh.androidsamples.ui.coroutines.exceptions.different_exceptions.DifferentExceptionsScreen
 
 @Composable
 fun CoroutineExceptionsLobbyScreen() {
@@ -88,6 +88,6 @@ fun NavGraphBuilder.setUpCoroutineExceptionsNavigation(navController: NavHostCon
         AsyncComparisonScreen()
     }
     composable(route = DifferentExceptionsChallengeDestination.route) {
-        ExceptionPropagationScreen()
+         DifferentExceptionsScreen()
     }
 }

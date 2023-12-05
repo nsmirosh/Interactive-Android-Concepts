@@ -71,14 +71,14 @@ fun MainScreenContent(
                 }
                 .padding(24.dp)
         )
-        Text(
-            text = "Todo list",
-            modifier = Modifier
-                .clickable {
-                    onTodoClick?.invoke()
-                }
-                .padding(24.dp)
-        )
+//        Text(
+//            text = "Todo list",
+//            modifier = Modifier
+//                .clickable {
+//                    onTodoClick?.invoke()
+//                }
+//                .padding(24.dp)
+//        )
         Text(
             text = "Animation",
             modifier = Modifier
@@ -87,22 +87,22 @@ fun MainScreenContent(
                 }
                 .padding(24.dp)
         )
-        Text(
-            text = "Disposable Effect",
-            modifier = Modifier
-                .clickable {
-                    onDisposableEffectClicked?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
-            text = "Recomposition",
-            modifier = Modifier
-                .clickable {
-                    onRecompositionClicked?.invoke()
-                }
-                .padding(24.dp)
-        )
+//        Text(
+//            text = "Disposable Effect",
+//            modifier = Modifier
+//                .clickable {
+//                    onDisposableEffectClicked?.invoke()
+//                }
+//                .padding(24.dp)
+//        )
+//        Text(
+//            text = "Recomposition",
+//            modifier = Modifier
+//                .clickable {
+//                    onRecompositionClicked?.invoke()
+//                }
+//                .padding(24.dp)
+//        )
         Text(
             text = "Parallax",
             modifier = Modifier

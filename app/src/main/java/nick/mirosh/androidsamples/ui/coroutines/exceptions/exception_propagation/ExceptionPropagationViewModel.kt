@@ -117,7 +117,7 @@ class ExceptionPropagationViewModel : ViewModel() {
 
 
     fun simpleChallenge() {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             launch {
                 Log.d(TAG, "child1")
                 delay(200)

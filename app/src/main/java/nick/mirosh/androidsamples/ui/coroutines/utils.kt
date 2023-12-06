@@ -6,12 +6,15 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -20,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
@@ -27,6 +31,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import nick.mirosh.androidsamples.R
+import nick.mirosh.androidsamples.ui.coroutines.exceptions.different_exceptions.ProgressUpdate
 import java.io.PrintWriter
 import java.io.StringWriter
 
@@ -47,11 +52,50 @@ suspend fun runUpdatesIn(
     }
 }
 
+suspend fun runElapsingUpdates(
+    flow: MutableStateFlow<ProgressUpdate>,
+    delay: Long,
+) {
+    for (i in (delay / 100).toInt() downTo 0) {
+        delay(100)
+        Log.d(
+            "runElapsingUpdates",
+            "sendTimeUpdatesInto: $${i.toFloat() / (delay / 100)} i = $i"
+        )
+        flow.value = ProgressUpdate(i.toFloat() / (delay / 100), " ${i / 10},${i % 10}s")
+    }
+}
+
 fun Throwable.logStackTrace(tag: String) {
     val sw = StringWriter()
     this.printStackTrace(PrintWriter(sw))
     val exceptionAsString = sw.toString()
     Log.e(tag, exceptionAsString)
+}
+
+@Composable
+fun ProgressBarWithLabel(
+    modifier: Modifier = Modifier,
+    progress: Float,
+    label: String,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth().height(45.dp),
+        contentAlignment = Alignment.Center
+    )
+    {
+        ProgressBar(
+            modifier = Modifier.fillMaxSize(),
+            progress = progress
+        )
+        Text(
+            text = label,
+            color = Color.White, fontSize = 20.sp,
+            letterSpacing = 1.sp,
+
+        )
+    }
 }
 
 @Composable
@@ -72,7 +116,6 @@ fun ProgressBar(
     LinearProgressIndicator(
         progress = progressAnimation,
         modifier = modifier
-            .padding(horizontal = 16.dp)
             .height(32.dp)
             .clip(RoundedCornerShape(16.dp))
     )
@@ -82,10 +125,14 @@ fun ProgressBar(
 fun CancellableProgressBar(
     modifier: Modifier = Modifier,
     progress: Float,
+    label: String = "",
     cancelled: Boolean = false,
     finished: Boolean = false,
 ) {
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
         val progressAnimDuration = 300
         val progressAnimation by animateFloatAsState(
             targetValue = progress,
@@ -95,21 +142,31 @@ fun CancellableProgressBar(
             ),
             label = ""
         )
+        if (cancelled) {
+            CancelAnimation(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .height(50.dp)
+                    .width(50.dp)
+            )
+        }
+
         LinearProgressIndicator(
             progress = progressAnimation,
             modifier = Modifier
                 .height(32.dp)
+                .padding(start = 60.dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
                 .align(Alignment.Center) // Center the progress indicator
         )
 
-        if (cancelled) {
-            CancelAnimation(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .height(100.dp)
-                    .width(100.dp)
+        if (label.isNotEmpty()) {
+            Text(
+                modifier = Modifier,
+                text = label,
+                color = Color.White,
+                fontSize = 20.sp
             )
         }
     }
@@ -136,9 +193,23 @@ fun ProgressBarPreview() {
             .background(Color.White)
             .padding(16.dp)
     ) {
-        CancellableProgressBar(
-            progress = 0.3f
-        )
+        Column {
+            CancellableProgressBar(
+                progress = 0.3f,
+                label = "30%",
+                cancelled = false
+            )
+            CancellableProgressBar(
+                progress = 0.3f,
+                label = "30%",
+                cancelled = true
+            )
+            ProgressBarWithLabel(
+                modifier = Modifier.padding(start = 32.dp),
+                progress = 0.5f,
+                label = "30%",
+            )
+        }
     }
 }
 

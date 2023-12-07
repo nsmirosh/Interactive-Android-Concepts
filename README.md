@@ -14,7 +14,8 @@ Feel free to play around with these examples to get a better understanding of ea
 1. [Coroutines Examples](#coroutines-examples)
     - Coroutine cooperation. Building a cooperative coroutine. [Link](#coroutine-cooperation)
     - The difference between `async {}` and `viewModelScope.launch{}`. How it influences coroutine execution and cancellation. [Link](#async-vs-launch)
-    - How `coroutineScope {}` influence the order of execution in coroutines [Link](#coroutinescope--influence)
+    - How `coroutineScope {}` influences the order of execution in coroutines [Link](#coroutinescope--influence)
+    - Why is `CancellationException` special? How exception propagation works. [Link](#cancellationexception-vs-ordinary-exceptions-exception-propagation)
 2. [Jetpack Compose Examples](#jetpack-compose-examples)
     - Demonstration of the usage of `rememberUpdatedState()` for updating a schedule lambda [Link](#launchedeffect-and-rememberupdatedstate)
     - How `rememberCoroutineScope` can be used to cancel the execution of a coroutine [Link](#remember-coroutine-scope)
@@ -45,6 +46,13 @@ Understand how `coroutineScope` influences coroutine order of execution.
 - **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/coroutine_scope/CoroutineScopeScreen.kt)**
 
 https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/a54319e4-3961-4985-8437-483f7b775e48
+
+### `CancellationException` vs ordinary exceptions. Exception propagation. 
+Learn why `CancellationException` is special in Kotlin coroutines and how exceptions are propagated from child to parent.
+- **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-why-cancellationexception-is-special-in-coroutines)**
+- **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/exceptions/different_exceptions/DifferentExceptionsScreen.kt)**
+
+https://github.com/nsmirosh/Android-concepts-examples/assets/5850601/3b3a4bce-676c-45f4-ac9c-5d9e60648422
 
 
 ## Jetpack Compose Examples

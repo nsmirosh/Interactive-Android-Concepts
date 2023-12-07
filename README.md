@@ -17,7 +17,7 @@ Feel free to play around with these examples to get a better understanding of ea
     - How `coroutineScope {}` influences the order of execution in coroutines [Link](#coroutinescope--influence)
     - Why is `CancellationException` special? How exception propagation works. [Link](#cancellationexception-vs-ordinary-exceptions-exception-propagation)
 2. [Jetpack Compose Examples](#jetpack-compose-examples)
-    - Demonstration of the usage of `rememberUpdatedState()` for updating a schedule lambda [Link](#launchedeffect-and-rememberupdatedstate)
+    - Demonstration of the usage of `rememberUpdatedState()` for updating a scheduled lambda [Link](#launchedeffect-and-rememberupdatedstate)
     - How `rememberCoroutineScope` can be used to cancel the execution of a coroutine [Link](#remember-coroutine-scope)
 
 

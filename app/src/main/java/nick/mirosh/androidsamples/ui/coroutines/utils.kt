@@ -62,7 +62,7 @@ suspend fun runElapsingUpdates(
             "runElapsingUpdates",
             "sendTimeUpdatesInto: $${i.toFloat() / (delay / 100)} i = $i"
         )
-        flow.value = ProgressUpdate(i.toFloat() / (delay / 100), " ${i / 10},${i % 10}s")
+        flow.emit(ProgressUpdate(i.toFloat() / (delay / 100), " ${i / 10},${i % 10}s"))
     }
 }
 
@@ -81,7 +81,8 @@ fun ProgressBarWithLabel(
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth().height(45.dp),
+            .fillMaxWidth()
+            .height(45.dp),
         contentAlignment = Alignment.Center
     )
     {
@@ -94,7 +95,7 @@ fun ProgressBarWithLabel(
             color = Color.White, fontSize = 20.sp,
             letterSpacing = 1.sp,
 
-        )
+            )
     }
 }
 

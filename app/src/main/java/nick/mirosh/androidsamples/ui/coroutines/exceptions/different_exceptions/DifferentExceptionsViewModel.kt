@@ -17,54 +17,48 @@ const val TAG = "DifferentExceptionsViewModel"
 
 class DifferentExceptionsViewModel : ViewModel() {
 
-    private val _task1Flow = MutableStateFlow(ProgressUpdate(label = "4.0s"))
+    private val _task1Flow = MutableStateFlow(ProgressUpdate(label = "12.0s"))
     val task1Flow = _task1Flow.asStateFlow()
 
-    private val _task2Flow = MutableStateFlow(ProgressUpdate(label = "6.0s"))
+    private val _task2Flow = MutableStateFlow(ProgressUpdate(label = "18.0s"))
     val task2Flow = _task2Flow.asStateFlow()
 
-    private val _task3Flow = MutableStateFlow(ProgressUpdate(label = "2.0s"))
+    private val _task3Flow = MutableStateFlow(ProgressUpdate(label = "5.0s"))
     val task3Flow = _task3Flow.asStateFlow()
 
     private val _firstCoroutineCancelled = MutableStateFlow(false)
     val firstCoroutineCancelled = _firstCoroutineCancelled.asStateFlow()
 
-    private val _secondCoroutineCancelled = MutableStateFlow(false)
-    val secondCoroutineCancelled = _secondCoroutineCancelled.asStateFlow()
-
     private val _thirdCoroutineCancelled = MutableStateFlow(false)
     val thirdCoroutineCancelled = _thirdCoroutineCancelled.asStateFlow()
 
     fun simpleChallenge() {
-
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             throwable.logStackTrace(TAG)
         }
         //An exception handler has to be added if we don't want the application to crash
-
         CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             try {
                 val job1 = launch {
                     Log.d(TAG, "child1")
-                    runElapsingUpdates(_task1Flow, 6000L)
+                    runElapsingUpdates(_task1Flow, 12000L)
                     Log.d(TAG, "child1 working")
                     throw RuntimeException()
                 }
 
                 val job2 = launch {
                     Log.d(TAG, "child2")
-                    runElapsingUpdates(_task2Flow, 9000L)
+                    runElapsingUpdates(_task2Flow, 18000L)
                     Log.d(TAG, "child2 finishing")
                 }
                 val job3 = launch {
-                    runElapsingUpdates(_task3Flow, 3000L)
-                    _thirdCoroutineCancelled.value = true
+                    runElapsingUpdates(_task3Flow, 5000L)
+                    _thirdCoroutineCancelled.emit(true)
                     throw CancellationException()
                 }
                 joinAll(job1, job2, job3)
             } catch (e: Exception) {
-                _firstCoroutineCancelled.value = true
-                _secondCoroutineCancelled.value = true
+                _firstCoroutineCancelled.emit(true)
                 Log.d(TAG, "exception caught")
             }
         }

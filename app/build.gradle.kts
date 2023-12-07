@@ -31,11 +31,19 @@ android {
             )
         }
         release {
+
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"https://pokeapi.co/api/v2/\""
+            )
+
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {

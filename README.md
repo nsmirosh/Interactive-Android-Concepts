@@ -13,7 +13,7 @@ Feel free to play around with these examples to get a better understanding of ea
 
 1. [Coroutines Examples](#coroutines-examples)
     - Coroutine cooperation. Building a cooperative coroutine. [Link](#coroutine-cooperation)
-    - The difference between `async {}` and `viewModelScope.launch{}`. How it influences coroutine execution and cancellation. [Link](#async-vs-launch)
+    - The difference between `async {}` and `launch{}`. How it influences coroutine execution and cancellation. [Link](#async-vs-launch)
     - How `coroutineScope {}` influences the order of execution in coroutines [Link](#coroutinescope--influence)
     - Why is `CancellationException` special? How exception propagation works. [Link](#cancellationexception-vs-ordinary-exceptions-exception-propagation)
 2. [Jetpack Compose Examples](#jetpack-compose-examples)

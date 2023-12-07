@@ -2,7 +2,7 @@
 
 # Android Concepts Examples
 
-This is my collection of code samples and demonstrations focusing on Android development, specifically Jetpack Compose and Kotlin coroutines. 
+This is a collection of code samples and demonstrations focusing on Android development, specifically Jetpack Compose and Kotlin coroutines. 
 
 The aim of this repository is to visually illustrate the usage of complex Android concepts. All of the video illustrations have corresponding code representation.
 

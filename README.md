@@ -19,7 +19,7 @@ Feel free to play around with these examples to get a better understanding of ea
 2. [Jetpack Compose Examples](#jetpack-compose-examples)
     - Demonstration of the usage of `rememberUpdatedState()` for updating a scheduled lambda [Link](#launchedeffect-and-rememberupdatedstate)
     - How `rememberCoroutineScope` can be used to cancel the execution of a coroutine [Link](#remember-coroutine-scope)
-
+3. [Progress animation](#canvas-based-animation)
 
 
 ## Coroutines Examples
@@ -69,5 +69,11 @@ Discover the use of `rememberCoroutineScope()` for canceling coroutine execution
 
 https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/5d0a9793-a5e3-40be-9ed7-70e1682c496f
 
+## Progress Animation
 
+### Canvas-Based Animation
+A creative progress animation developed using `Canvas`, inspired by UX flame.
+- **[Inspiration Source](https://www.youtube.com/watch?v=LbktxnviLKI&ab_channel=UXFLAME)**
+
+https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/44ec954c-cb32-4026-bd01-7b5e1521b7ae
 

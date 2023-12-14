@@ -69,6 +69,10 @@ object Coroutines : MyAppDestinations {
     override val route = "remember_coroutine_scope"
 }
 
+object ModifiersDestination : MyAppDestinations {
+    override val route = "modifiers"
+}
+
 
 //Coroutines destinations
 

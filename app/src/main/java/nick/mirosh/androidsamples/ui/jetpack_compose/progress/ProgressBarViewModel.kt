@@ -1,4 +1,4 @@
-package nick.mirosh.androidsamples.ui.progress
+package nick.mirosh.androidsamples.ui.jetpack_compose.progress
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

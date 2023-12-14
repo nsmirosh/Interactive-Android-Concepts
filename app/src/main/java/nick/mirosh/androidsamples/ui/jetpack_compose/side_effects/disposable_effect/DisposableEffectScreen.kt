@@ -1,4 +1,4 @@
-package nick.mirosh.androidsamples.ui.side_effects.disposable_effect
+package nick.mirosh.androidsamples.ui.jetpack_compose.side_effects.disposable_effect
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

@@ -1,4 +1,4 @@
-package nick.mirosh.androidsamples.ui.parallax
+package nick.mirosh.androidsamples.ui.jetpack_compose.parallax
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.background

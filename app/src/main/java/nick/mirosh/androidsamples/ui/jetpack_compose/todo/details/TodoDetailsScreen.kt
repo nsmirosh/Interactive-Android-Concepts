@@ -1,4 +1,4 @@
-package nick.mirosh.androidsamples.ui.todo.details
+package nick.mirosh.androidsamples.ui.jetpack_compose.todo.details
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column

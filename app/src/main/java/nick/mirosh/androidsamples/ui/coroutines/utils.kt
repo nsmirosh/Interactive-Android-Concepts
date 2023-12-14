@@ -40,6 +40,11 @@ const val greenColor = "#00ab41"
 
 fun myGreen() = Color(android.graphics.Color.parseColor(greenColor))
 
+val Purple = Color(0xFF9b5de5)
+val Yellow = Color(0xFFfee440)
+val Blue = Color(0xFF00bbf9)
+fun getColor(color: String) = Color(android.graphics.Color.parseColor(color))
+
 suspend fun runUpdatesIn(
     flow: MutableStateFlow<Float>,
     delayMs: Long = 500L,

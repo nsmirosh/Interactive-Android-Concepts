@@ -1,4 +1,4 @@
-package nick.mirosh.androidsamples.ui.animation
+package nick.mirosh.androidsamples.ui.jetpack_compose.animation
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

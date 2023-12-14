@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nick.mirosh.androidsamples.R
 import nick.mirosh.androidsamples.models.Todo
-import nick.mirosh.androidsamples.ui.todo.TodoViewModel
+import nick.mirosh.androidsamples.ui.jetpack_compose.todo.TodoViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable

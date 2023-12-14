@@ -1,4 +1,4 @@
-package nick.mirosh.androidsamples.ui.bottom_nav
+package nick.mirosh.androidsamples.ui.jetpack_compose.bottom_nav
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Text

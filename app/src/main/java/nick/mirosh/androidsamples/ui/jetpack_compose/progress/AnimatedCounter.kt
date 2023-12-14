@@ -1,4 +1,4 @@
-package nick.mirosh.androidsamples.ui.progress
+package nick.mirosh.androidsamples.ui.jetpack_compose.progress
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent

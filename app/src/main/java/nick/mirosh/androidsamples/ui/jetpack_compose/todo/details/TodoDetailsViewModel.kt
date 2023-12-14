@@ -1,4 +1,4 @@
-package nick.mirosh.androidsamples.ui.todo.details
+package nick.mirosh.androidsamples.ui.jetpack_compose.todo.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

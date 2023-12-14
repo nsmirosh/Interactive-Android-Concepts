@@ -21,4 +21,16 @@
           \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 } \n
          \u0020 \u0020 \u0020 \u0020 }
         </string>
+
+
+    <string name="modifier_text">
+        Box(
+            modifier = Modifier\n
+                .size(150.dp)\n
+                .border(24.dp, Purple)\n
+                .background(Yellow)
+                .border(24.dp, Blue)
+                .align(Alignment.Center)
+        )
+    </string>
 </resources>

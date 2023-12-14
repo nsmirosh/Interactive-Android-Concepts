@@ -23,8 +23,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import nick.mirosh.androidsamples.R
 import nick.mirosh.androidsamples.ui.coroutines.Blue
 import nick.mirosh.androidsamples.ui.coroutines.Purple
 import nick.mirosh.androidsamples.ui.coroutines.Yellow
@@ -82,6 +90,7 @@ fun ModifierChallenge2Solved(clip: Boolean, padding: Boolean) {
         )
     }
 }
+
 data class ModifierDragDrop(
     val position: Int,
     val modifier: Modifier
@@ -94,6 +103,11 @@ fun DragDropModifierScreen() {
     var inTargetArea by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
+        HighlightedText2(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(16.dp)
+        )
         Text(
             text = "Drag me",
             modifier = Modifier
@@ -116,7 +130,6 @@ fun DragDropModifierScreen() {
 
         if (inTargetArea) {
             Text(text = "In target area", Modifier.align(Alignment.Center))
-
         }
 
         // Visual representation of the target area
@@ -127,6 +140,64 @@ fun DragDropModifierScreen() {
 //                .background(if (inTargetArea) Color.Green else Color.LightGray)
         )
     }
+}
+
+
+@Composable
+fun ModifierText(
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    Text(
+        modifier = modifier,
+        text = context.getString(R.string.modifier_text)
+    )
+}
+
+@Composable
+fun HighlightedText2(
+    modifier: Modifier = Modifier,
+) {
+    val annotatedString = buildAnnotatedString {
+        val regularStyle =
+            SpanStyle(color = Color.Black, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+
+
+        withStyle(regularStyle) {
+            append("Box(\n")
+        }
+
+        withStyle(regularStyle) {
+            append("    modifier = Modifier\n\n")
+        }
+
+        withStyle(regularStyle) {
+            append("        .size(150.dp)\n\n")
+        }
+
+        withStyle(regularStyle) {
+            append("        .border(24.dp, Purple)\n\n")
+        }
+
+        withStyle(regularStyle) {
+            append("        .background(Yellow)\n\n")
+        }
+
+        withStyle(regularStyle) {
+            append("        .border(24.dp, Blue)\n")
+        }
+
+        withStyle(regularStyle) {
+            append(")\n")
+        }
+    }
+
+    Text(
+        lineHeight = 32.sp,
+        modifier = modifier,
+        text = annotatedString,
+        letterSpacing = 1.sp,
+    )
 }
 
 @Composable
@@ -152,3 +223,15 @@ fun ModifierChallenge2Solved2(firstModifier: ModifierDragDrop, secondModifier: M
         )
     }
 }
+
+
+@Preview
+@Composable
+fun ModifierChallengePreview() {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.White)) {
+        DragDropModifierScreen()
+    }
+}
+

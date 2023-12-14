@@ -4,7 +4,9 @@
 
 This is a collection of code samples and demonstrations focusing on Android development, specifically Jetpack Compose and Kotlin coroutines. 
 
-The aim of this repository is to visually illustrate the usage of complex Android concepts. All of the video illustrations have corresponding code representation.
+The goal of this repository is to visually illustrate the usage of complex Android concepts. The samples aim to be interactive. 
+
+All of the video illustrations have corresponding code representation.
 
 Feel free to play around with these examples to get a better understanding of each of the concepts. 
 

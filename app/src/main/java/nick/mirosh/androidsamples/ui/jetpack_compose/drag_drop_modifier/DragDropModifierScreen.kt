@@ -39,53 +39,20 @@ import nick.mirosh.androidsamples.ui.coroutines.Yellow
 import kotlin.math.roundToInt
 
 
-@Composable
-fun ModifierChallenge() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .width(150.dp)
-                .height(150.dp)
-//            .size(150.dp)
-                .padding(16.dp)
-                .border(5.dp, Color.Magenta)
-                .padding(10.dp)
-                .background(Color.Cyan)
-                .padding(5.dp)
-        ) {
-            Text("Hello Compose", Modifier.align(Alignment.Center))
-        }
-    }
-}
+const val TAG = "DragDropModifierScreen"
+
 
 @Composable
-fun ModifierChallenge2() {
-    Box(modifier = Modifier.fillMaxSize()) {
+fun GeneratedBox(modifier: Modifier = Modifier) {
+    Box(modifier = modifier) {
         Box(
             modifier = Modifier
-                .size(150.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .border(24.dp, Purple)
+                .size(200.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .border(32.dp, Purple)
                 .background(Yellow)
-                .padding(24.dp)
-                .border(24.dp, Blue)
-                .align(Alignment.Center)
-        )
-    }
-}
-
-@Composable
-fun ModifierChallenge2Solved(clip: Boolean, padding: Boolean) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Box(
-            modifier = Modifier
-                .size(150.dp)
-                .then(if (clip) Modifier.clip(RoundedCornerShape(16.dp)) else Modifier)
-                .border(24.dp, Purple)
-                .background(Yellow)
-                .then(if (padding) Modifier.padding(24.dp) else Modifier)
-                .border(24.dp, Blue)
+                .padding(32.dp)
+                .border(32.dp, Blue)
                 .align(Alignment.Center)
         )
     }
@@ -99,59 +66,137 @@ data class ModifierDragDrop(
 @Composable
 fun DragDropModifierScreen() {
     var offset by remember { mutableStateOf(Offset.Zero) }
-    val targetPosition = Offset(100f, 100f) // Define the target position
-    var inTargetArea by remember { mutableStateOf(false) }
+    var offset2 by remember { mutableStateOf(Offset.Zero) }
+    val modifier1TargetPosition1 = Offset(100f, -800f) // Define the target position
+    val modifier1TargetPosition2 = Offset(100f, -650f) // Define the target position
+    val modifier1TargetPosition3 = Offset(100f, -500f) // Define the target position
+    val modifier1TargetPosition4 = Offset(100f, -350f) // Define the target position
+
+    val modifier2TargetPosition1 = Offset(100f, -880f) // Define the target position
+    val modifier2TargetPosition2 = Offset(100f, -720f) // Define the target position
+    val modifier2TargetPosition3 = Offset(100f, -550f) // Define the target position
+    val modifier2TargetPosition4 = Offset(100f, -400f) // Define the target position
+
+    var modifier1InTargetArea1 by remember { mutableStateOf(false) }
+    var modifier1InTargetArea2 by remember { mutableStateOf(false) }
+    var modifier1InTargetArea3 by remember { mutableStateOf(false) }
+    var modifier1InTargetArea4 by remember { mutableStateOf(false) }
+
+    var modifier2InTargetArea1 by remember { mutableStateOf(false) }
+    var modifier2InTargetArea2 by remember { mutableStateOf(false) }
+    var modifier2InTargetArea3 by remember { mutableStateOf(false) }
+    var modifier2InTargetArea4 by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         HighlightedText2(
             modifier = Modifier
-                .align(Alignment.Center)
                 .padding(16.dp)
         )
         Text(
-            text = "Drag me",
+            text = ".padding(24.dp) ",
+            color = Color.Black,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp,
+            lineHeight = 30.sp,
             modifier = Modifier
+                .padding(start = 20.dp, top = 390.dp)
                 .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }
                 .pointerInput(Unit) {
                     detectDragGestures { change, dragAmount ->
                         val newPosition = offset + dragAmount
                         offset = newPosition
-                        inTargetArea =
-                            (newPosition - targetPosition).getDistance() < 100f // Adjust this threshold as needed
+                        modifier1InTargetArea1 =
+                            (newPosition - modifier1TargetPosition1).getDistance() < 50f // Adjust this threshold as needed
+
+                        modifier1InTargetArea2 =
+                            (newPosition - modifier1TargetPosition2).getDistance() < 50f // Adjust this threshold as needed
+
+                        modifier1InTargetArea3 =
+                            (newPosition - modifier1TargetPosition3).getDistance() < 50f // Adjust this threshold as needed
+
+                        modifier1InTargetArea4 =
+                            (newPosition - modifier1TargetPosition4).getDistance() < 50f // Adjust this threshold as needed
+
+
                         change.consume()
                     }
                 }
         )
 
-        if (inTargetArea) {
-            // Snap text into place
-            offset = targetPosition
-        }
-
-        if (inTargetArea) {
-            Text(text = "In target area", Modifier.align(Alignment.Center))
-        }
-
-        // Visual representation of the target area
-        Box(
+        Text(
+            text = ".clip(RoundedCornerShape(16.dp)) ",
+            color = Color.Black,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp,
+            lineHeight = 30.sp,
             modifier = Modifier
-                .size(100.dp)
-                .offset { IntOffset(targetPosition.x.roundToInt(), targetPosition.y.roundToInt()) }
-//                .background(if (inTargetArea) Color.Green else Color.LightGray)
+                .padding(start = 20.dp, top = 430.dp)
+                .offset { IntOffset(offset2.x.roundToInt(), offset2.y.roundToInt()) }
+                .pointerInput(Unit) {
+                    detectDragGestures { change, dragAmount ->
+                        val newPosition = offset2 + dragAmount
+                        offset2 = newPosition
+                        modifier2InTargetArea1 =
+                            (newPosition - modifier2TargetPosition1).getDistance() < 50f // Adjust this threshold as needed
+
+                        modifier2InTargetArea2 =
+                            (newPosition - modifier2TargetPosition2).getDistance() < 50f // Adjust this threshold as needed
+
+                        modifier2InTargetArea3 =
+                            (newPosition - modifier2TargetPosition3).getDistance() < 50f // Adjust this threshold as needed
+
+                        modifier2InTargetArea4 =
+                            (newPosition - modifier2TargetPosition4).getDistance() < 50f // Adjust this threshold as needed
+                        change.consume()
+                    }
+                }
+        )
+
+
+        var firstModifierDragDrop: ModifierDragDrop? = null
+        var secondModifierDragDrop: ModifierDragDrop? = null
+
+        if (modifier1InTargetArea1 || modifier1InTargetArea2 || modifier1InTargetArea3 || modifier1InTargetArea4) {
+             firstModifierDragDrop = ModifierDragDrop(
+                position = when {
+                    modifier1InTargetArea1 -> 1
+                    modifier1InTargetArea2 -> 2
+                    modifier1InTargetArea3 -> 3
+                    modifier1InTargetArea4 -> 4
+                    else -> 0
+                },
+                modifier = Modifier
+                    .padding(24.dp))
+
+        }
+
+        if (modifier2InTargetArea1 || modifier2InTargetArea2 || modifier2InTargetArea3 || modifier2InTargetArea4) {
+            secondModifierDragDrop = ModifierDragDrop(
+                position = when {
+                    modifier2InTargetArea1 -> 1
+                    modifier2InTargetArea2 -> 2
+                    modifier2InTargetArea3 -> 3
+                    modifier2InTargetArea4 -> 4
+                    else -> 0
+                },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp)))
+        }
+//        GeneratedBox(
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter)
+//                .padding(bottom = 16.dp)
+//        )
+        ModifierChallenge2Solved3(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp),
+            firstModifier = firstModifierDragDrop ?: ModifierDragDrop(0, Modifier),
+            secondModifier = secondModifierDragDrop ?: ModifierDragDrop(0, Modifier)
         )
     }
-}
-
-
-@Composable
-fun ModifierText(
-    modifier: Modifier = Modifier,
-) {
-    val context = LocalContext.current
-    Text(
-        modifier = modifier,
-        text = context.getString(R.string.modifier_text)
-    )
 }
 
 @Composable
@@ -160,7 +205,7 @@ fun HighlightedText2(
 ) {
     val annotatedString = buildAnnotatedString {
         val regularStyle =
-            SpanStyle(color = Color.Black, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+            SpanStyle(color = Color.Black, fontSize = 20.sp, fontWeight = FontWeight.Bold)
 
 
         withStyle(regularStyle) {
@@ -188,21 +233,25 @@ fun HighlightedText2(
         }
 
         withStyle(regularStyle) {
-            append(")\n")
+            append(")")
         }
     }
 
     Text(
-        lineHeight = 32.sp,
         modifier = modifier,
         text = annotatedString,
         letterSpacing = 1.sp,
+        lineHeight = 32.sp,
     )
 }
 
 @Composable
-fun ModifierChallenge2Solved2(firstModifier: ModifierDragDrop, secondModifier: ModifierDragDrop) {
-    Box(modifier = Modifier.fillMaxSize()) {
+fun ModifierChallenge2Solved3(
+    modifier: Modifier = Modifier,
+    firstModifier: ModifierDragDrop,
+    secondModifier: ModifierDragDrop,
+) {
+    Box(modifier = modifier) {
         Box(
             modifier = Modifier
                 .then(if (firstModifier.position == 0) firstModifier.modifier else Modifier)
@@ -224,13 +273,14 @@ fun ModifierChallenge2Solved2(firstModifier: ModifierDragDrop, secondModifier: M
     }
 }
 
-
-@Preview
+@Preview(name = "New_Pixel_2_API_UpsideDownCake")
 @Composable
 fun ModifierChallengePreview() {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.White)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
         DragDropModifierScreen()
     }
 }

@@ -43,6 +43,8 @@ fun myGreen() = Color(android.graphics.Color.parseColor(greenColor))
 val Purple = Color(0xFF9b5de5)
 val Yellow = Color(0xFFfee440)
 val Blue = Color(0xFF00bbf9)
+val Pink = Color(0xFFF15BB5)
+val Teal = Color(0xFF00f5d4)
 fun getColor(color: String) = Color(android.graphics.Color.parseColor(color))
 
 suspend fun runUpdatesIn(

@@ -1,5 +1,6 @@
 package nick.mirosh.androidsamples.ui.jetpack_compose.drag_drop_modifier
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -35,7 +36,9 @@ import androidx.compose.ui.unit.sp
 import nick.mirosh.androidsamples.R
 import nick.mirosh.androidsamples.ui.coroutines.Blue
 import nick.mirosh.androidsamples.ui.coroutines.Purple
+import nick.mirosh.androidsamples.ui.coroutines.Teal
 import nick.mirosh.androidsamples.ui.coroutines.Yellow
+import nick.mirosh.androidsamples.ui.coroutines.myGreen
 import kotlin.math.roundToInt
 
 
@@ -86,6 +89,11 @@ fun DragDropModifierScreen() {
     var modifier2InTargetArea2 by remember { mutableStateOf(false) }
     var modifier2InTargetArea3 by remember { mutableStateOf(false) }
     var modifier2InTargetArea4 by remember { mutableStateOf(false) }
+    val modifier1InAnyTargetArea =
+        modifier1InTargetArea1 || modifier1InTargetArea2 || modifier1InTargetArea3 || modifier1InTargetArea4
+
+    val modifier2InAnyTargetArea =
+        modifier2InTargetArea1 || modifier2InTargetArea2 || modifier2InTargetArea3 || modifier2InTargetArea4
 
     Box(modifier = Modifier.fillMaxSize()) {
         HighlightedText2(
@@ -94,7 +102,7 @@ fun DragDropModifierScreen() {
         )
         Text(
             text = ".padding(24.dp) ",
-            color = Color.Black,
+            color = if (modifier1InAnyTargetArea) myGreen() else Color.Black,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp,
@@ -126,7 +134,7 @@ fun DragDropModifierScreen() {
 
         Text(
             text = ".clip(RoundedCornerShape(16.dp)) ",
-            color = Color.Black,
+            color = if (modifier2InAnyTargetArea) myGreen() else Color.Black,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 1.sp,
@@ -159,36 +167,22 @@ fun DragDropModifierScreen() {
         var secondModifierDragDrop: ModifierDragDrop? = null
 
         if (modifier1InTargetArea1 || modifier1InTargetArea2 || modifier1InTargetArea3 || modifier1InTargetArea4) {
-             firstModifierDragDrop = ModifierDragDrop(
-                position = when {
-                    modifier1InTargetArea1 -> 1
-                    modifier1InTargetArea2 -> 2
-                    modifier1InTargetArea3 -> 3
-                    modifier1InTargetArea4 -> 4
-                    else -> 0
-                },
+            firstModifierDragDrop = ModifierDragDrop(
+                position = if (modifier1InTargetArea1) 1 else if (modifier1InTargetArea2) 2 else if (modifier1InTargetArea3) 3 else 4,
                 modifier = Modifier
-                    .padding(24.dp))
+                    .padding(32.dp)
+            )
 
         }
 
         if (modifier2InTargetArea1 || modifier2InTargetArea2 || modifier2InTargetArea3 || modifier2InTargetArea4) {
             secondModifierDragDrop = ModifierDragDrop(
-                position = when {
-                    modifier2InTargetArea1 -> 1
-                    modifier2InTargetArea2 -> 2
-                    modifier2InTargetArea3 -> 3
-                    modifier2InTargetArea4 -> 4
-                    else -> 0
-                },
+                position = if (modifier2InTargetArea1) 1 else if (modifier2InTargetArea2) 2 else if (modifier2InTargetArea3) 3 else 4,
+
                 modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp)))
+                    .clip(RoundedCornerShape(20.dp))
+            )
         }
-//        GeneratedBox(
-//            modifier = Modifier
-//                .align(Alignment.BottomCenter)
-//                .padding(bottom = 16.dp)
-//        )
         ModifierChallenge2Solved3(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -251,23 +245,41 @@ fun ModifierChallenge2Solved3(
     firstModifier: ModifierDragDrop,
     secondModifier: ModifierDragDrop,
 ) {
+    Log.d(TAG, "ModifierChallenge2Solved3: $firstModifier")
+    Log.d(TAG, "ModifierChallenge2Solved3: $secondModifier")
     Box(modifier = modifier) {
         Box(
             modifier = Modifier
-                .then(if (firstModifier.position == 0) firstModifier.modifier else Modifier)
-                .then(if (secondModifier.position == 0) secondModifier.modifier else Modifier)
-                .size(150.dp)
                 .then(if (firstModifier.position == 1) firstModifier.modifier else Modifier)
                 .then(if (secondModifier.position == 1) secondModifier.modifier else Modifier)
-                .border(24.dp, Purple)
+                .size(200.dp)
                 .then(if (firstModifier.position == 2) firstModifier.modifier else Modifier)
                 .then(if (secondModifier.position == 2) secondModifier.modifier else Modifier)
-                .background(Yellow)
+                .border(32.dp, Purple)
                 .then(if (firstModifier.position == 3) firstModifier.modifier else Modifier)
                 .then(if (secondModifier.position == 3) secondModifier.modifier else Modifier)
-                .border(24.dp, Blue)
+                .background(Yellow)
                 .then(if (firstModifier.position == 4) firstModifier.modifier else Modifier)
                 .then(if (secondModifier.position == 4) secondModifier.modifier else Modifier)
+                .border(32.dp, Blue)
+                .align(Alignment.Center)
+        )
+    }
+}
+
+@Composable
+fun ModifierChallenge2Solved4(
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .size(200.dp)
+                .border(32.dp, Purple)
+                .padding(32.dp)
+                .background(Yellow)
+                .clip(RoundedCornerShape(20.dp))
+                .border(32.dp, Blue)
                 .align(Alignment.Center)
         )
     }

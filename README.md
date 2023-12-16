@@ -70,6 +70,8 @@ Discover the use of `rememberCoroutineScope()` for canceling coroutine execution
 - **[Explanation Post](https://www.nickmirosh.com/post/are-you-using-coroutines-inside-your-composables-make-sure-to-use-remembercoroutinescope)**
 - **[Code](https://github.com/nsmirosh/Android-concepts-examples/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/remember_coroutine_scope/RememberCoroutineScope.kt)**
 
+https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/5d0a9793-a5e3-40be-9ed7-70e1682c496f
+
 ### Drag-drop `Modifier`
 You can drag and drop the two modifiers in order to discover how it will influence the Composable. 
 - **[Explanation Post](https://www.nickmirosh.com/post/do-you-know-how-to-position-your-modifiers-in-jetpack-compose)**

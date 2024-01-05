@@ -25,7 +25,6 @@ import nick.mirosh.androidsamples.ui.MainScreen
 import nick.mirosh.androidsamples.ui.ModifiersDestination
 import nick.mirosh.androidsamples.ui.Parallax
 import nick.mirosh.androidsamples.ui.ProgressBar
-import nick.mirosh.androidsamples.ui.Recomposition
 import nick.mirosh.androidsamples.ui.SimpleList
 import nick.mirosh.androidsamples.ui.TodoDetails
 import nick.mirosh.androidsamples.ui.TodoList
@@ -76,9 +75,14 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
             onSimpleListClick = { navController.navigateSingleTopTo(SimpleList.route) },
             onProgressBarClick = { navController.navigateSingleTopTo(ProgressBar.route) },
             onBottomNavClick = { navController.navigateSingleTopTo(BottomNavigation.route) },
-            onSideEffectsClicked = {
+            onLaunchedEffectClick = {
                 navController.navigateSingleTopTo(
                     LaunchedEffect.route
+                )
+            },
+            onDisposableEffectClick = {
+                navController.navigateSingleTopTo(
+                    DisposableEffect.route
                 )
             },
 

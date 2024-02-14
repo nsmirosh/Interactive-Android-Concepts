@@ -19,16 +19,8 @@ import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
 @Composable
 fun MainScreenContent(
     modifier: Modifier = Modifier,
-    onSimpleListClick: (() -> Unit)? = null,
-    onProgressBarClick: (() -> Unit)? = null,
-    onBottomNavClick: (() -> Unit)? = null,
-    onAnimationClick: (() -> Unit)? = null,
-    onLaunchedEffectClick: (() -> Unit)? = null,
-    onDisposableEffectClick: (() -> Unit)? = null,
-    onProduceStateClicked: (() -> Unit)? = null,
-    onParallaxScreenClicked: (() -> Unit)? = null,
     onCoroutinesClicked: (() -> Unit)? = null,
-    onModifiersClicked: (() -> Unit)? = null,
+    onComposeClicked: (() -> Unit)? = null,
 ) {
     val scrollState = rememberScrollState()
 
@@ -43,75 +35,10 @@ fun MainScreenContent(
         )
 
         Text(
-            text = "Drag Drop Modifiers",
+            text = "Compose",
             modifier = Modifier
                 .clickable {
-                    onModifiersClicked?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
-            text = "Launched Effect",
-            modifier = Modifier
-                .clickable {
-                    onLaunchedEffectClick?.invoke()
-                }
-                .padding(24.dp)
-        )
-
-        Text(
-            text = "Disposable Effect",
-            modifier = Modifier
-                .clickable {
-                    onDisposableEffectClick?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
-            text = "ProduceState()",
-            modifier = Modifier
-                .clickable {
-                    onProduceStateClicked?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
-            text = "Simple List",
-            modifier = Modifier
-                .clickable {
-                    onSimpleListClick?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
-            text = "Progress Bar",
-            modifier = Modifier
-                .clickable {
-                    onProgressBarClick?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
-            text = "Bottom Nav",
-            modifier = Modifier
-                .clickable {
-                    onBottomNavClick?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
-            text = "Animation",
-            modifier = Modifier
-                .clickable {
-                    onAnimationClick?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
-            text = "Parallax",
-            modifier = Modifier
-                .clickable {
-                    onParallaxScreenClicked?.invoke()
+                    onComposeClicked?.invoke()
                 }
                 .padding(24.dp)
         )

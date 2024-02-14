@@ -20,13 +20,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import nick.mirosh.androidsamples.navigateSingleTopTo
-import nick.mirosh.androidsamples.ui.AsyncComparisonDestination
-import nick.mirosh.androidsamples.ui.CooperativeCancellationDestination
-import nick.mirosh.androidsamples.ui.CoroutineLobbyScreenDestination
-import nick.mirosh.androidsamples.ui.CoroutineScopeDestination
-import nick.mirosh.androidsamples.ui.DeadLockDestination
-import nick.mirosh.androidsamples.ui.ExceptionsLobbyDestination
-import nick.mirosh.androidsamples.ui.RememberCoroutineScopeDestination
+import nick.mirosh.androidsamples.ui.navigation.AsyncComparisonDestination
+import nick.mirosh.androidsamples.ui.navigation.CooperativeCancellationDestination
+import nick.mirosh.androidsamples.ui.navigation.CoroutineLobbyScreenDestination
+import nick.mirosh.androidsamples.ui.navigation.CoroutineScopeDestination
+import nick.mirosh.androidsamples.ui.navigation.DeadLockDestination
+import nick.mirosh.androidsamples.ui.navigation.ExceptionsLobbyDestination
+import nick.mirosh.androidsamples.ui.navigation.RememberCoroutineScopeDestination
 import nick.mirosh.androidsamples.ui.coroutines.async.AsyncComparisonScreen
 import nick.mirosh.androidsamples.ui.coroutines.coroutine_scope.CoroutineScopeScreen
 import nick.mirosh.androidsamples.ui.coroutines.exceptions.lobby.CoroutineExceptionsLobbyScreen
@@ -50,7 +50,7 @@ fun CoroutineLobbyScreen() {
 }
 
 @Composable
-fun LobbyContent(
+fun CoroutinesLobbyContent(
     onRememberCoroutineScopeClicked: (() -> Unit)? = null,
     onAsyncComparisonClicked: (() -> Unit)? = null,
     onCoroutineScopeClicked: (() -> Unit)? = null,
@@ -116,7 +116,7 @@ fun LobbyContent(
 
 fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     composable(route = CoroutineLobbyScreenDestination.route) {
-        LobbyContent(
+        CoroutinesLobbyContent(
             onAsyncComparisonClicked = {
                 navController.navigateSingleTopTo(
                     AsyncComparisonDestination.route

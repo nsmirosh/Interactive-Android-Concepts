@@ -18,9 +18,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import nick.mirosh.androidsamples.navigateSingleTopTo
-import nick.mirosh.androidsamples.ui.CoroutineExceptionsLobbyDestination
-import nick.mirosh.androidsamples.ui.DifferentExceptionsChallengeDestination
-import nick.mirosh.androidsamples.ui.ExceptionPropagationDestination
+import nick.mirosh.androidsamples.ui.navigation.CoroutineExceptionsLobbyDestination
+import nick.mirosh.androidsamples.ui.navigation.DifferentExceptionsChallengeDestination
+import nick.mirosh.androidsamples.ui.navigation.ExceptionPropagationDestination
 import nick.mirosh.androidsamples.ui.coroutines.async.AsyncComparisonScreen
 import nick.mirosh.androidsamples.ui.coroutines.exceptions.different_exceptions.DifferentExceptionsScreen
 

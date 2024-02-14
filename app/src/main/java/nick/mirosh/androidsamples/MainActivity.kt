@@ -24,6 +24,7 @@ import nick.mirosh.androidsamples.ui.LaunchedEffect
 import nick.mirosh.androidsamples.ui.MainScreen
 import nick.mirosh.androidsamples.ui.ModifiersDestination
 import nick.mirosh.androidsamples.ui.Parallax
+import nick.mirosh.androidsamples.ui.ProduceState
 import nick.mirosh.androidsamples.ui.ProgressBar
 import nick.mirosh.androidsamples.ui.SimpleList
 import nick.mirosh.androidsamples.ui.TodoDetails
@@ -36,6 +37,7 @@ import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
 import nick.mirosh.androidsamples.ui.jetpack_compose.parallax.UriParallaxColumnRunner
+import nick.mirosh.androidsamples.ui.jetpack_compose.produce_state.ProduceStateScreen
 import nick.mirosh.androidsamples.ui.jetpack_compose.progress.ProgressBarContent2
 import nick.mirosh.androidsamples.ui.jetpack_compose.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.jetpack_compose.side_effects.disposable_effect.DisposableEffectScreen
@@ -83,6 +85,11 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
             onDisposableEffectClick = {
                 navController.navigateSingleTopTo(
                     DisposableEffect.route
+                )
+            },
+            onProduceStateClicked = {
+                navController.navigateSingleTopTo(
+                    ProduceState.route
                 )
             },
 
@@ -154,6 +161,9 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     }
     composable(route = ModifiersDestination.route) {
         DragDropModifierScreen()
+    }
+    composable(route = ProduceState.route) {
+        ProduceStateScreen()
     }
 }
 

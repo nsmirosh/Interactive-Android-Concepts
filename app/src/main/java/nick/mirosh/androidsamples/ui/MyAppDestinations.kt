@@ -56,6 +56,9 @@ object LaunchedEffect : MyAppDestinations {
 object DisposableEffect : MyAppDestinations {
     override val route = "disposable_effect"
 }
+object ProduceState: MyAppDestinations {
+    override val route = "produce_state"
+}
 
 object Recomposition : MyAppDestinations {
     override val route = "recomposition"

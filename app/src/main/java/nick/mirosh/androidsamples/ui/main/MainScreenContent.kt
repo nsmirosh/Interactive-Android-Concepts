@@ -25,6 +25,7 @@ fun MainScreenContent(
     onAnimationClick: (() -> Unit)? = null,
     onLaunchedEffectClick: (() -> Unit)? = null,
     onDisposableEffectClick: (() -> Unit)? = null,
+    onProduceStateClicked: (() -> Unit)? = null,
     onParallaxScreenClicked: (() -> Unit)? = null,
     onCoroutinesClicked: (() -> Unit)? = null,
     onModifiersClicked: (() -> Unit)? = null,
@@ -63,6 +64,14 @@ fun MainScreenContent(
             modifier = Modifier
                 .clickable {
                     onDisposableEffectClick?.invoke()
+                }
+                .padding(24.dp)
+        )
+        Text(
+            text = "ProduceState()",
+            modifier = Modifier
+                .clickable {
+                    onProduceStateClicked?.invoke()
                 }
                 .padding(24.dp)
         )

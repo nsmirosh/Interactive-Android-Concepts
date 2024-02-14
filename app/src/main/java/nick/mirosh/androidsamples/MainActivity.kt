@@ -1,7 +1,5 @@
 package nick.mirosh.androidsamples
 
-import DeadLockScreen
-import TodoListScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -44,9 +42,6 @@ import nick.mirosh.androidsamples.ui.jetpack_compose.progress.ProgressBarContent
 import nick.mirosh.androidsamples.ui.jetpack_compose.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.jetpack_compose.side_effects.disposable_effect.DisposableEffectScreen
 import nick.mirosh.androidsamples.ui.theme.MyApplicationTheme
-import nick.mirosh.androidsamples.ui.jetpack_compose.todo.TodoViewModel
-import nick.mirosh.androidsamples.ui.jetpack_compose.todo.details.TodoDetailsScreen
-import nick.mirosh.androidsamples.ui.jetpack_compose.todo.details.TodoDetailsViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -94,8 +89,9 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
                     ProduceState.route
                 )
             },
-
-            onAnimationClick = { navController.navigateSingleTopTo(Animation.route) },
+            onAnimationClick = {
+                navController.navigateSingleTopTo(Animation.route)
+            },
             onParallaxScreenClicked = {
                 navController.navigateSingleTopTo(
                     Parallax.route
@@ -128,23 +124,6 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     }
     composable(route = BottomNavigation.route) {
         BottomNavigationScreen()
-    }
-    composable(route = TodoList.route) {
-        val viewModel = hiltViewModel<TodoViewModel>()
-        TodoListScreen(viewModel = viewModel, onNewTodoClicked = {
-            navController.navigateSingleTopTo(TodoDetails.route)
-        })
-    }
-    composable(route = TodoDetails.route) {
-        val viewModel = hiltViewModel<TodoDetailsViewModel>()
-        TodoDetailsScreen { titleText, descriptionText ->
-            viewModel.insertTodo(
-                title = titleText,
-                description = descriptionText
-
-            )
-            navController.popBackStack()
-        }
     }
     composable(route = Animation.route) {
         SmileyLoadingAnimation()

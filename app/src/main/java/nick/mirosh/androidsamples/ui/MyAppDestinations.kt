@@ -107,6 +107,10 @@ object RememberCoroutineScopeDestination : CoroutinesDestinations {
     override val route = "remember_coroutine_scope"
 }
 
+object DeadLockDestination : CoroutinesDestinations {
+    override val route = "deadlock"
+}
+
 
 //Coroutines exception handling destinations
 

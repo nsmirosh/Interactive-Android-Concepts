@@ -1,6 +1,7 @@
 package nick.mirosh.androidsamples.ui.coroutines.lobby
 
 import CooperativeCancellationScreen
+import DeadLockScreen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,7 @@ import nick.mirosh.androidsamples.ui.AsyncComparisonDestination
 import nick.mirosh.androidsamples.ui.CooperativeCancellationDestination
 import nick.mirosh.androidsamples.ui.CoroutineLobbyScreenDestination
 import nick.mirosh.androidsamples.ui.CoroutineScopeDestination
+import nick.mirosh.androidsamples.ui.DeadLockDestination
 import nick.mirosh.androidsamples.ui.ExceptionsLobbyDestination
 import nick.mirosh.androidsamples.ui.RememberCoroutineScopeDestination
 import nick.mirosh.androidsamples.ui.coroutines.async.AsyncComparisonScreen
@@ -54,6 +56,7 @@ fun LobbyContent(
     onCoroutineScopeClicked: (() -> Unit)? = null,
     onExceptionsClicked: (() -> Unit)? = null,
     onCooperativeCancellationClicked: (() -> Unit)? = null,
+    onDeadLockClicked: (() -> Unit)? = null
 ) {
 
     val scrollState = rememberScrollState()
@@ -99,6 +102,15 @@ fun LobbyContent(
                 }
                 .padding(24.dp)
         )
+
+        Text(
+            text = "Deadlock",
+            modifier = Modifier
+                .clickable {
+                    onDeadLockClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
     }
 }
 
@@ -129,6 +141,12 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
                 navController.navigateSingleTopTo(
                     RememberCoroutineScopeDestination.route
                 )
+            },
+
+            onDeadLockClicked = {
+                navController.navigateSingleTopTo(
+                    DeadLockDestination.route
+                )
             }
         )
     }
@@ -137,7 +155,7 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
         AsyncComparisonScreen()
     }
     composable(route = ExceptionsLobbyDestination.route) {
-         CoroutineExceptionsLobbyScreen()
+        CoroutineExceptionsLobbyScreen()
     }
     composable(route = CooperativeCancellationDestination.route) {
         CooperativeCancellationScreen()
@@ -147,5 +165,9 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     }
     composable(route = RememberCoroutineScopeDestination.route) {
         RememberCoroutineScopeScreen()
+    }
+
+    composable(route = DeadLockDestination.route) {
+        DeadLockScreen()
     }
 }

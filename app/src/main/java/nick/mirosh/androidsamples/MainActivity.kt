@@ -1,5 +1,6 @@
 package nick.mirosh.androidsamples
 
+import DeadLockScreen
 import TodoListScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import nick.mirosh.androidsamples.ui.Animation
 import nick.mirosh.androidsamples.ui.BottomNavigation
 import nick.mirosh.androidsamples.ui.Coroutines
+import nick.mirosh.androidsamples.ui.DeadLockDestination
 import nick.mirosh.androidsamples.ui.DisposableEffect
 import nick.mirosh.androidsamples.ui.LaunchedEffect
 import nick.mirosh.androidsamples.ui.MainScreen

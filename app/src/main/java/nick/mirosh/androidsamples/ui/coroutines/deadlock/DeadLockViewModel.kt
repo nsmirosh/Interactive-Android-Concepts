@@ -3,17 +3,31 @@ package nick.mirosh.androidsamples.ui.coroutines.deadlock
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeout
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.system.measureTimeMillis
 
 private const val TAG = "DeadLockViewModel"
 
 class DeadLockViewModel : ViewModel() {
-
     fun runLogicalDeadlock() {
         viewModelScope.launch {
             try {
@@ -21,8 +35,13 @@ class DeadLockViewModel : ViewModel() {
                     deadLock()
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Caught exception: ${e.message}")
+                Log.e(TAG, "Exception: ${e.message}")
             }
+        }
+    }
+    fun runActualDeadlock() {
+        runBlocking {
+            deadLock()
         }
     }
 
@@ -30,50 +49,15 @@ class DeadLockViewModel : ViewModel() {
         coroutineScope {
             var deferred2: Deferred<String>? = null
             val deferred1 = async {
-                Log.d(TAG, "runDeadlock: awaiting task 2 to complete")
-                val result2 = deferred2?.await()
-                Log.d(TAG, "task 1 completed")
-                "Result of task 1 depends on task 2: $result2"
+                deferred2?.await()
+                "Result of task 1:"
             }
             deferred2 = async {
-
-                Log.d(TAG, "runDeadlock: awaiting task 1 to complete")
-                val result1 = deferred1.await() // This creates a circular dependency
-                Log.d(TAG, "task 2 completed")
-                "Result of task 2 depends on task 1: $result1"
+                deferred1.await()
+                "Result of task 2"
             }
-            Log.d(TAG, "runDeadlock: waiting for tasks to complete")
             deferred1.await()
             deferred2.await()
-        }
-    }
-
-    fun runActualDeadlock() {
-
-        runBlocking {
-
-            var deferred2: Deferred<String>? = null
-
-            val deferred1 = async {
-                Log.d(TAG, "runDeadlock: awaiting task 2 to complete")
-                val result2 = deferred2?.await()
-                Log.d(TAG, "task 1 completed")
-                "Result of task 1 depends on task 2: $result2"
-            }
-
-            deferred2 = async {
-                Log.d(TAG, "awaiting task 1 to complete")
-                val result1 = deferred1.await()
-                Log.d(TAG, "task 2 completed")
-                "Result of task 2 depends on task 1: $result1"
-            }
-            try {
-                Log.d(TAG, "runDeadlock: waiting for tasks to complete")
-                deferred1.await()
-                deferred2.await()
-            } catch (e: Exception) {
-                Log.e(TAG, "Caught exception: ${e.message}")
-            }
         }
     }
 }

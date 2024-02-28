@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import nick.mirosh.androidsamples.ui.jetpack_compose.lobby.ComposeLobbyScreen
 import nick.mirosh.androidsamples.ui.coroutines.lobby.CoroutineLobbyScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
@@ -65,7 +66,6 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     composable(route = Coroutines.route) {
         CoroutineLobbyScreen()
     }
-
     composable(route = Compose.route) {
         ComposeLobbyScreen()
     }

@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import nick.mirosh.androidsamples.navigateSingleTopTo
+import nick.mirosh.androidsamples.ui.background_processing.multiple_processes.ProcessesScreen
 import nick.mirosh.androidsamples.ui.navigation.AsyncComparisonDestination
 import nick.mirosh.androidsamples.ui.navigation.CooperativeCancellationDestination
 import nick.mirosh.androidsamples.ui.navigation.CoroutineLobbyScreenDestination
@@ -33,6 +34,7 @@ import nick.mirosh.androidsamples.ui.coroutines.exceptions.lobby.CoroutineExcept
 import nick.mirosh.androidsamples.ui.coroutines.flows.FlowsScreen
 import nick.mirosh.androidsamples.ui.coroutines.remember_coroutine_scope.RememberCoroutineScopeScreen
 import nick.mirosh.androidsamples.ui.navigation.FlowDestination
+import nick.mirosh.androidsamples.ui.navigation.MultipleProcesses
 
 @Composable
 fun CoroutineLobbyScreen() {
@@ -59,7 +61,8 @@ fun CoroutinesLobbyContent(
     onExceptionsClicked: (() -> Unit)? = null,
     onCooperativeCancellationClicked: (() -> Unit)? = null,
     onDeadLockClicked: (() -> Unit)? = null,
-    onFlowClicked: (() -> Unit)? = null
+    onFlowClicked: (() -> Unit)? = null,
+    onMultipleProcessesClicked: (() -> Unit)? = null
 ) {
 
     val scrollState = rememberScrollState()
@@ -122,6 +125,15 @@ fun CoroutinesLobbyContent(
                 }
                 .padding(24.dp)
         )
+
+        Text(
+            text = "Multiple processes",
+            modifier = Modifier
+                .clickable {
+                    onMultipleProcessesClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
     }
 }
 
@@ -153,7 +165,7 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
                     RememberCoroutineScopeDestination.route
                 )
             },
-            onFlowClicked  = {
+            onFlowClicked = {
                 navController.navigateSingleTopTo(
                     FlowDestination.route
                 )
@@ -162,6 +174,12 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
             onDeadLockClicked = {
                 navController.navigateSingleTopTo(
                     DeadLockDestination.route
+                )
+            },
+
+            onMultipleProcessesClicked = {
+                navController.navigateSingleTopTo(
+                    MultipleProcesses.route
                 )
             }
         )
@@ -189,5 +207,8 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
 
     composable(route = DeadLockDestination.route) {
         DeadLockScreen()
+    }
+    composable(route = MultipleProcesses.route) {
+        ProcessesScreen()
     }
 }

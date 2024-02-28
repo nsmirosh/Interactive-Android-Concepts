@@ -35,3 +35,7 @@ object FlowDestination : CoroutinesDestinations {
 object DeadLockDestination : CoroutinesDestinations {
     override val route = "deadlock"
 }
+
+object MultipleProcesses : CoroutinesDestinations {
+    override val route = "multiple_processes"
+}

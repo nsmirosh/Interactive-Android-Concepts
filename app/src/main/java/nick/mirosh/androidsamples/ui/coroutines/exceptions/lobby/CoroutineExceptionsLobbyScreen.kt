@@ -87,6 +87,7 @@ fun NavGraphBuilder.setUpCoroutineExceptionsNavigation(navController: NavHostCon
     composable(route = ExceptionPropagationDestination.route) {
         AsyncComparisonScreen()
     }
+
     composable(route = DifferentExceptionsChallengeDestination.route) {
          DifferentExceptionsScreen()
     }

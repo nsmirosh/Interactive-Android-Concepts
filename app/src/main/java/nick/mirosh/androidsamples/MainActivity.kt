@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import nick.mirosh.androidsamples.ui.coroutines.lobby.ComposeLobbyScreen
+import nick.mirosh.androidsamples.ui.jetpack_compose.lobby.ComposeLobbyScreen
 import nick.mirosh.androidsamples.ui.coroutines.lobby.CoroutineLobbyScreen
 import nick.mirosh.androidsamples.ui.main.MainScreenContent
 import nick.mirosh.androidsamples.ui.navigation.Compose

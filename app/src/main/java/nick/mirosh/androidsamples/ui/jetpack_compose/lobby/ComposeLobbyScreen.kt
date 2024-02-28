@@ -1,4 +1,4 @@
-package nick.mirosh.androidsamples.ui.coroutines.lobby
+package nick.mirosh.androidsamples.ui.jetpack_compose.lobby
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

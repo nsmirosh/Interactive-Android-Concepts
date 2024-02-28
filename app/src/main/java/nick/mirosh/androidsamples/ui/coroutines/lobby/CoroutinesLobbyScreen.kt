@@ -30,7 +30,9 @@ import nick.mirosh.androidsamples.ui.navigation.RememberCoroutineScopeDestinatio
 import nick.mirosh.androidsamples.ui.coroutines.async.AsyncComparisonScreen
 import nick.mirosh.androidsamples.ui.coroutines.coroutine_scope.CoroutineScopeScreen
 import nick.mirosh.androidsamples.ui.coroutines.exceptions.lobby.CoroutineExceptionsLobbyScreen
+import nick.mirosh.androidsamples.ui.coroutines.flows.FlowsScreen
 import nick.mirosh.androidsamples.ui.coroutines.remember_coroutine_scope.RememberCoroutineScopeScreen
+import nick.mirosh.androidsamples.ui.navigation.FlowDestination
 
 @Composable
 fun CoroutineLobbyScreen() {
@@ -56,7 +58,8 @@ fun CoroutinesLobbyContent(
     onCoroutineScopeClicked: (() -> Unit)? = null,
     onExceptionsClicked: (() -> Unit)? = null,
     onCooperativeCancellationClicked: (() -> Unit)? = null,
-    onDeadLockClicked: (() -> Unit)? = null
+    onDeadLockClicked: (() -> Unit)? = null,
+    onFlowClicked: (() -> Unit)? = null
 ) {
 
     val scrollState = rememberScrollState()
@@ -104,6 +107,14 @@ fun CoroutinesLobbyContent(
         )
 
         Text(
+            text = "Flows",
+            modifier = Modifier
+                .clickable {
+                    onFlowClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
+        Text(
             text = "Deadlock",
             modifier = Modifier
                 .clickable {
@@ -142,6 +153,11 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
                     RememberCoroutineScopeDestination.route
                 )
             },
+            onFlowClicked  = {
+                navController.navigateSingleTopTo(
+                    FlowDestination.route
+                )
+            },
 
             onDeadLockClicked = {
                 navController.navigateSingleTopTo(
@@ -165,6 +181,10 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     }
     composable(route = RememberCoroutineScopeDestination.route) {
         RememberCoroutineScopeScreen()
+    }
+
+    composable(route = FlowDestination.route) {
+        FlowsScreen()
     }
 
     composable(route = DeadLockDestination.route) {

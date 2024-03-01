@@ -14,9 +14,11 @@ class MySameProcessService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        // Intentionally causing a crash
-        CoroutineScope(Dispatchers.IO).launch {
-            delay(5000)
+        val causeCrash = intent.getBooleanExtra("cause_crash", false)
+        Thread.setDefaultUncaughtExceptionHandler{
+            _, throwable -> throwable.printStackTrace()
+        }
+        if (causeCrash) {
             throw RuntimeException("Crash in same process service")
         }
         return START_NOT_STICKY

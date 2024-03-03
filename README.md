@@ -22,6 +22,8 @@ Feel free to play around with these examples to get a better understanding of ea
     - Modifier precedence importance. A Drag-Drop example of modifier usage. [Link](#drag-drop-modifier)
     - Demonstration of the usage of `rememberUpdatedState()` for updating a scheduled lambda [Link](#launchedeffect-and-rememberupdatedstate)
     - How `rememberCoroutineScope` can be used to cancel the execution of a coroutine [Link](#remember-coroutine-scope)
+3. [Other Android Concepts](#other-android-concepts)
+   - Multiple processes. How you can have your app run in different processes. [Link](#multiple-processes)
 4. [Progress animation](#canvas-based-animation)
 
 
@@ -81,6 +83,15 @@ You can drag and drop the two modifiers in order to discover how it will influen
 https://github.com/nsmirosh/Interactive-Android-Concepts/assets/5850601/a2086b01-26a1-458d-94e1-1594f75d5653
 
 
+## Other Android Concepts
+
+### Multiple processes
+Two services are launched in different processes and both of the have a RuntimeException(). 
+One service crashes the app and the one that is in the separate process does not.
+- **[Explanation Post](https://www.nickmirosh.com/post/is-it-possible-to-have-a-runtimeexception-in-your-android-app-and-have-it-crash)**
+- **[Code](https://github.com/nsmirosh/Interactive-Android-Concepts/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/background_processing/multiple_processes/ProcessesScreen.kt)**
+
+
 ## Progress Animation
 
 ### Canvas-Based Animation
@@ -88,4 +99,6 @@ A creative progress animation developed using `Canvas`, inspired by UX flame.
 - **[Inspiration Source](https://www.youtube.com/watch?v=LbktxnviLKI&ab_channel=UXFLAME)**
 
 https://github.com/nsmirosh/MyAndroidSamples/assets/5850601/44ec954c-cb32-4026-bd01-7b5e1521b7ae
+
+
 

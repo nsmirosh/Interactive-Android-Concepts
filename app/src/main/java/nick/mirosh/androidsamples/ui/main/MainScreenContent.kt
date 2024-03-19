@@ -21,6 +21,8 @@ fun MainScreenContent(
     modifier: Modifier = Modifier,
     onCoroutinesClicked: (() -> Unit)? = null,
     onComposeClicked: (() -> Unit)? = null,
+    onAndroidApisClicked: (() -> Unit)? = null,
+
 ) {
     val scrollState = rememberScrollState()
 
@@ -39,6 +41,15 @@ fun MainScreenContent(
             modifier = Modifier
                 .clickable {
                     onComposeClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
+
+        Text(
+            text = "Android Apis",
+            modifier = Modifier
+                .clickable {
+                    onAndroidApisClicked?.invoke()
                 }
                 .padding(24.dp)
         )

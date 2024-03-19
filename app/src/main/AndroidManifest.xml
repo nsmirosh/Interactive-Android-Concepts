@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
     <application
         android:name=".ui.MyApplication"
         android:allowBackup="true"
@@ -42,5 +45,11 @@
             android:process=":separate_process" />
 
         <service android:name=".ui.background_processing.multiple_processes.MySameProcessService" />
+
+        <receiver android:name=".ui.android.YourElapsedReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="Balls" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

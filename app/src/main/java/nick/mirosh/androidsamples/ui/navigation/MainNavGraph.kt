@@ -17,4 +17,8 @@ object Compose : MainDestination {
     override val route = "compose"
 }
 
+object AndroidApis : MainDestination {
+    override val route = "android_apis"
+}
+
 

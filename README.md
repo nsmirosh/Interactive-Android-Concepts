@@ -91,6 +91,8 @@ One service crashes the app and the one that is in the separate process does not
 - **[Explanation Post](https://www.nickmirosh.com/post/is-it-possible-to-have-a-runtimeexception-in-your-android-app-and-have-it-crash)**
 - **[Code](https://github.com/nsmirosh/Interactive-Android-Concepts/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/background_processing/multiple_processes/ProcessesScreen.kt)**
 
+https://github.com/nsmirosh/Interactive-Android-Concepts/assets/5850601/c304a65c-3ad0-4e54-a9f2-e628832c891f
+
 
 ## Progress Animation
 

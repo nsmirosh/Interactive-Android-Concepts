@@ -41,3 +41,6 @@ object Parallax : ComposeDestinations {
 object ModifiersDestination : ComposeDestinations {
     override val route = "modifiers"
 }
+object TextFieldDestination : ComposeDestinations {
+    override val route = "text_field"
+}

@@ -27,6 +27,7 @@ import nick.mirosh.androidsamples.ui.jetpack_compose.produce_state.ProduceStateS
 import nick.mirosh.androidsamples.ui.jetpack_compose.progress.ProgressBarContent2
 import nick.mirosh.androidsamples.ui.jetpack_compose.progress.ProgressBarViewModel
 import nick.mirosh.androidsamples.ui.jetpack_compose.side_effects.disposable_effect.DisposableEffectScreen
+import nick.mirosh.androidsamples.ui.jetpack_compose.textfield.TextFieldFormatting
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
 import nick.mirosh.androidsamples.ui.navigation.Animation
@@ -39,6 +40,7 @@ import nick.mirosh.androidsamples.ui.navigation.Parallax
 import nick.mirosh.androidsamples.ui.navigation.ProduceState
 import nick.mirosh.androidsamples.ui.navigation.ProgressBar
 import nick.mirosh.androidsamples.ui.navigation.SimpleList
+import nick.mirosh.androidsamples.ui.navigation.TextFieldDestination
 
 
 @Composable
@@ -70,6 +72,7 @@ fun ComposeLobbyContent(
     onProduceStateClicked: (() -> Unit)? = null,
     onParallaxScreenClicked: (() -> Unit)? = null,
     onModifiersClicked: (() -> Unit)? = null,
+    onTextFieldFormatting: (() -> Unit)? = null
 ) {
 
     val scrollState = rememberScrollState()
@@ -147,6 +150,15 @@ fun ComposeLobbyContent(
                 }
                 .padding(24.dp)
         )
+
+        Text(
+            text = "TextField Formatting",
+            modifier = Modifier
+                .clickable {
+                    onTextFieldFormatting?.invoke()
+                }
+                .padding(24.dp)
+        )
     }
 }
 
@@ -174,6 +186,9 @@ fun NavGraphBuilder.setUpComposeNavigation(navController: NavHostController) {
             },
             onModifiersClicked = {
                 navController.navigate(ModifiersDestination.route)
+            },
+            onTextFieldFormatting = {
+                navController.navigate(TextFieldDestination.route)
             }
         )
     }
@@ -212,6 +227,10 @@ fun NavGraphBuilder.setUpComposeNavigation(navController: NavHostController) {
     }
     composable(route = ProduceState.route) {
         ProduceStateScreen()
+    }
+
+    composable(route = TextFieldDestination.route) {
+        TextFieldFormatting()
     }
 
 }

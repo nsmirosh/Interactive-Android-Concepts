@@ -22,6 +22,7 @@ import com.example.androidcomposeexample.ui.sideeffects.launchedeffect.LaunchedE
 import nick.mirosh.androidsamples.ui.jetpack_compose.animation.SmileyLoadingAnimation
 import nick.mirosh.androidsamples.ui.jetpack_compose.bottom_nav.BottomNavigationScreen
 import nick.mirosh.androidsamples.ui.jetpack_compose.drag_drop_modifier.DragDropModifierScreen
+import nick.mirosh.androidsamples.ui.jetpack_compose.measuring.MeasuringComposable
 import nick.mirosh.androidsamples.ui.jetpack_compose.parallax.UriParallaxColumnRunner
 import nick.mirosh.androidsamples.ui.jetpack_compose.produce_state.ProduceStateScreen
 import nick.mirosh.androidsamples.ui.jetpack_compose.progress.ProgressBarContent2
@@ -34,6 +35,7 @@ import nick.mirosh.androidsamples.ui.navigation.BottomNavigation
 import nick.mirosh.androidsamples.ui.navigation.ComposeLobbyScreenDestination
 import nick.mirosh.androidsamples.ui.navigation.DisposableEffect
 import nick.mirosh.androidsamples.ui.navigation.LaunchedEffect
+import nick.mirosh.androidsamples.ui.navigation.MeasuringComposableDestination
 import nick.mirosh.androidsamples.ui.navigation.ModifiersDestination
 import nick.mirosh.androidsamples.ui.navigation.Parallax
 import nick.mirosh.androidsamples.ui.navigation.ProduceState
@@ -70,6 +72,7 @@ fun ComposeLobbyContent(
     onProduceStateClicked: (() -> Unit)? = null,
     onParallaxScreenClicked: (() -> Unit)? = null,
     onModifiersClicked: (() -> Unit)? = null,
+    onMeasuringComposableClicked: (() -> Unit)? = null,
 ) {
 
     val scrollState = rememberScrollState()
@@ -147,6 +150,15 @@ fun ComposeLobbyContent(
                 }
                 .padding(24.dp)
         )
+
+        Text(
+            text = "Measuring Composable",
+            modifier = Modifier
+                .clickable {
+                    onMeasuringComposableClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
     }
 }
 
@@ -174,6 +186,10 @@ fun NavGraphBuilder.setUpComposeNavigation(navController: NavHostController) {
             },
             onModifiersClicked = {
                 navController.navigate(ModifiersDestination.route)
+            },
+
+            onMeasuringComposableClicked = {
+                navController.navigate(MeasuringComposableDestination.route)
             }
         )
     }
@@ -212,6 +228,10 @@ fun NavGraphBuilder.setUpComposeNavigation(navController: NavHostController) {
     }
     composable(route = ProduceState.route) {
         ProduceStateScreen()
+    }
+
+    composable(route = MeasuringComposableDestination.route) {
+        MeasuringComposable("balls")
     }
 
 }

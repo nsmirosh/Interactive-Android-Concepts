@@ -31,6 +31,14 @@ fun FlowsScreen(
             ) {
                 Text("Transform Latest")
             }
+
+            Button(
+                onClick = {
+//                    viewModel.debounce()
+                }
+            ) {
+                Text("debounce")
+            }
         }
     }
 

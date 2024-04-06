@@ -41,3 +41,7 @@ object Parallax : ComposeDestinations {
 object ModifiersDestination : ComposeDestinations {
     override val route = "modifiers"
 }
+
+object MeasuringComposableDestination : ComposeDestinations {
+    override val route = "measuring"
+}

@@ -7,14 +7,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMap
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.takeWhile
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 
@@ -51,11 +55,11 @@ class FlowViewModel : ViewModel() {
 
 
     private fun myFlow() = flow {
-//        for (i in 1..3) {
-//            delay(100)
-//            emit(i)
-//        }
-        emit(1)
+        for (i in 0..10) {
+            emit(i)
+            Log.d(TAG, "myFlow: emitting $i")
+            delay(100)
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -91,4 +95,35 @@ class FlowViewModel : ViewModel() {
             }
         }
     }
+
+
+//    @OptIn(FlowPreview::class)
+//    fun debounce() {
+//        viewModelScope.launch {
+//
+//            val startTime = System.currentTimeMillis()
+//            Log.d(TAG, "debounce: start = $startTime")
+//
+//
+//            var firstEmission = true
+//
+//            myFlow()
+//                .debounce {
+//                    if (firstEmission) {
+//                        firstEmission = false
+//                        0L
+//                    } else 150L
+//                }.flatMapMerge{
+//
+//                }
+//                .collect {
+//                    Log.d(
+//                        TAG,
+//                        "debounce: emission with value $it =  ${System.currentTimeMillis() - startTime}"
+//                    )
+//                }
+//        }
+//
+//    }
 }
+

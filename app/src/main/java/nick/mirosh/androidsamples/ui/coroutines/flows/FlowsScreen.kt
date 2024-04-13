@@ -34,10 +34,10 @@ fun FlowsScreen(
 
             Button(
                 onClick = {
-//                    viewModel.debounce()
+                    viewModel.distinctUntilChanged()
                 }
             ) {
-                Text("debounce")
+                Text("distinctUntilChanged")
             }
         }
     }

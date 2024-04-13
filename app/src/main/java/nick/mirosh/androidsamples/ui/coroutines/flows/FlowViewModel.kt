@@ -5,20 +5,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flatMap
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.takeWhile
-import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 
@@ -54,7 +52,7 @@ class FlowViewModel : ViewModel() {
     }
 
 
-    private fun myFlow() = flow {
+    private fun myFlow2() = flow {
         for (i in 0..10) {
             emit(i)
             Log.d(TAG, "myFlow: emitting $i")
@@ -96,6 +94,35 @@ class FlowViewModel : ViewModel() {
         }
     }
 
+    data class Message(val text: String)
+    private fun myFlow() = flow {
+        emit(Message("hello"))
+        delay(100)
+        emit(Message("hello"))
+    }
+
+    fun distinctUntilChanged() {
+        viewModelScope.launch {
+            myFlow()
+                .distinctUntilChanged()
+                .onCompletion { Log.d(TAG, "Completed") }
+                .collect { Log.d(TAG, "A: $it") }
+        }
+        viewModelScope.launch {
+            myFlow()
+                .distinctUntilChanged { new, old ->
+                    new == old && new.hashCode() != old.hashCode()
+                }
+                .collect { Log.d(TAG, "B : $it") }
+        }
+        viewModelScope.launch {
+            myFlow()
+                .stateIn(scope = viewModelScope)
+                .onCompletion { Log.d(TAG, "Completed") }
+                .collect { Log.d(TAG, "C: $it") }
+        }
+    }
+
 
 //    @OptIn(FlowPreview::class)
 //    fun debounce() {
@@ -126,4 +153,6 @@ class FlowViewModel : ViewModel() {
 //
 //    }
 }
+
+data class Message(val text: String)
 

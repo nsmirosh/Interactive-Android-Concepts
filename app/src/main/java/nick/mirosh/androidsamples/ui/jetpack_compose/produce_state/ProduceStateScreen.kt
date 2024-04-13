@@ -28,9 +28,6 @@ private const val TAG = "ProduceStateScreen"
 @Composable
 fun ProduceStateScreen() {
     example2Runner()
-//    UserProfileUsingProduceState()
-//    UserProfileUsingLaunchedEffect("1")
-//    UserProfileUsingViewModel()
 }
 
 @Composable

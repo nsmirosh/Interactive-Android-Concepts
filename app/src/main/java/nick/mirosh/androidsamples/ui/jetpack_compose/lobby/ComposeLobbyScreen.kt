@@ -231,7 +231,7 @@ fun NavGraphBuilder.setUpComposeNavigation(navController: NavHostController) {
     }
 
     composable(route = MeasuringComposableDestination.route) {
-        MeasuringComposable("balls")
+        MeasuringComposable("REALLY REALLY long long long text stuff")
     }
 
 }

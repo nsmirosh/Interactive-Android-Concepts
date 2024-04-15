@@ -94,33 +94,79 @@ class FlowViewModel : ViewModel() {
         }
     }
 
-    data class Message(val text: String)
+    data class Message2(val text: String)
+//        override fun equals(other: Any?): Boolean {
+//            return other is Message2 && other === this
+//        }
+
+//        override fun hashCode(): Int {
+//            return 34
+//        }
+
+//    class Message(val text: String) {
+//        override fun equals(other: Any?): Boolean {
+//            Log.d(TAG, "equals called")
+//            return other is Message
+//        }
+
+//        override fun hashCode(): Int {
+//            return 34
+//        }
+
+    //    }
     private fun myFlow() = flow {
-        emit(Message("hello"))
+
+        emit(Message2("hello"))
         delay(100)
-        emit(Message("hello"))
+        emit(Message2("hello"))
+    }
+
+    data class Message(val text: String) {
+        var time = System.currentTimeMillis()
     }
 
     fun distinctUntilChanged() {
-        viewModelScope.launch {
-            myFlow()
-                .distinctUntilChanged()
-                .onCompletion { Log.d(TAG, "Completed") }
-                .collect { Log.d(TAG, "A: $it") }
-        }
+        val message1 = Message("Fun")
+        //100 ms delay
+        val message2 = Message("Fun")
+        println("${message1.hashCode() == message2.hashCode()}")
+        println("${message1 == message2}")
+        println("${message1.time == message2.time}")
+
+//        val message = Message2("hello")
+//        val message2 = Message2("hello")
+//        Log.d(TAG, "myFlow: ${message.hashCode()}")
+//        Log.d(TAG, "myFlow: ${message2.hashCode()}")
+//        Log.d(TAG, "myFlow: ${message == message2}")
+//        Log.d(TAG, "myFlow: ${message === message2}")
+//
+//        val message3 = Message("hello")
+//        val message4 = Message("hello")
+//        Log.d(TAG, "myFlow: ${message3.hashCode()}")
+//        Log.d(TAG, "myFlow: ${message4.hashCode()}")
+//        Log.d(TAG, "myFlow: ${message3 == message4}")
+//        Log.d(TAG, "myFlow: ${message3 === message4}")
+        //https://stackoverflow.com/questions/4178997/how-default-equals-and-hashcode-will-work-for-my-classes
+
+//        viewModelScope.launch {
+//            myFlow()
+//                .distinctUntilChanged()
+//                .onCompletion { Log.d(TAG, "Completed") }
+//                .collect { Log.d(TAG, "A: $it") }
+//        }
         viewModelScope.launch {
             myFlow()
                 .distinctUntilChanged { new, old ->
-                    new == old && new.hashCode() != old.hashCode()
+                    new == old && new.hashCode() == old.hashCode()
                 }
                 .collect { Log.d(TAG, "B : $it") }
         }
-        viewModelScope.launch {
-            myFlow()
-                .stateIn(scope = viewModelScope)
-                .onCompletion { Log.d(TAG, "Completed") }
-                .collect { Log.d(TAG, "C: $it") }
-        }
+//        viewModelScope.launch {
+//            myFlow()
+//                .stateIn(scope = viewModelScope)
+//                .onCompletion { Log.d(TAG, "Completed") }
+//                .collect { Log.d(TAG, "C: $it") }
+//        }
     }
 
 
@@ -154,5 +200,4 @@ class FlowViewModel : ViewModel() {
 //    }
 }
 
-data class Message(val text: String)
 

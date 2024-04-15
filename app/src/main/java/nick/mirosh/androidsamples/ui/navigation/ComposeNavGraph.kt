@@ -45,3 +45,7 @@ object ModifiersDestination : ComposeDestinations {
 object MeasuringComposableDestination : ComposeDestinations {
     override val route = "measuring"
 }
+
+object SearchDestination : ComposeDestinations {
+    override val route = "search"
+}

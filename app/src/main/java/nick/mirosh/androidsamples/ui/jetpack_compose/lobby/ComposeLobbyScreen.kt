@@ -27,6 +27,7 @@ import nick.mirosh.androidsamples.ui.jetpack_compose.parallax.UriParallaxColumnR
 import nick.mirosh.androidsamples.ui.jetpack_compose.produce_state.ProduceStateScreen
 import nick.mirosh.androidsamples.ui.jetpack_compose.progress.ProgressBarContent2
 import nick.mirosh.androidsamples.ui.jetpack_compose.progress.ProgressBarViewModel
+import nick.mirosh.androidsamples.ui.jetpack_compose.search.SearchScreen
 import nick.mirosh.androidsamples.ui.jetpack_compose.side_effects.disposable_effect.DisposableEffectScreen
 import nick.mirosh.androidsamples.ui.main.MainViewModel
 import nick.mirosh.androidsamples.ui.main.SimpleListScreenContent
@@ -40,6 +41,7 @@ import nick.mirosh.androidsamples.ui.navigation.ModifiersDestination
 import nick.mirosh.androidsamples.ui.navigation.Parallax
 import nick.mirosh.androidsamples.ui.navigation.ProduceState
 import nick.mirosh.androidsamples.ui.navigation.ProgressBar
+import nick.mirosh.androidsamples.ui.navigation.SearchDestination
 import nick.mirosh.androidsamples.ui.navigation.SimpleList
 
 
@@ -73,6 +75,7 @@ fun ComposeLobbyContent(
     onParallaxScreenClicked: (() -> Unit)? = null,
     onModifiersClicked: (() -> Unit)? = null,
     onMeasuringComposableClicked: (() -> Unit)? = null,
+    onSearchScreenClicked: (() -> Unit)? = null,
 ) {
 
     val scrollState = rememberScrollState()
@@ -159,6 +162,15 @@ fun ComposeLobbyContent(
                 }
                 .padding(24.dp)
         )
+
+        Text(
+            text = "Search",
+            modifier = Modifier
+                .clickable {
+                    onSearchScreenClicked?.invoke()
+                }
+                .padding(24.dp)
+        )
     }
 }
 
@@ -190,6 +202,10 @@ fun NavGraphBuilder.setUpComposeNavigation(navController: NavHostController) {
 
             onMeasuringComposableClicked = {
                 navController.navigate(MeasuringComposableDestination.route)
+            },
+
+            onSearchScreenClicked = {
+                navController.navigate(SearchDestination.route)
             }
         )
     }
@@ -232,6 +248,10 @@ fun NavGraphBuilder.setUpComposeNavigation(navController: NavHostController) {
 
     composable(route = MeasuringComposableDestination.route) {
         MeasuringComposable("REALLY REALLY long long long text stuff")
+    }
+
+    composable(route = SearchDestination.route) {
+        SearchScreen()
     }
 
 }

@@ -21,20 +21,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import nick.mirosh.androidsamples.navigateSingleTopTo
 import nick.mirosh.androidsamples.ui.background_processing.multiple_processes.ProcessesScreen
+import nick.mirosh.androidsamples.ui.coroutines.async.AsyncComparisonScreen
+import nick.mirosh.androidsamples.ui.coroutines.coroutine_scope.CoroutineScopeScreen
+import nick.mirosh.androidsamples.ui.coroutines.exceptions.lobby.CoroutineExceptionsLobbyScreen
+import nick.mirosh.androidsamples.ui.coroutines.remember_coroutine_scope.RememberCoroutineScopeScreen
 import nick.mirosh.androidsamples.ui.navigation.AsyncComparisonDestination
 import nick.mirosh.androidsamples.ui.navigation.CooperativeCancellationDestination
 import nick.mirosh.androidsamples.ui.navigation.CoroutineLobbyScreenDestination
 import nick.mirosh.androidsamples.ui.navigation.CoroutineScopeDestination
 import nick.mirosh.androidsamples.ui.navigation.DeadLockDestination
 import nick.mirosh.androidsamples.ui.navigation.ExceptionsLobbyDestination
-import nick.mirosh.androidsamples.ui.navigation.RememberCoroutineScopeDestination
-import nick.mirosh.androidsamples.ui.coroutines.async.AsyncComparisonScreen
-import nick.mirosh.androidsamples.ui.coroutines.coroutine_scope.CoroutineScopeScreen
-import nick.mirosh.androidsamples.ui.coroutines.exceptions.lobby.CoroutineExceptionsLobbyScreen
-import nick.mirosh.androidsamples.ui.coroutines.flows.FlowsScreen
-import nick.mirosh.androidsamples.ui.coroutines.remember_coroutine_scope.RememberCoroutineScopeScreen
-import nick.mirosh.androidsamples.ui.navigation.FlowDestination
 import nick.mirosh.androidsamples.ui.navigation.MultipleProcesses
+import nick.mirosh.androidsamples.ui.navigation.RememberCoroutineScopeDestination
 
 @Composable
 fun CoroutineLobbyScreen() {
@@ -61,7 +59,6 @@ fun CoroutinesLobbyContent(
     onExceptionsClicked: (() -> Unit)? = null,
     onCooperativeCancellationClicked: (() -> Unit)? = null,
     onDeadLockClicked: (() -> Unit)? = null,
-    onFlowClicked: (() -> Unit)? = null,
     onMultipleProcessesClicked: (() -> Unit)? = null
 ) {
 
@@ -110,14 +107,6 @@ fun CoroutinesLobbyContent(
         )
 
         Text(
-            text = "Flows",
-            modifier = Modifier
-                .clickable {
-                    onFlowClicked?.invoke()
-                }
-                .padding(24.dp)
-        )
-        Text(
             text = "Deadlock",
             modifier = Modifier
                 .clickable {
@@ -165,12 +154,6 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
                     RememberCoroutineScopeDestination.route
                 )
             },
-            onFlowClicked = {
-                navController.navigateSingleTopTo(
-                    FlowDestination.route
-                )
-            },
-
             onDeadLockClicked = {
                 navController.navigateSingleTopTo(
                     DeadLockDestination.route
@@ -199,10 +182,6 @@ fun NavGraphBuilder.setUpNavigation(navController: NavHostController) {
     }
     composable(route = RememberCoroutineScopeDestination.route) {
         RememberCoroutineScopeScreen()
-    }
-
-    composable(route = FlowDestination.route) {
-        FlowsScreen()
     }
 
     composable(route = DeadLockDestination.route) {

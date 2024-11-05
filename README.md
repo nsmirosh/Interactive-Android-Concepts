@@ -1,11 +1,11 @@
 <img width="834" alt="Screenshot 2024-11-05 at 17 01 28" src="https://github.com/user-attachments/assets/cb658579-fd4a-4d4a-a39f-c0c3b1c5dd0c">  
 
-# Android Concepts Examples
+# Interactive Android Concepts Examples
 
 This is a collection of code samples and demonstrations focusing on Android development,
 specifically Jetpack Compose and Kotlin coroutines.
 
-The goal of this repository is to visually illustrate the usage of complex Android concepts. The
+The goal of this repository is to visually illustrate the usage of hard-to-understand Android and Kotlin concepts. The
 samples aim to be interactive.
 
 All of the video illustrations have corresponding code representations.

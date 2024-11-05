@@ -18,7 +18,7 @@ You're welcome to contribute your own code samples.
 
 To contribute:
 
-1. Find an interesting concept that is yet not covered.
+1. Find a concept that is not straightforward and not yet covered.
 2. Contact [me](https://www.linkedin.com/in/nickmirosh/) to make sure that your MR will get accepted
    before you start working on it.
 3. Make sure that what you want to contribute is an interactive and / or visual representation of a

@@ -1,7 +1,6 @@
 package nick.mirosh.androidsamples.ui.coroutines.remember_coroutine_scope
 
 
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

@@ -2,6 +2,7 @@ package nick.mirosh.androidsamples.ui.coroutines.remember_coroutine_scope
 
 
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
@@ -42,49 +43,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import nick.mirosh.androidsamples.ui.dialog.WebViewDialog
 
+private const val EXPLANATION_LINK =
+    "https://www.nickmirosh.com/post/are-you-using-coroutines-inside-your-composables-make-sure-to-use-remembercoroutinescope"
+private const val ANIMATION_DURATION = 300
 
-@Composable
-fun CancelledIcon(
-    modifier: Modifier = Modifier,
-    color: Color = Color.Red,
-    contentDescription: String? = null
-) {
-    Icon(
-        imageVector = Icons.Default.Close,
-        contentDescription = contentDescription,
-        modifier = modifier.size(48.dp),
-        tint = color
-    )
-}
-
-@Composable
-fun SuccessIcon(
-    modifier: Modifier = Modifier,
-    color: Color = Color.Green,
-    contentDescription: String? = null
-) {
-    Icon(
-        imageVector = Icons.Default.Check,
-        contentDescription = contentDescription,
-        modifier = modifier.size(48.dp),
-        tint = color
-    )
-}
 
 @Composable
 fun RememberCoroutineScopeScreen(modifier: Modifier = Modifier) {
-
-    var onCancelPressed by remember {
-        mutableStateOf(false)
-    }
-    var success by remember {
-        mutableStateOf(false)
-    }
-
+    var onCancelPressed by remember { mutableStateOf(false) }
+    var success by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
 
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-
         Column {
             if (success) {
                 SuccessState(
@@ -117,7 +87,7 @@ fun RememberCoroutineScopeScreen(modifier: Modifier = Modifier) {
         }
         if (showDialog) {
             WebViewDialog(
-                url = "https://www.nickmirosh.com/post/are-you-using-coroutines-inside-your-composables-make-sure-to-use-remembercoroutinescope",
+                url = EXPLANATION_LINK,
                 onDismissRequest = {
                     showDialog = false
                 }
@@ -132,29 +102,38 @@ fun InitialState(
     onCancelPressed: () -> Unit,
     onFinished: () -> Unit,
 ) {
+    var useRememberCoroutineScope by remember { mutableStateOf(false) }
 
-    var rememberCoroutineScope by remember { mutableStateOf(false) }
+
+    val scope =
+        if (useRememberCoroutineScope) rememberCoroutineScope() else CoroutineScope(Dispatchers.Main)
+
+    var progress by remember { mutableIntStateOf(0) }
 
     Column {
-        if (rememberCoroutineScope) {
-            RememberCoroutineScopeComposable(
-                onCancelPressed = {
-                    onCancelPressed()
-                },
-                onFinished = {
-                    onFinished()
-                }
-            )
-        } else {
-            RegularCoroutineScopeComposable(
-                onCancelPressed = {
-                    onCancelPressed()
-                },
-                onFinished = {
-                    onFinished()
-                }
-            )
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+        ) {
+            Button(
+                onClick = {
+                    scope.launch {
+                        runCounter {
+                            progress = it
+                        }
+                        onFinished()
+                    }
+                }) {
+                Text(text = "Start")
+            }
+            Button(
+                modifier = Modifier.padding(start = 16.dp),
+                onClick = onCancelPressed
+            ) {
+                Text(text = "Cancel")
+            }
         }
+        ProgressWithCancel(progress = progress)
 
         Row(
             modifier = Modifier
@@ -163,8 +142,8 @@ fun InitialState(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Checkbox(checked = rememberCoroutineScope, onCheckedChange = {
-                rememberCoroutineScope = !rememberCoroutineScope
+            Checkbox(checked = useRememberCoroutineScope, onCheckedChange = {
+                useRememberCoroutineScope = !useRememberCoroutineScope
             })
             Text(
                 fontSize = 16.sp,
@@ -196,9 +175,7 @@ fun CancelledState(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
-            onClick = {
-                onTryAgainClicked()
-            }
+            onClick = onTryAgainClicked
         ) {
             Text(
                 text = "Try again"
@@ -231,9 +208,7 @@ fun SuccessState(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
-            onClick = {
-                onTryAgainClicked()
-            }
+            onClick = onTryAgainClicked
         ) {
             Text(
                 text = "Try again"
@@ -242,85 +217,32 @@ fun SuccessState(
     }
 }
 
-
 @Composable
-fun RememberCoroutineScopeComposable(
-    onCancelPressed: () -> Unit,
-    onFinished: () -> Unit = {}
+fun CancelledIcon(
+    modifier: Modifier = Modifier,
+    color: Color = Color.Red,
+    contentDescription: String? = null
 ) {
-    val rememberCoroutineScope = rememberCoroutineScope()
-    var progress by remember { mutableIntStateOf(0) }
-    Column {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Button(
-                onClick = {
-                    rememberCoroutineScope.launch {
-                        runCounter {
-                            progress = it
-                        }
-                        onFinished()
-                    }
-                }) {
-                Text(
-                    text = "Start"
-                )
-            }
-            Button(
-                modifier = Modifier.padding(start = 16.dp),
-                onClick = {
-                    onCancelPressed()
-                }) {
-                Text(
-                    text = "Cancel"
-                )
-            }
-        }
-        ProgressWithCancel(progress = progress)
-    }
+    Icon(
+        imageVector = Icons.Default.Close,
+        contentDescription = contentDescription,
+        modifier = modifier.size(48.dp),
+        tint = color
+    )
 }
 
 @Composable
-fun RegularCoroutineScopeComposable(
-    onCancelPressed: () -> Unit,
-    onFinished: () -> Unit = {}
+fun SuccessIcon(
+    modifier: Modifier = Modifier,
+    color: Color = Color.Green,
+    contentDescription: String? = null
 ) {
-    var progress by remember { mutableIntStateOf(0) }
-    Column {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Button(
-                modifier = Modifier.padding(start = 16.dp),
-                onClick = {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        runCounter {
-                            progress = it
-                        }
-                        onFinished()
-                    }
-
-                }) {
-                Text(
-                    text = "Start"
-                )
-            }
-            Button(
-
-                modifier = Modifier.padding(start = 16.dp),
-                onClick = {
-                    onCancelPressed()
-                }) {
-                Text(
-                    text = "Cancel"
-                )
-            }
-        }
-        ProgressWithCancel(progress = progress)
-    }
+    Icon(
+        imageVector = Icons.Default.Check,
+        contentDescription = contentDescription,
+        modifier = modifier.size(48.dp),
+        tint = color
+    )
 }
 
 suspend fun runCounter(
@@ -335,19 +257,18 @@ suspend fun runCounter(
 }
 
 @Composable
-fun ProgressWithCancel(progress: Int) {
-    val progressAnimDuration = 300
+fun ProgressWithCancel(progress: Int, modifier: Modifier = Modifier) {
     val progressAnimation by animateFloatAsState(
         targetValue = progress.toFloat() / 100f,
         animationSpec = tween(
-            durationMillis = progressAnimDuration,
-            easing = FastOutSlowInEasing
+            durationMillis = ANIMATION_DURATION,
+            easing = LinearEasing
         ),
         label = ""
     )
     LinearProgressIndicator(
         progress = { progressAnimation },
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .height(32.dp)
@@ -357,12 +278,15 @@ fun ProgressWithCancel(progress: Int) {
 
 @Preview(showBackground = true)
 @Composable
-fun RememberCoroutineScopeScreenPreview() {
-    RememberCoroutineScopeScreen()
+fun CancelledStatePreview() {
+    CancelledState { }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun CancelledStatePreview() {
-    CancelledState { }
+fun InitialStatePreview() {
+    InitialState (
+        onCancelPressed = { },
+        onFinished = { }
+    )
 }

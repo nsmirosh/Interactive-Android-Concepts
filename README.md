@@ -25,7 +25,7 @@ To contribute:
    certain Android concept.
 4. Write a detailed post with an explanation of what's going on in your example.
    Consult [this screen](https://github.com/nsmirosh/Interactive-Android-Concepts/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/remember_coroutine_scope/RememberCoroutineScopeScreen.kt)
-   for reference. 
+   for reference and see the attached `EXPLANATION_LINK`. 
 5. Open an MR with your changes.
 
 ## Contents

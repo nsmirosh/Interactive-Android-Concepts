@@ -28,10 +28,6 @@ object RememberCoroutineScopeDestination : CoroutinesDestinations {
     override val route = "remember_coroutine_scope"
 }
 
-object FlowDestination : CoroutinesDestinations {
-    override val route = "flows"
-}
-
 object DeadLockDestination : CoroutinesDestinations {
     override val route = "deadlock"
 }

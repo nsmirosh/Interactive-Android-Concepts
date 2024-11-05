@@ -22,7 +22,7 @@ To contribute:
 2. Contact [me](https://www.linkedin.com/in/nickmirosh/) to make sure that your MR will get accepted
    before you start working on it.
 3. Make sure that what you want to contribute is an interactive and / or visual representation of a
-   certain Android concept.
+   certain Android / Kotlin concept.
 4. Write a detailed post with an explanation of what's going on in your example.
    Consult [this screen](https://github.com/nsmirosh/Interactive-Android-Concepts/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/remember_coroutine_scope/RememberCoroutineScopeScreen.kt)
    for reference and see the constant `EXPLANATION_LINK`. 

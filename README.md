@@ -16,7 +16,7 @@ Feel free to play around with these examples to get a better understanding of ea
 
 You're welcome to contribute your own code samples.
 
-To contribute:
+To contribute your own interactive example:
 
 1. Find a concept that is not straightforward and not yet covered.
 2. Contact [me](https://www.linkedin.com/in/nickmirosh/) to make sure that your MR will get accepted
@@ -27,6 +27,12 @@ To contribute:
    Consult [this screen](https://github.com/nsmirosh/Interactive-Android-Concepts/blob/main/app/src/main/java/nick/mirosh/androidsamples/ui/coroutines/remember_coroutine_scope/RememberCoroutineScopeScreen.kt)
    for reference and see the constant `EXPLANATION_LINK`. 
 5. Open an MR with your changes.
+
+To contribute your refactoring / infrastructure changes: 
+
+1. Contact [me](https://www.linkedin.com/in/nickmirosh/) to make sure that your MR will get accepted
+   before you start working on it.
+2. Once you're finished -open an MR with your changes. 
 
 ## Contents
 
